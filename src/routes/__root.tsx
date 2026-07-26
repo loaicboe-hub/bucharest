@@ -77,21 +77,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter" },
+      {
+        name: "description",
+        content:
+          "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified. Serving international markets with exceptional quality and reliable export services.",
+      },
+      {
+        name: "keywords",
+        content:
+          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, ISO 9001, Agricultural Export, Premium Produce, Fresh Produce Export",
+      },
+      { name: "author", content: "Fresh Diamond for Export" },
+      { property: "og:title", content: "Fresh Diamond for Export | Premium Fresh Produce Exporter" },
+      {
+        property: "og:description",
+        content: "Premium fresh fruits & vegetables exported worldwide since 2011. ISO 9001 Certified.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800;900&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
