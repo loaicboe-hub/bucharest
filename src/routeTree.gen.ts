@@ -9,29 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminAuthedRouteImport } from './routes/admin._authed'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
-import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
-import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
-import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
-import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
-import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
-import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
-import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
-import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
+import { Route as AdminAuthedRouteImport } from './routes/admin._authed'
 import { Route as AdminAuthedSettingsRouteImport } from './routes/admin._authed.settings'
+import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
+import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
+import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
+import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
+import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
+import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
+import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
+import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -39,44 +39,23 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAuthedRoute = AdminAuthedRouteImport.update({
-  id: '/_authed',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAuthedContactRequestsRoute =
-  AdminAuthedContactRequestsRouteImport.update({
-    id: '/contact-requests',
-    path: '/contact-requests',
-    getParentRoute: () => AdminAuthedRoute,
-  } as any)
-const AdminAuthedContentRoute = AdminAuthedContentRouteImport.update({
-  id: '/content',
-  path: '/content',
+const AdminAuthedRoute = AdminAuthedRouteImport.update({
+  id: '/_authed',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuthedSettingsRoute = AdminAuthedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
-const AdminAuthedDashboardRoute = AdminAuthedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AdminAuthedRoute,
-} as any)
-const AdminAuthedMarketsRoute = AdminAuthedMarketsRouteImport.update({
-  id: '/markets',
-  path: '/markets',
-  getParentRoute: () => AdminAuthedRoute,
-} as any)
-const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
-  id: '/media',
-  path: '/media',
-  getParentRoute: () => AdminAuthedRoute,
-} as any)
-const AdminAuthedProductsRoute = AdminAuthedProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
+const AdminAuthedSeoRoute = AdminAuthedSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
 const AdminAuthedQuoteRequestsRoute =
@@ -85,16 +64,37 @@ const AdminAuthedQuoteRequestsRoute =
     path: '/quote-requests',
     getParentRoute: () => AdminAuthedRoute,
   } as any)
-const AdminAuthedSeoRoute = AdminAuthedSeoRouteImport.update({
-  id: '/seo',
-  path: '/seo',
+const AdminAuthedProductsRoute = AdminAuthedProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
-const AdminAuthedSettingsRoute = AdminAuthedSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
+const AdminAuthedMarketsRoute = AdminAuthedMarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedDashboardRoute = AdminAuthedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedContentRoute = AdminAuthedContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedContactRequestsRoute =
+  AdminAuthedContactRequestsRouteImport.update({
+    id: '/contact-requests',
+    path: '/contact-requests',
+    getParentRoute: () => AdminAuthedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -197,18 +197,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -218,13 +218,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/_authed': {
-      id: '/admin/_authed'
-      path: ''
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminAuthedRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -232,53 +225,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/_authed/contact-requests': {
-      id: '/admin/_authed/contact-requests'
-      path: '/contact-requests'
-      fullPath: '/admin/contact-requests'
-      preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
-      parentRoute: typeof AdminAuthedRoute
+    '/admin/_authed': {
+      id: '/admin/_authed'
+      path: ''
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminAuthedRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/admin/_authed/content': {
-      id: '/admin/_authed/content'
-      path: '/content'
-      fullPath: '/admin/content'
-      preLoaderRoute: typeof AdminAuthedContentRouteImport
-      parentRoute: typeof AdminAuthedRoute
-    }
-    '/admin/_authed/dashboard': {
-      id: '/admin/_authed/dashboard'
-      path: '/dashboard'
-      fullPath: '/admin/dashboard'
-      preLoaderRoute: typeof AdminAuthedDashboardRouteImport
-      parentRoute: typeof AdminAuthedRoute
-    }
-    '/admin/_authed/markets': {
-      id: '/admin/_authed/markets'
-      path: '/markets'
-      fullPath: '/admin/markets'
-      preLoaderRoute: typeof AdminAuthedMarketsRouteImport
-      parentRoute: typeof AdminAuthedRoute
-    }
-    '/admin/_authed/media': {
-      id: '/admin/_authed/media'
-      path: '/media'
-      fullPath: '/admin/media'
-      preLoaderRoute: typeof AdminAuthedMediaRouteImport
-      parentRoute: typeof AdminAuthedRoute
-    }
-    '/admin/_authed/products': {
-      id: '/admin/_authed/products'
-      path: '/products'
-      fullPath: '/admin/products'
-      preLoaderRoute: typeof AdminAuthedProductsRouteImport
-      parentRoute: typeof AdminAuthedRoute
-    }
-    '/admin/_authed/quote-requests': {
-      id: '/admin/_authed/quote-requests'
-      path: '/quote-requests'
-      fullPath: '/admin/quote-requests'
-      preLoaderRoute: typeof AdminAuthedQuoteRequestsRouteImport
+    '/admin/_authed/settings': {
+      id: '/admin/_authed/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminAuthedSettingsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
     '/admin/_authed/seo': {
@@ -288,11 +246,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedSeoRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
-    '/admin/_authed/settings': {
-      id: '/admin/_authed/settings'
-      path: '/settings'
-      fullPath: '/admin/settings'
-      preLoaderRoute: typeof AdminAuthedSettingsRouteImport
+    '/admin/_authed/quote-requests': {
+      id: '/admin/_authed/quote-requests'
+      path: '/quote-requests'
+      fullPath: '/admin/quote-requests'
+      preLoaderRoute: typeof AdminAuthedQuoteRequestsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/products': {
+      id: '/admin/_authed/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminAuthedProductsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/media': {
+      id: '/admin/_authed/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminAuthedMediaRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/markets': {
+      id: '/admin/_authed/markets'
+      path: '/markets'
+      fullPath: '/admin/markets'
+      preLoaderRoute: typeof AdminAuthedMarketsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/dashboard': {
+      id: '/admin/_authed/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminAuthedDashboardRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/content': {
+      id: '/admin/_authed/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminAuthedContentRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/contact-requests': {
+      id: '/admin/_authed/contact-requests'
+      path: '/contact-requests'
+      fullPath: '/admin/contact-requests'
+      preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
   }
@@ -347,3 +347,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
