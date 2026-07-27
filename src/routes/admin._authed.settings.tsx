@@ -1,0 +1,59 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/admin/_authed/settings")({
+  component: SettingsPage,
+});
+
+function SettingsPage() {
+  const [g, setG] = useState({
+    companyName: "Fresh Diamond for Export",
+    phone: "+20 100 000 0000",
+    email: "info@freshdiamond.com",
+    whatsapp: "+20 100 000 0000",
+    address: "Cairo, Egypt",
+    maps: "https://maps.google.com/?q=Cairo",
+    facebook: "https://facebook.com/freshdiamond",
+    instagram: "https://instagram.com/freshdiamond",
+    linkedin: "https://linkedin.com/company/freshdiamond",
+    twitter: "",
+  });
+
+  const upd = (k: keyof typeof g, v: string) => setG((s) => ({ ...s, [k]: v }));
+
+  return (
+    <div>
+      <PageHeader title="General Settings" description="Company details, contact info and social links" actions={<Button onClick={() => toast.success("Settings saved")}>Save Changes</Button>} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader><CardTitle>Company Information</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2"><Label>Company Name</Label><Input value={g.companyName} onChange={(e) => upd("companyName", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Phone</Label><Input value={g.phone} onChange={(e) => upd("phone", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Email</Label><Input value={g.email} onChange={(e) => upd("email", e.target.value)} /></div>
+            <div className="space-y-2"><Label>WhatsApp</Label><Input value={g.whatsapp} onChange={(e) => upd("whatsapp", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Address</Label><Textarea rows={2} value={g.address} onChange={(e) => upd("address", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Google Maps URL</Label><Input value={g.maps} onChange={(e) => upd("maps", e.target.value)} /></div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-border/60 shadow-sm">
+          <CardHeader><CardTitle>Social Links</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2"><Label>Facebook</Label><Input value={g.facebook} onChange={(e) => upd("facebook", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Instagram</Label><Input value={g.instagram} onChange={(e) => upd("instagram", e.target.value)} /></div>
+            <div className="space-y-2"><Label>LinkedIn</Label><Input value={g.linkedin} onChange={(e) => upd("linkedin", e.target.value)} /></div>
+            <div className="space-y-2"><Label>Twitter / X</Label><Input value={g.twitter} onChange={(e) => upd("twitter", e.target.value)} /></div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
