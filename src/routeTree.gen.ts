@@ -9,38 +9,201 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminAuthedRouteImport } from './routes/admin._authed'
+import { Route as AdminAuthedSettingsRouteImport } from './routes/admin._authed.settings'
+import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
+import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
+import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
+import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
+import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
+import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
+import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
+import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
 
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuthedRoute = AdminAuthedRouteImport.update({
+  id: '/_authed',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuthedSettingsRoute = AdminAuthedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedSeoRoute = AdminAuthedSeoRouteImport.update({
+  id: '/seo',
+  path: '/seo',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedQuoteRequestsRoute =
+  AdminAuthedQuoteRequestsRouteImport.update({
+    id: '/quote-requests',
+    path: '/quote-requests',
+    getParentRoute: () => AdminAuthedRoute,
+  } as any)
+const AdminAuthedProductsRoute = AdminAuthedProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedMarketsRoute = AdminAuthedMarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedDashboardRoute = AdminAuthedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedContentRoute = AdminAuthedContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedContactRequestsRoute =
+  AdminAuthedContactRequestsRouteImport.update({
+    id: '/contact-requests',
+    path: '/contact-requests',
+    getParentRoute: () => AdminAuthedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
+  '/admin/content': typeof AdminAuthedContentRoute
+  '/admin/dashboard': typeof AdminAuthedDashboardRoute
+  '/admin/markets': typeof AdminAuthedMarketsRoute
+  '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/products': typeof AdminAuthedProductsRoute
+  '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
+  '/admin/seo': typeof AdminAuthedSeoRoute
+  '/admin/settings': typeof AdminAuthedSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
+  '/admin/content': typeof AdminAuthedContentRoute
+  '/admin/dashboard': typeof AdminAuthedDashboardRoute
+  '/admin/markets': typeof AdminAuthedMarketsRoute
+  '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/products': typeof AdminAuthedProductsRoute
+  '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
+  '/admin/seo': typeof AdminAuthedSeoRoute
+  '/admin/settings': typeof AdminAuthedSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin/_authed': typeof AdminAuthedRouteWithChildren
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
+  '/admin/_authed/content': typeof AdminAuthedContentRoute
+  '/admin/_authed/dashboard': typeof AdminAuthedDashboardRoute
+  '/admin/_authed/markets': typeof AdminAuthedMarketsRoute
+  '/admin/_authed/media': typeof AdminAuthedMediaRoute
+  '/admin/_authed/products': typeof AdminAuthedProductsRoute
+  '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
+  '/admin/_authed/seo': typeof AdminAuthedSeoRoute
+  '/admin/_authed/settings': typeof AdminAuthedSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin/login'
+    | '/admin/'
+    | '/admin/contact-requests'
+    | '/admin/content'
+    | '/admin/dashboard'
+    | '/admin/markets'
+    | '/admin/media'
+    | '/admin/products'
+    | '/admin/quote-requests'
+    | '/admin/seo'
+    | '/admin/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/admin/login'
+    | '/admin/contact-requests'
+    | '/admin/content'
+    | '/admin/dashboard'
+    | '/admin/markets'
+    | '/admin/media'
+    | '/admin/products'
+    | '/admin/quote-requests'
+    | '/admin/seo'
+    | '/admin/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin/_authed'
+    | '/admin/login'
+    | '/admin/'
+    | '/admin/_authed/contact-requests'
+    | '/admin/_authed/content'
+    | '/admin/_authed/dashboard'
+    | '/admin/_authed/markets'
+    | '/admin/_authed/media'
+    | '/admin/_authed/products'
+    | '/admin/_authed/quote-requests'
+    | '/admin/_authed/seo'
+    | '/admin/_authed/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +211,138 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/_authed': {
+      id: '/admin/_authed'
+      path: ''
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminAuthedRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/_authed/settings': {
+      id: '/admin/_authed/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminAuthedSettingsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/seo': {
+      id: '/admin/_authed/seo'
+      path: '/seo'
+      fullPath: '/admin/seo'
+      preLoaderRoute: typeof AdminAuthedSeoRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/quote-requests': {
+      id: '/admin/_authed/quote-requests'
+      path: '/quote-requests'
+      fullPath: '/admin/quote-requests'
+      preLoaderRoute: typeof AdminAuthedQuoteRequestsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/products': {
+      id: '/admin/_authed/products'
+      path: '/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminAuthedProductsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/media': {
+      id: '/admin/_authed/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminAuthedMediaRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/markets': {
+      id: '/admin/_authed/markets'
+      path: '/markets'
+      fullPath: '/admin/markets'
+      preLoaderRoute: typeof AdminAuthedMarketsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/dashboard': {
+      id: '/admin/_authed/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminAuthedDashboardRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/content': {
+      id: '/admin/_authed/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminAuthedContentRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/contact-requests': {
+      id: '/admin/_authed/contact-requests'
+      path: '/contact-requests'
+      fullPath: '/admin/contact-requests'
+      preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
   }
 }
 
+interface AdminAuthedRouteChildren {
+  AdminAuthedContactRequestsRoute: typeof AdminAuthedContactRequestsRoute
+  AdminAuthedContentRoute: typeof AdminAuthedContentRoute
+  AdminAuthedDashboardRoute: typeof AdminAuthedDashboardRoute
+  AdminAuthedMarketsRoute: typeof AdminAuthedMarketsRoute
+  AdminAuthedMediaRoute: typeof AdminAuthedMediaRoute
+  AdminAuthedProductsRoute: typeof AdminAuthedProductsRoute
+  AdminAuthedQuoteRequestsRoute: typeof AdminAuthedQuoteRequestsRoute
+  AdminAuthedSeoRoute: typeof AdminAuthedSeoRoute
+  AdminAuthedSettingsRoute: typeof AdminAuthedSettingsRoute
+}
+
+const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
+  AdminAuthedContactRequestsRoute: AdminAuthedContactRequestsRoute,
+  AdminAuthedContentRoute: AdminAuthedContentRoute,
+  AdminAuthedDashboardRoute: AdminAuthedDashboardRoute,
+  AdminAuthedMarketsRoute: AdminAuthedMarketsRoute,
+  AdminAuthedMediaRoute: AdminAuthedMediaRoute,
+  AdminAuthedProductsRoute: AdminAuthedProductsRoute,
+  AdminAuthedQuoteRequestsRoute: AdminAuthedQuoteRequestsRoute,
+  AdminAuthedSeoRoute: AdminAuthedSeoRoute,
+  AdminAuthedSettingsRoute: AdminAuthedSettingsRoute,
+}
+
+const AdminAuthedRouteWithChildren = AdminAuthedRoute._addFileChildren(
+  AdminAuthedRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAuthedRoute: typeof AdminAuthedRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuthedRoute: AdminAuthedRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
