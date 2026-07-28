@@ -20,9 +20,12 @@ import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._au
 import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
 import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
 import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
+import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.invoices'
 import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
 import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
 import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
+import { Route as AdminAuthedInvoicesIndexRouteImport } from './routes/admin._authed.invoices.index'
+import { Route as AdminAuthedInvoicesIdRouteImport } from './routes/admin._authed.invoices.$id'
 
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
@@ -79,6 +82,11 @@ const AdminAuthedMarketsRoute = AdminAuthedMarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
+const AdminAuthedInvoicesRoute = AdminAuthedInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
 const AdminAuthedDashboardRoute = AdminAuthedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -95,6 +103,17 @@ const AdminAuthedContactRequestsRoute =
     path: '/contact-requests',
     getParentRoute: () => AdminAuthedRoute,
   } as any)
+const AdminAuthedInvoicesIndexRoute =
+  AdminAuthedInvoicesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AdminAuthedInvoicesRoute,
+  } as any)
+const AdminAuthedInvoicesIdRoute = AdminAuthedInvoicesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAuthedInvoicesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -104,12 +123,15 @@ export interface FileRoutesByFullPath {
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
+  '/admin/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
   '/admin/settings': typeof AdminAuthedSettingsRoute
+  '/admin/invoices/$id': typeof AdminAuthedInvoicesIdRoute
+  '/admin/invoices/': typeof AdminAuthedInvoicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -124,6 +146,8 @@ export interface FileRoutesByTo {
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
   '/admin/settings': typeof AdminAuthedSettingsRoute
+  '/admin/invoices/$id': typeof AdminAuthedInvoicesIdRoute
+  '/admin/invoices': typeof AdminAuthedInvoicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -135,12 +159,15 @@ export interface FileRoutesById {
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/_authed/content': typeof AdminAuthedContentRoute
   '/admin/_authed/dashboard': typeof AdminAuthedDashboardRoute
+  '/admin/_authed/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/_authed/markets': typeof AdminAuthedMarketsRoute
   '/admin/_authed/media': typeof AdminAuthedMediaRoute
   '/admin/_authed/products': typeof AdminAuthedProductsRoute
   '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/_authed/seo': typeof AdminAuthedSeoRoute
   '/admin/_authed/settings': typeof AdminAuthedSettingsRoute
+  '/admin/_authed/invoices/$id': typeof AdminAuthedInvoicesIdRoute
+  '/admin/_authed/invoices/': typeof AdminAuthedInvoicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -152,12 +179,15 @@ export interface FileRouteTypes {
     | '/admin/contact-requests'
     | '/admin/content'
     | '/admin/dashboard'
+    | '/admin/invoices'
     | '/admin/markets'
     | '/admin/media'
     | '/admin/products'
     | '/admin/quote-requests'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/invoices/$id'
+    | '/admin/invoices/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,6 +202,8 @@ export interface FileRouteTypes {
     | '/admin/quote-requests'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/invoices/$id'
+    | '/admin/invoices'
   id:
     | '__root__'
     | '/'
@@ -182,12 +214,15 @@ export interface FileRouteTypes {
     | '/admin/_authed/contact-requests'
     | '/admin/_authed/content'
     | '/admin/_authed/dashboard'
+    | '/admin/_authed/invoices'
     | '/admin/_authed/markets'
     | '/admin/_authed/media'
     | '/admin/_authed/products'
     | '/admin/_authed/quote-requests'
     | '/admin/_authed/seo'
     | '/admin/_authed/settings'
+    | '/admin/_authed/invoices/$id'
+    | '/admin/_authed/invoices/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -274,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedMarketsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/invoices': {
+      id: '/admin/_authed/invoices'
+      path: '/invoices'
+      fullPath: '/admin/invoices'
+      preLoaderRoute: typeof AdminAuthedInvoicesRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
     '/admin/_authed/dashboard': {
       id: '/admin/_authed/dashboard'
       path: '/dashboard'
@@ -295,13 +337,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/invoices/': {
+      id: '/admin/_authed/invoices/'
+      path: '/'
+      fullPath: '/admin/invoices/'
+      preLoaderRoute: typeof AdminAuthedInvoicesIndexRouteImport
+      parentRoute: typeof AdminAuthedInvoicesRoute
+    }
+    '/admin/_authed/invoices/$id': {
+      id: '/admin/_authed/invoices/$id'
+      path: '/$id'
+      fullPath: '/admin/invoices/$id'
+      preLoaderRoute: typeof AdminAuthedInvoicesIdRouteImport
+      parentRoute: typeof AdminAuthedInvoicesRoute
+    }
   }
 }
+
+interface AdminAuthedInvoicesRouteChildren {
+  AdminAuthedInvoicesIdRoute: typeof AdminAuthedInvoicesIdRoute
+  AdminAuthedInvoicesIndexRoute: typeof AdminAuthedInvoicesIndexRoute
+}
+
+const AdminAuthedInvoicesRouteChildren: AdminAuthedInvoicesRouteChildren = {
+  AdminAuthedInvoicesIdRoute: AdminAuthedInvoicesIdRoute,
+  AdminAuthedInvoicesIndexRoute: AdminAuthedInvoicesIndexRoute,
+}
+
+const AdminAuthedInvoicesRouteWithChildren =
+  AdminAuthedInvoicesRoute._addFileChildren(AdminAuthedInvoicesRouteChildren)
 
 interface AdminAuthedRouteChildren {
   AdminAuthedContactRequestsRoute: typeof AdminAuthedContactRequestsRoute
   AdminAuthedContentRoute: typeof AdminAuthedContentRoute
   AdminAuthedDashboardRoute: typeof AdminAuthedDashboardRoute
+  AdminAuthedInvoicesRoute: typeof AdminAuthedInvoicesRouteWithChildren
   AdminAuthedMarketsRoute: typeof AdminAuthedMarketsRoute
   AdminAuthedMediaRoute: typeof AdminAuthedMediaRoute
   AdminAuthedProductsRoute: typeof AdminAuthedProductsRoute
@@ -314,6 +384,7 @@ const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedContactRequestsRoute: AdminAuthedContactRequestsRoute,
   AdminAuthedContentRoute: AdminAuthedContentRoute,
   AdminAuthedDashboardRoute: AdminAuthedDashboardRoute,
+  AdminAuthedInvoicesRoute: AdminAuthedInvoicesRouteWithChildren,
   AdminAuthedMarketsRoute: AdminAuthedMarketsRoute,
   AdminAuthedMediaRoute: AdminAuthedMediaRoute,
   AdminAuthedProductsRoute: AdminAuthedProductsRoute,

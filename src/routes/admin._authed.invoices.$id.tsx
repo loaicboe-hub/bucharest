@@ -137,15 +137,7 @@ function InvoiceEditor() {
     <div>
       <PageHeader
         title={id === "new" ? "New Invoice" : `Invoice ${inv.number}`}
-        description={
-          <span className="flex items-center gap-2 text-sm">
-            <Badge variant="outline">{inv.number}</Badge>
-            <Badge variant={inv.finalized ? "default" : "secondary"}>
-              {inv.finalized ? "Finalized" : "Draft"}
-            </Badge>
-            <span className="text-muted-foreground">Autosaves as you type</span>
-          </span>
-        }
+        description={`${inv.number} · ${inv.finalized ? "Finalized" : "Draft"} · Autosaves as you type`}
         actions={
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => navigate({ to: "/admin/invoices" })} className="gap-2">
