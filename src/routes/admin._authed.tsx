@@ -29,7 +29,7 @@ function AuthedLayout() {
               Signed in as <span className="font-medium text-foreground">{user?.username ?? "admin"}</span>
             </div>
           </header>
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="admin-scope flex-1 p-4 sm:p-6 lg:p-8">
             <Outlet />
           </main>
         </div>
