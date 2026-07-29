@@ -38,9 +38,12 @@ import {
   loadInvoices,
   type Invoice,
   type PaymentStatus,
+  upsertInvoice,
 } from "@/lib/admin-invoices";
 import { generateInvoicePDF } from "@/lib/admin-invoice-pdf";
 import { toast } from "sonner";
+
+const STATUS_OPTIONS: PaymentStatus[] = ["draft", "unpaid", "partial", "paid", "overdue"];
 
 export const Route = createFileRoute("/admin/_authed/invoices/")({
   component: InvoicesList,
