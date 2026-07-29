@@ -38,9 +38,12 @@ import {
   loadInvoices,
   type Invoice,
   type PaymentStatus,
+  upsertInvoice,
 } from "@/lib/admin-invoices";
 import { generateInvoicePDF } from "@/lib/admin-invoice-pdf";
 import { toast } from "sonner";
+
+const STATUS_OPTIONS: PaymentStatus[] = ["draft", "unpaid", "partial", "paid", "overdue"];
 
 export const Route = createFileRoute("/admin/_authed/invoices/")({
   component: InvoicesList,
@@ -163,7 +166,35 @@ function InvoicesList() {
                         <Badge variant="outline">{inv.shipping.incoterm}</Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge className={STATUS_STYLES[inv.status]}>{inv.status}</Badge>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button
+                              type="button"
+                              className="rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                              title="Change status"
+                            >
+                              <Badge className={`${STATUS_STYLES[inv.status]} cursor-pointer capitalize`}>
+                                {inv.status}
+                              </Badge>
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start">
+                            {STATUS_OPTIONS.map((s) => (
+                              <DropdownMenuItem
+                                key={s}
+                                onClick={() => {
+                                  if (inv.status === s) return;
+                                  upsertInvoice({ ...inv, status: s });
+                                  refresh();
+                                  toast.success(`Marked as ${s}`);
+                                }}
+                                className="capitalize"
+                              >
+                                <Badge className={`${STATUS_STYLES[s]} mr-2 capitalize`}>{s}</Badge>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
