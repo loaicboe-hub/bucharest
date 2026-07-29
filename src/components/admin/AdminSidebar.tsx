@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   Diamond,
+  Receipt,
 } from "lucide-react";
 import {
   Sidebar,
@@ -31,6 +32,7 @@ const items = [
   { title: "Contact Requests", url: "/admin/contact-requests", icon: Inbox },
   { title: "Quote Requests", url: "/admin/quote-requests", icon: FileText },
   { title: "Products", url: "/admin/products", icon: Package },
+  { title: "Billing & Invoices", url: "/admin/invoices", icon: Receipt },
   { title: "Markets", url: "/admin/markets", icon: Globe },
   { title: "Website Content", url: "/admin/content", icon: Type },
   { title: "Media Library", url: "/admin/media", icon: Image },
