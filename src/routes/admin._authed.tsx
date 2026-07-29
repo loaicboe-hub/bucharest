@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { isAuthenticated, getUser } from "@/lib/admin-auth";
 
@@ -33,6 +34,7 @@ function AuthedLayout() {
           </main>
         </div>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 }
