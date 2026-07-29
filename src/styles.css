@@ -121,3 +121,28 @@
 @utility animate-fade-up {
   animation: fade-up 0.8s ease-out both;
 }
+
+/* Admin form controls — make inputs clearly distinguishable from page bg */
+.admin-scope input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([role="combobox"]),
+.admin-scope textarea,
+.admin-scope select,
+.admin-scope button[role="combobox"] {
+  background-color: #ffffff;
+  border: 1px solid oklch(0.82 0.02 145);
+  box-shadow: 0 1px 2px oklch(0.2 0.02 150 / 0.04);
+}
+.admin-scope input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([role="combobox"]):hover,
+.admin-scope textarea:hover,
+.admin-scope button[role="combobox"]:hover {
+  border-color: oklch(0.7 0.05 145);
+}
+.admin-scope input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([role="combobox"]):focus,
+.admin-scope input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([role="combobox"]):focus-visible,
+.admin-scope textarea:focus,
+.admin-scope textarea:focus-visible,
+.admin-scope button[role="combobox"]:focus,
+.admin-scope button[role="combobox"]:focus-visible {
+  border-color: var(--fresh);
+  box-shadow: 0 0 0 3px oklch(0.66 0.17 145 / 0.18);
+  outline: none;
+}
