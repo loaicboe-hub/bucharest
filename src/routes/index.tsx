@@ -88,35 +88,6 @@ const process = [
   { title: "Delivery", desc: "Handed off fresh, on schedule." },
 ];
 
-const testimonials = [
-  {
-    quote: "Outstanding quality and professional service. Every container arrives exactly as promised.",
-    author: "M. Kellerman",
-    role: "Procurement Director, EU Distributor",
-  },
-  {
-    quote: "Reliable supplier with consistent freshness. Our supermarket clients are delighted.",
-    author: "A. Al-Farsi",
-    role: "Import Manager, Gulf Region",
-  },
-  {
-    quote: "Excellent export partner. Fresh Diamond understands what premium truly means.",
-    author: "R. Nakamura",
-    role: "Head of Sourcing, Asian Retail Chain",
-  },
-];
-
-const galleryImages = [
-  { src: farm, alt: "Farm fields at sunrise", cls: "row-span-2" },
-  { src: packaging, alt: "Packaging facility", cls: "" },
-  { src: coldStorage, alt: "Cold storage warehouse", cls: "" },
-  { src: shipping, alt: "Container ship at port", cls: "col-span-2" },
-  { src: loading, alt: "Container loading", cls: "" },
-  { src: strawberries, alt: "Fresh strawberries", cls: "" },
-  { src: peppers, alt: "Colorful peppers", cls: "" },
-  { src: mangoes, alt: "Ripe mangoes", cls: "" },
-];
-
 const regions = ["Europe", "Middle East", "Africa", "Asia"];
 
 function Index() {
@@ -144,7 +115,6 @@ function Index() {
     { href: "#why", label: "Why Us" },
     { href: "#process", label: "Process" },
     { href: "#markets", label: "Markets" },
-    { href: "#contact", label: "Contact" },
   ];
 
   return (
