@@ -646,15 +646,20 @@ function Index() {
                   </div>
                 </div>
               </div>
-              <p className="mt-5 max-w-md text-primary-foreground/70">
-                Premium fresh fruits & vegetables exported worldwide since 2011. ISO 9001
-                certified quality you can rely on.
-              </p>
+              <p className="mt-5 max-w-md text-primary-foreground/70">{footer.tagline}</p>
               <div className="mt-6 flex gap-3">
-                {[Facebook, Instagram, Linkedin].map((I, i) => (
+                {(
+                  [
+                    [Facebook, footer.social.facebook],
+                    [Instagram, footer.social.instagram],
+                    [Linkedin, footer.social.linkedin],
+                  ] as const
+                ).map(([I, href], i) => (
                   <a
                     key={i}
-                    href="#"
+                    href={href || "#top"}
+                    target={href?.startsWith("http") ? "_blank" : undefined}
+                    rel="noreferrer"
                     aria-label="Social"
                     className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-primary-foreground/80 transition-all hover:border-gold hover:bg-gold hover:text-gold-foreground"
                   >
@@ -664,15 +669,9 @@ function Index() {
               </div>
             </div>
 
-            <FooterCol title="Company" links={["About", "Careers", "News", "Sustainability"]} />
-            <FooterCol
-              title="Products"
-              links={["Fresh Fruits", "Vegetables", "Seasonal", "Packaging"]}
-            />
-            <FooterCol
-              title="More"
-              links={["Certifications", "Contact", "Request Quote", "Privacy"]}
-            />
+            {footer.columns.map((col) => (
+              <FooterCol key={col.title} title={col.title} links={col.links} />
+            ))}
           </div>
 
           <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-primary-foreground/60 sm:flex-row">
