@@ -37,7 +37,6 @@ import garlic from "@/assets/garlic.jpg";
 import sweetPotatoes from "@/assets/sweet-potatoes.jpg";
 import greenBeans from "@/assets/green-beans.jpg";
 import peppers from "@/assets/peppers.jpg";
-import shipping from "@/assets/shipping.jpg";
 import farm from "@/assets/farm.jpg";
 
 export const Route = createFileRoute("/")({

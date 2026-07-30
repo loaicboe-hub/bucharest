@@ -29,7 +29,6 @@ import { logout } from "@/lib/admin-auth";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-  { title: "Contact Requests", url: "/admin/contact-requests", icon: Inbox },
   { title: "Quote Requests", url: "/admin/quote-requests", icon: FileText },
   { title: "Products", url: "/admin/products", icon: Package },
   { title: "Billing & Invoices", url: "/admin/invoices", icon: Receipt },
