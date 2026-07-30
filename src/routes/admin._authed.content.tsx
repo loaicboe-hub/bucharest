@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
-import { Upload } from "lucide-react";
+import { Upload, Plus, Trash2 } from "lucide-react";
+import {
+  defaultFooterConfig,
+  loadFooterConfig,
+  saveFooterConfig,
+  type FooterConfig,
+  type FooterColumn,
+  type FooterLink,
+} from "@/lib/admin-footer";
 
 export const Route = createFileRoute("/admin/_authed/content")({
   component: ContentPage,
