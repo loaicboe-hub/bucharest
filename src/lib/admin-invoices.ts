@@ -215,7 +215,9 @@ export function blankInvoice(): Invoice {
       arrivalDate: "",
       containerNumber: "",
       vesselName: "",
+      transportation: "",
     },
+
     tax: { mode: "zero-rated", vatPercent: 0 },
     extras: {
       notes: "",
