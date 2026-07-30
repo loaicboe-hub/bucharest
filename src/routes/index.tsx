@@ -21,7 +21,6 @@ import {
   Instagram,
   Linkedin,
   Star,
-  Quote,
   Leaf,
 } from "lucide-react";
 
@@ -38,11 +37,7 @@ import garlic from "@/assets/garlic.jpg";
 import sweetPotatoes from "@/assets/sweet-potatoes.jpg";
 import greenBeans from "@/assets/green-beans.jpg";
 import peppers from "@/assets/peppers.jpg";
-import shipping from "@/assets/shipping.jpg";
-import coldStorage from "@/assets/cold-storage.jpg";
-import packaging from "@/assets/packaging.jpg";
 import farm from "@/assets/farm.jpg";
-import loading from "@/assets/loading.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -88,35 +83,6 @@ const process = [
   { title: "Delivery", desc: "Handed off fresh, on schedule." },
 ];
 
-const testimonials = [
-  {
-    quote: "Outstanding quality and professional service. Every container arrives exactly as promised.",
-    author: "M. Kellerman",
-    role: "Procurement Director, EU Distributor",
-  },
-  {
-    quote: "Reliable supplier with consistent freshness. Our supermarket clients are delighted.",
-    author: "A. Al-Farsi",
-    role: "Import Manager, Gulf Region",
-  },
-  {
-    quote: "Excellent export partner. Fresh Diamond understands what premium truly means.",
-    author: "R. Nakamura",
-    role: "Head of Sourcing, Asian Retail Chain",
-  },
-];
-
-const galleryImages = [
-  { src: farm, alt: "Farm fields at sunrise", cls: "row-span-2" },
-  { src: packaging, alt: "Packaging facility", cls: "" },
-  { src: coldStorage, alt: "Cold storage warehouse", cls: "" },
-  { src: shipping, alt: "Container ship at port", cls: "col-span-2" },
-  { src: loading, alt: "Container loading", cls: "" },
-  { src: strawberries, alt: "Fresh strawberries", cls: "" },
-  { src: peppers, alt: "Colorful peppers", cls: "" },
-  { src: mangoes, alt: "Ripe mangoes", cls: "" },
-];
-
 const regions = ["Europe", "Middle East", "Africa", "Asia"];
 
 function Index() {
@@ -144,7 +110,6 @@ function Index() {
     { href: "#why", label: "Why Us" },
     { href: "#process", label: "Process" },
     { href: "#markets", label: "Markets" },
-    { href: "#contact", label: "Contact" },
   ];
 
   return (
@@ -462,59 +427,46 @@ function Index() {
       </section>
 
       {/* Process */}
-      <section
-        id="process"
-        className="relative overflow-hidden bg-primary py-24 text-primary-foreground lg:py-32"
-      >
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url(${coldStorage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/95 via-primary/90 to-primary" />
-
+      <section id="process" className="relative overflow-hidden bg-white py-24 lg:py-32">
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-              <span className="h-px w-8 bg-gold" /> Export Process{" "}
-              <span className="h-px w-8 bg-gold" />
+            <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
+              <span className="h-px w-8 bg-fresh" /> Export Process{" "}
+              <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-4xl font-bold sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
               From Farm to <span className="text-gradient-gold">Global Market</span>
             </h2>
+            <p className="mt-6 text-lg text-muted-foreground">
+              Seven controlled stages that keep every shipment fresh, traceable and on schedule.
+            </p>
           </div>
 
-          <div className="relative mt-20">
-            <div className="absolute left-4 top-0 bottom-0 hidden w-px bg-gradient-to-b from-gold/60 via-gold/30 to-transparent md:left-1/2 md:block" />
-            <div className="space-y-8 md:space-y-16">
-              {process.map((step, i) => (
-                <div
-                  key={step.title}
-                  className={`relative md:grid md:grid-cols-2 md:gap-12 ${
-                    i % 2 === 1 ? "md:[&>*:first-child]:col-start-2" : ""
-                  }`}
-                >
-                  <div className={i % 2 === 1 ? "md:text-left" : "md:text-right"}>
-                    <div className="glass-dark rounded-2xl p-6">
-                      <div className="text-gold font-display text-4xl font-bold">
-                        {String(i + 1).padStart(2, "0")}
-                      </div>
-                      <h3 className="mt-2 font-display text-2xl font-semibold">{step.title}</h3>
-                      <p className="mt-2 text-primary-foreground/70">{step.desc}</p>
-                    </div>
-                  </div>
-                  <div
-                    className={`absolute left-4 top-8 hidden h-4 w-4 -translate-x-1/2 rounded-full bg-gold shadow-[0_0_20px_oklch(0.75_0.13_85)] md:left-1/2 md:block`}
-                  />
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {process.map((step, i) => (
+              <div
+                key={step.title}
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
+              >
+                <span className="absolute right-5 top-3 font-display text-6xl font-bold text-fresh/10 transition-colors group-hover:text-gold/20">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="grid h-12 w-12 place-items-center rounded-xl bg-fresh/10 font-display text-lg font-bold text-fresh transition-colors group-hover:bg-fresh group-hover:text-white">
+                  {i + 1}
                 </div>
-              ))}
-            </div>
+                <h3 className="relative mt-5 font-display text-xl font-semibold text-primary">
+                  {step.title}
+                </h3>
+                <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {step.desc}
+                </p>
+                <span className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-fresh to-gold transition-transform duration-300 group-hover:scale-x-100" />
+              </div>
+            ))}
           </div>
         </div>
       </section>
+
 
       {/* Certifications */}
       <section className="relative py-24 lg:py-32">
@@ -589,76 +541,6 @@ function Index() {
                 <WorldMap />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="relative py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Gallery{" "}
-              <span className="h-px w-8 bg-fresh" />
-            </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Freshness in Motion
-            </h2>
-          </div>
-
-          <div className="mt-14 grid auto-rows-[220px] grid-cols-2 gap-4 md:grid-cols-4">
-            {galleryImages.map((g, i) => (
-              <div
-                key={i}
-                className={`group relative overflow-hidden rounded-2xl ${g.cls}`}
-              >
-                <img
-                  src={g.src}
-                  alt={g.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                <div className="absolute bottom-4 left-4 translate-y-4 text-sm font-medium text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
-                  {g.alt}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="relative overflow-hidden bg-cream py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Testimonials{" "}
-              <span className="h-px w-8 bg-fresh" />
-            </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Trusted by Partners Worldwide
-            </h2>
-          </div>
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <div
-                key={t.author}
-                className="relative rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1"
-              >
-                <Quote className="absolute right-6 top-6 h-10 w-10 text-fresh/15" />
-                <div className="mb-3 flex gap-1 text-gold">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-foreground/85 leading-relaxed">"{t.quote}"</p>
-                <div className="mt-6 border-t border-border pt-4">
-                  <div className="font-semibold text-primary">{t.author}</div>
-                  <div className="text-sm text-muted-foreground">{t.role}</div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
