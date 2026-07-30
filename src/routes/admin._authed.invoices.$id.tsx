@@ -406,6 +406,17 @@ function InvoiceEditor() {
                     <Input value={inv.shipping.vesselName} onChange={(e) => patchGroup("shipping", { vesselName: e.target.value })} />
                   </Field>
                 </Grid>
+                <div className="mt-4">
+                  <Field label="Transportation Details">
+                    <Textarea
+                      rows={3}
+                      placeholder="e.g. In reefer truck, Temperature 13.0°C"
+                      value={inv.shipping.transportation ?? ""}
+                      onChange={(e) => patchGroup("shipping", { transportation: e.target.value })}
+                    />
+                  </Field>
+                </div>
+
               </SectionCard>
             </TabsContent>
 

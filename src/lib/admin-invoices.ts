@@ -65,6 +65,8 @@ export type Invoice = {
     arrivalDate: string;
     containerNumber: string;
     vesselName: string;
+    transportation: string;
+
   };
   tax: {
     mode: TaxMode;
@@ -213,7 +215,9 @@ export function blankInvoice(): Invoice {
       arrivalDate: "",
       containerNumber: "",
       vesselName: "",
+      transportation: "",
     },
+
     tax: { mode: "zero-rated", vatPercent: 0 },
     extras: {
       notes: "",
