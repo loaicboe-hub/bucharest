@@ -411,7 +411,7 @@ function InvoiceEditor() {
                     <Textarea
                       rows={3}
                       placeholder="e.g. In reefer truck, Temperature 13.0°C"
-                      value={inv.shipping.transportation}
+                      value={inv.shipping.transportation ?? ""}
                       onChange={(e) => patchGroup("shipping", { transportation: e.target.value })}
                     />
                   </Field>

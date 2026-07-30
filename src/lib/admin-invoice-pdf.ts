@@ -80,6 +80,7 @@ export function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = "save"
     ["Ship Date", inv.shipping.shipDate || "-"],
     ["Arrival Date", inv.shipping.arrivalDate || "-"],
     ["Vessel / Container", `${inv.shipping.vesselName || "-"} / ${inv.shipping.containerNumber || "-"}`],
+    ["Transportation", inv.shipping.transportation || "-"],
   ];
   autoTable(doc, {
     startY: y,
