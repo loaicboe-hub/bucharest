@@ -90,6 +90,11 @@ function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showTop, setShowTop] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
+
+  useEffect(() => {
+    setFooter(loadFooterConfig());
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
