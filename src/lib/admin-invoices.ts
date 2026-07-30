@@ -65,6 +65,8 @@ export type Invoice = {
     arrivalDate: string;
     containerNumber: string;
     vesselName: string;
+    transportation: string;
+
   };
   tax: {
     mode: TaxMode;
