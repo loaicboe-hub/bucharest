@@ -21,7 +21,6 @@ import {
   Instagram,
   Linkedin,
   Star,
-  Quote,
   Leaf,
 } from "lucide-react";
 
@@ -39,10 +38,7 @@ import sweetPotatoes from "@/assets/sweet-potatoes.jpg";
 import greenBeans from "@/assets/green-beans.jpg";
 import peppers from "@/assets/peppers.jpg";
 import shipping from "@/assets/shipping.jpg";
-import coldStorage from "@/assets/cold-storage.jpg";
-import packaging from "@/assets/packaging.jpg";
 import farm from "@/assets/farm.jpg";
-import loading from "@/assets/loading.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
