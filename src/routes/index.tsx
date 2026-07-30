@@ -4,6 +4,7 @@ import {
   defaultFooterConfig,
   loadFooterConfig,
   type FooterConfig,
+  type FooterLink,
 } from "@/lib/admin-footer";
 import {
   Award,
