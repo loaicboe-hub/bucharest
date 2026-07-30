@@ -754,7 +754,7 @@ function Field({
   );
 }
 
-function FooterCol({ title, links }: { title: string; links: string[] }) {
+function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
   return (
     <div>
       <div className="font-display text-sm font-bold uppercase tracking-[0.2em] text-gold">
@@ -762,12 +762,14 @@ function FooterCol({ title, links }: { title: string; links: string[] }) {
       </div>
       <ul className="mt-4 space-y-2.5 text-sm">
         {links.map((l) => (
-          <li key={l}>
+          <li key={l.label}>
             <a
-              href="#"
+              href={l.href || "#top"}
+              target={l.href?.startsWith("http") ? "_blank" : undefined}
+              rel="noreferrer"
               className="text-primary-foreground/70 transition-colors hover:text-gold"
             >
-              {l}
+              {l.label}
             </a>
           </li>
         ))}
