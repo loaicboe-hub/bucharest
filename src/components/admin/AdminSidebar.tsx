@@ -11,6 +11,7 @@ import {
   LogOut,
   Diamond,
   Receipt,
+  Palette,
 } from "lucide-react";
 import {
   Sidebar,
