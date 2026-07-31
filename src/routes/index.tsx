@@ -6,6 +6,7 @@ import {
   type FooterConfig,
   type FooterLink,
 } from "@/lib/admin-footer";
+import { loadLogo } from "@/lib/admin-branding";
 import {
   Award,
   ShieldCheck,
