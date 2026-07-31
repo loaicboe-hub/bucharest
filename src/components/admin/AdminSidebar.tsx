@@ -34,6 +34,7 @@ const items = [
   { title: "Markets", url: "/admin/markets", icon: Globe },
   { title: "Website Content", url: "/admin/content", icon: Type },
   { title: "Media Library", url: "/admin/media", icon: Image },
+  { title: "Logo & Branding", url: "/admin/branding", icon: Palette },
   { title: "SEO Settings", url: "/admin/seo", icon: Search },
   { title: "General Settings", url: "/admin/settings", icon: Settings },
 ];
