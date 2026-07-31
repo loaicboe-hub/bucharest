@@ -97,9 +97,11 @@ function Index() {
   const [showTop, setShowTop] = useState(false);
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
+  const [logo, setLogo] = useState<string | null>(null);
 
   useEffect(() => {
     setFooter(loadFooterConfig());
+    setLogo(loadLogo());
   }, []);
 
   useEffect(() => {
