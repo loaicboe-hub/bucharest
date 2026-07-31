@@ -24,6 +24,7 @@ import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.
 import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
 import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
 import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
+import { Route as AdminAuthedBrandingRouteImport } from './routes/admin._authed.branding'
 import { Route as AdminAuthedInvoicesIndexRouteImport } from './routes/admin._authed.invoices.index'
 import { Route as AdminAuthedInvoicesIdRouteImport } from './routes/admin._authed.invoices.$id'
 
@@ -103,6 +104,11 @@ const AdminAuthedContactRequestsRoute =
     path: '/contact-requests',
     getParentRoute: () => AdminAuthedRoute,
   } as any)
+const AdminAuthedBrandingRoute = AdminAuthedBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
 const AdminAuthedInvoicesIndexRoute =
   AdminAuthedInvoicesIndexRouteImport.update({
     id: '/',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/admin/_authed': typeof AdminAuthedRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/_authed/branding': typeof AdminAuthedBrandingRoute
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/_authed/content': typeof AdminAuthedContentRoute
   '/admin/_authed/dashboard': typeof AdminAuthedDashboardRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/login'
     | '/admin/'
+    | '/admin/branding'
     | '/admin/contact-requests'
     | '/admin/content'
     | '/admin/dashboard'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/admin/login'
+    | '/admin/branding'
     | '/admin/contact-requests'
     | '/admin/content'
     | '/admin/dashboard'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/admin/_authed'
     | '/admin/login'
     | '/admin/'
+    | '/admin/_authed/branding'
     | '/admin/_authed/contact-requests'
     | '/admin/_authed/content'
     | '/admin/_authed/dashboard'
@@ -337,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/branding': {
+      id: '/admin/_authed/branding'
+      path: '/branding'
+      fullPath: '/admin/branding'
+      preLoaderRoute: typeof AdminAuthedBrandingRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
     '/admin/_authed/invoices/': {
       id: '/admin/_authed/invoices/'
       path: '/'
@@ -368,6 +387,7 @@ const AdminAuthedInvoicesRouteWithChildren =
   AdminAuthedInvoicesRoute._addFileChildren(AdminAuthedInvoicesRouteChildren)
 
 interface AdminAuthedRouteChildren {
+  AdminAuthedBrandingRoute: typeof AdminAuthedBrandingRoute
   AdminAuthedContactRequestsRoute: typeof AdminAuthedContactRequestsRoute
   AdminAuthedContentRoute: typeof AdminAuthedContentRoute
   AdminAuthedDashboardRoute: typeof AdminAuthedDashboardRoute
@@ -381,6 +401,7 @@ interface AdminAuthedRouteChildren {
 }
 
 const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
+  AdminAuthedBrandingRoute: AdminAuthedBrandingRoute,
   AdminAuthedContactRequestsRoute: AdminAuthedContactRequestsRoute,
   AdminAuthedContentRoute: AdminAuthedContentRoute,
   AdminAuthedDashboardRoute: AdminAuthedDashboardRoute,

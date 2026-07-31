@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeTotals, formatMoney, type Invoice } from "./admin-invoices";
+import { loadLogo } from "./admin-branding";
 
 const GREEN: [number, number, number] = [30, 86, 49];
 const GOLD: [number, number, number] = [212, 175, 55];
@@ -20,19 +21,34 @@ export function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = "save"
   doc.setFillColor(...GOLD);
   doc.rect(0, 90, pageW, 3, "F");
 
+  // Optional company logo (admin uploaded)
+  let tx = M;
+  const logo = loadLogo();
+  if (logo) {
+    try {
+      const fmt = logo.includes("image/jpeg") || logo.includes("image/jpg") ? "JPEG" : "PNG";
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(M, 18, 54, 54, 6, 6, "F");
+      doc.addImage(logo, fmt, M + 5, 23, 44, 44, undefined, "FAST");
+      tx = M + 68;
+    } catch {
+      tx = M;
+    }
+  }
+
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.text(inv.exporter.company, M, 40);
+  doc.text(inv.exporter.company, tx, 40);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.text(inv.exporter.address, M, 56);
+  doc.text(inv.exporter.address, tx, 56);
   doc.text(
     `${inv.exporter.country}  •  ${inv.exporter.phone}  •  ${inv.exporter.email}`,
-    M,
+    tx,
     68,
   );
-  doc.text(inv.exporter.website, M, 80);
+  doc.text(inv.exporter.website, tx, 80);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);

@@ -6,6 +6,7 @@ import {
   type FooterConfig,
   type FooterLink,
 } from "@/lib/admin-footer";
+import { loadLogo } from "@/lib/admin-branding";
 import {
   Award,
   ShieldCheck,
@@ -97,9 +98,11 @@ function Index() {
   const [showTop, setShowTop] = useState(false);
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
+  const [logo, setLogo] = useState<string | null>(null);
 
   useEffect(() => {
     setFooter(loadFooterConfig());
+    setLogo(loadLogo());
   }, []);
 
   useEffect(() => {
@@ -148,8 +151,12 @@ function Index() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
           <a href="#top" className="flex items-center gap-2.5">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary shadow-[var(--shadow-glow)]">
-              <Leaf className="h-5 w-5 text-white" />
+            <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl gradient-primary shadow-[var(--shadow-glow)]">
+              {logo ? (
+                <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
+              ) : (
+                <Leaf className="h-5 w-5 text-white" />
+              )}
             </div>
             <div className="min-w-0">
               <div
@@ -637,8 +644,12 @@ function Index() {
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl bg-gold text-gold-foreground">
-                  <Leaf className="h-6 w-6" />
+                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-xl bg-gold text-gold-foreground">
+                  {logo ? (
+                    <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
+                  ) : (
+                    <Leaf className="h-6 w-6" />
+                  )}
                 </div>
                 <div>
                   <div className="font-display text-xl font-bold">Fresh Diamond</div>
