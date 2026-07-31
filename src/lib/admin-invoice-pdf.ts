@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { computeTotals, formatMoney, type Invoice } from "./admin-invoices";
+import { loadLogo } from "./admin-branding";
 
 const GREEN: [number, number, number] = [30, 86, 49];
 const GOLD: [number, number, number] = [212, 175, 55];
