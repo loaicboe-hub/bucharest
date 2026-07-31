@@ -151,8 +151,12 @@ function Index() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
           <a href="#top" className="flex items-center gap-2.5">
-            <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl gradient-primary shadow-[var(--shadow-glow)]">
-              <Leaf className="h-5 w-5 text-white" />
+            <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl gradient-primary shadow-[var(--shadow-glow)]">
+              {logo ? (
+                <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
+              ) : (
+                <Leaf className="h-5 w-5 text-white" />
+              )}
             </div>
             <div className="min-w-0">
               <div
