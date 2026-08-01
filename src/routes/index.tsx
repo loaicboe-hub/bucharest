@@ -50,47 +50,44 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const fruits = [
-  { name: "Oranges", desc: "Sun-ripened citrus with vibrant sweetness.", img: oranges },
-  { name: "Grapes", desc: "Hand-picked table grapes, plump and juicy.", img: grapes },
-  { name: "Mangoes", desc: "Fragrant, honey-sweet tropical mangoes.", img: mangoes },
-  { name: "Pomegranates", desc: "Ruby seeds bursting with flavor.", img: pomegranates },
-  { name: "Strawberries", desc: "Aromatic berries, cold-chain fresh.", img: strawberries },
-  { name: "Lemons", desc: "Zesty, thin-skinned premium lemons.", img: lemons },
-];
+const fruitImgs = [oranges, grapes, mangoes, pomegranates, strawberries, lemons];
+const vegImgs = [potatoes, onions, garlic, sweetPotatoes, greenBeans, peppers];
+const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
+const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
+const badgeIcons = [Award, BadgeCheck, Globe2];
+const contactIcons = [Mail, Phone, MapPin];
 
-const vegetables = [
-  { name: "Potatoes", desc: "Firm, versatile export-grade potatoes.", img: potatoes },
-  { name: "Onions", desc: "Golden and red bulbs, long shelf life.", img: onions },
-  { name: "Garlic", desc: "Robust flavor, uniform premium bulbs.", img: garlic },
-  { name: "Sweet Potatoes", desc: "Naturally sweet, rich orange flesh.", img: sweetPotatoes },
-  { name: "Green Beans", desc: "Crisp, tender pods harvested young.", img: greenBeans },
-  { name: "Peppers", desc: "Colorful bell peppers, thick-walled.", img: peppers },
-];
-
-const whyUs = [
-  { icon: Award, title: "Premium Quality", desc: "Only export-grade produce, hand-selected." },
-  { icon: BadgeCheck, title: "ISO 9001 Certified", desc: "Rigorous internationally recognized standards." },
-  { icon: Sprout, title: "Selected Farms", desc: "Partnerships with trusted, vetted growers." },
-  { icon: ShieldCheck, title: "Strict Quality Control", desc: "Multi-stage inspection at every step." },
-  { icon: HeartHandshake, title: "Competitive Prices", desc: "Direct sourcing means best value." },
-  { icon: Globe2, title: "Global Experience", desc: "Exporting worldwide since 2011." },
-  { icon: Clock, title: "On-Time Delivery", desc: "Reliable logistics you can plan around." },
-  { icon: Snowflake, title: "Cold Chain", desc: "Temperature controlled end-to-end." },
-  { icon: Star, title: "Customer First", desc: "Long-term partnerships, not transactions." },
-];
-
-const process = [
-  { title: "Farm Selection", desc: "Sourcing only from certified partner farms." },
-  { title: "Quality Inspection", desc: "Field and lab checks for every batch." },
-  { title: "Sorting & Packaging", desc: "Graded and packed to buyer specifications." },
-  { title: "Cold Storage", desc: "Temperature and humidity controlled." },
-  { title: "Container Loading", desc: "Refrigerated reefers loaded with care." },
-  { title: "International Shipping", desc: "Ocean and air freight worldwide." },
-  { title: "Delivery", desc: "Handed off fresh, on schedule." },
-];
-
-const regions = ["Europe", "Middle East", "Africa", "Asia"];
+function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
+  const { lang, setLang, c } = useLang();
+  return (
+    <div
+      aria-label={c.ui.language}
+      className={`inline-flex items-center gap-1 rounded-full border p-1 ${
+        compact
+          ? "border-border bg-white"
+          : "border-white/25 bg-white/10 backdrop-blur-md"
+      }`}
+    >
+      {(["en", "ar"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+            lang === l
+              ? "bg-gold text-gold-foreground shadow"
+              : compact
+                ? "text-muted-foreground hover:text-primary"
+                : "text-white/80 hover:text-white"
+          }`}
+        >
+          {l === "en" ? "EN" : "ع"}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function Index() {
   const [scrolled, setScrolled] = useState(false);
@@ -99,11 +96,31 @@ function Index() {
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
+  const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const { lang, c } = useLang();
 
   useEffect(() => {
+    initLang();
     setFooter(loadFooterConfig());
     setLogo(loadLogo());
   }, []);
+
+  useEffect(() => {
+    setFormMsg(null);
+    if (typeof document === "undefined") return;
+    document.title =
+      lang === "ar"
+        ? "فريش دايموند للتصدير | مُصدِّر فواكه وخضروات طازجة فاخرة"
+        : "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter";
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc)
+      desc.setAttribute(
+        "content",
+        lang === "ar"
+          ? "فريش دايموند للتصدير شركة رائدة في تصدير الفواكه والخضروات الطازجة الفاخرة منذ 2011، حاصلة على شهادة الأيزو 9001 وتخدم الأسواق الدولية بجودة عالية وموثوقية."
+          : "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified. Serving international markets with exceptional quality and reliable export services.",
+      );
+  }, [lang]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -118,13 +135,8 @@ function Index() {
     };
   }, []);
 
-  const nav = [
-    { href: "#about", label: "About" },
-    { href: "#products", label: "Products" },
-    { href: "#why", label: "Why Us" },
-    { href: "#process", label: "Process" },
-    { href: "#markets", label: "Markets" },
-  ];
+  const nav = c.nav;
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
