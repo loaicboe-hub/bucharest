@@ -149,8 +149,9 @@ function Index() {
               <div className="absolute inset-0 rounded-full blur-2xl bg-gold/40" />
             </div>
             <div className="text-primary-foreground font-display text-xl tracking-wide">
-              Fresh Diamond
+              {c.brand}
             </div>
+
           </div>
         </div>
       )}
