@@ -177,7 +177,8 @@ function Index() {
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
-                Fresh Diamond
+                {c.brand}
+
               </div>
               <div
                 className={`text-[10px] uppercase tracking-[0.2em] ${
