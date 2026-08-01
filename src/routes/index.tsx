@@ -605,25 +605,40 @@ function Index() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const name = String(fd.get("name") ?? "").trim();
+                const email = String(fd.get("email") ?? "").trim();
+                const message = String(fd.get("message") ?? "").trim();
+                if (!name || !email || !message) {
+                  setFormMsg({ type: "error", text: c.ui.errRequired });
+                  return;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  setFormMsg({ type: "error", text: c.ui.errEmail });
+                  return;
+                }
+                setFormMsg({ type: "success", text: c.ui.okSent });
+                e.currentTarget.reset();
               }}
               className="lg:col-span-3 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] lg:p-10"
             >
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Name" type="text" name="name" />
-                <Field label="Company" type="text" name="company" />
-                <Field label="Country" type="text" name="country" />
-                <Field label="Email" type="email" name="email" />
-                <Field label="Phone" type="tel" name="phone" />
-                <Field label="Interested Product" type="text" name="product" />
+                <Field label={c.ui.fName} type="text" name="name" />
+                <Field label={c.ui.fCompany} type="text" name="company" />
+                <Field label={c.ui.fCountry} type="text" name="country" />
+                <Field label={c.ui.fEmail} type="email" name="email" />
+                <Field label={c.ui.fPhone} type="tel" name="phone" />
+                <Field label={c.ui.fProduct} type="text" name="product" />
               </div>
               <div className="mt-5">
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Message
+                  {c.ui.fMessage}
                 </label>
                 <textarea
+                  name="message"
                   rows={5}
                   className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-all focus:border-fresh focus:ring-2 focus:ring-fresh/20"
-                  placeholder="Tell us about your requirements..."
+                  placeholder={c.ui.fMessagePlaceholder}
                 />
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -631,15 +646,28 @@ function Index() {
                   type="submit"
                   className="group inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 font-semibold text-white shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl"
                 >
-                  Send Inquiry <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  {c.ui.sendInquiry} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <button
                   type="button"
+                  onClick={() => setFormMsg({ type: "success", text: c.ui.okQuote })}
                   className="inline-flex items-center gap-2 rounded-full border border-gold bg-gold/10 px-7 py-3.5 font-semibold text-primary transition-all hover:bg-gold hover:text-gold-foreground"
                 >
-                  Request Quotation
+                  {c.ui.requestQuotation}
                 </button>
               </div>
+              {formMsg && (
+                <div
+                  role="status"
+                  className={`mt-5 rounded-xl border px-4 py-3 text-sm font-medium ${
+                    formMsg.type === "error"
+                      ? "border-destructive/30 bg-destructive/10 text-destructive"
+                      : "border-fresh/40 bg-fresh/10 text-primary"
+                  }`}
+                >
+                  {formMsg.text}
+                </div>
+              )}
             </form>
           </div>
         </div>
@@ -659,9 +687,9 @@ function Index() {
                   )}
                 </div>
                 <div>
-                  <div className="font-display text-xl font-bold">Fresh Diamond</div>
+                  <div className="font-display text-xl font-bold">{c.brand}</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
-                    for Export
+                    {c.brandSub}
                   </div>
                 </div>
               </div>
@@ -694,9 +722,11 @@ function Index() {
           </div>
 
           <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-primary-foreground/60 sm:flex-row">
-            <div>© {new Date().getFullYear()} Fresh Diamond for Export. All rights reserved.</div>
+            <div>
+              © {new Date().getFullYear()} {c.brand} {c.brandSub}. {c.ui.rights}
+            </div>
             <div className="flex items-center gap-2">
-              <BadgeCheck className="h-4 w-4 text-gold" /> ISO 9001 Certified · Since 2011
+              <BadgeCheck className="h-4 w-4 text-gold" /> {c.ui.footerBadge}
             </div>
           </div>
         </div>
@@ -706,7 +736,7 @@ function Index() {
       {showTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Back to top"
+          aria-label={c.ui.backToTop}
           className="fixed bottom-8 right-8 z-40 grid h-12 w-12 place-items-center rounded-full gradient-primary text-white shadow-xl transition-all hover:scale-110"
         >
           <ArrowUp className="h-5 w-5" />
@@ -720,10 +750,14 @@ function ProductCard({
   name,
   desc,
   img,
+  premium,
+  learnMore,
 }: {
   name: string;
   desc: string;
   img: string;
+  premium: string;
+  learnMore: string;
 }) {
   return (
     <div className="group relative overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-2">
@@ -736,14 +770,14 @@ function ProductCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-60" />
         <div className="absolute right-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
-          Premium
+          {premium}
         </div>
       </div>
       <div className="p-6">
         <h4 className="font-display text-2xl font-semibold text-primary">{name}</h4>
         <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
         <button className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh transition-all hover:gap-3">
-          Learn More <ArrowRight className="h-4 w-4" />
+          {learnMore} <ArrowRight className="h-4 w-4" />
         </button>
       </div>
     </div>
