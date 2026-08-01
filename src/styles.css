@@ -170,3 +170,9 @@ html[dir="rtl"] .tracking-\[0\.25em\],
 html[dir="rtl"] .tracking-\[0\.3em\] {
   letter-spacing: 0;
 }
+html[dir="rtl"] h1 {
+  line-height: 1.25;
+}
+html[dir="rtl"] .lucide-arrow-right {
+  transform: scaleX(-1);
+}
