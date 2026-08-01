@@ -7,6 +7,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { loadLogo } from "@/lib/admin-branding";
+import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
   ShieldCheck,
@@ -50,47 +51,44 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const fruits = [
-  { name: "Oranges", desc: "Sun-ripened citrus with vibrant sweetness.", img: oranges },
-  { name: "Grapes", desc: "Hand-picked table grapes, plump and juicy.", img: grapes },
-  { name: "Mangoes", desc: "Fragrant, honey-sweet tropical mangoes.", img: mangoes },
-  { name: "Pomegranates", desc: "Ruby seeds bursting with flavor.", img: pomegranates },
-  { name: "Strawberries", desc: "Aromatic berries, cold-chain fresh.", img: strawberries },
-  { name: "Lemons", desc: "Zesty, thin-skinned premium lemons.", img: lemons },
-];
+const fruitImgs = [oranges, grapes, mangoes, pomegranates, strawberries, lemons];
+const vegImgs = [potatoes, onions, garlic, sweetPotatoes, greenBeans, peppers];
+const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
+const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
+const badgeIcons = [Award, BadgeCheck, Globe2];
+const contactIcons = [Mail, Phone, MapPin];
 
-const vegetables = [
-  { name: "Potatoes", desc: "Firm, versatile export-grade potatoes.", img: potatoes },
-  { name: "Onions", desc: "Golden and red bulbs, long shelf life.", img: onions },
-  { name: "Garlic", desc: "Robust flavor, uniform premium bulbs.", img: garlic },
-  { name: "Sweet Potatoes", desc: "Naturally sweet, rich orange flesh.", img: sweetPotatoes },
-  { name: "Green Beans", desc: "Crisp, tender pods harvested young.", img: greenBeans },
-  { name: "Peppers", desc: "Colorful bell peppers, thick-walled.", img: peppers },
-];
-
-const whyUs = [
-  { icon: Award, title: "Premium Quality", desc: "Only export-grade produce, hand-selected." },
-  { icon: BadgeCheck, title: "ISO 9001 Certified", desc: "Rigorous internationally recognized standards." },
-  { icon: Sprout, title: "Selected Farms", desc: "Partnerships with trusted, vetted growers." },
-  { icon: ShieldCheck, title: "Strict Quality Control", desc: "Multi-stage inspection at every step." },
-  { icon: HeartHandshake, title: "Competitive Prices", desc: "Direct sourcing means best value." },
-  { icon: Globe2, title: "Global Experience", desc: "Exporting worldwide since 2011." },
-  { icon: Clock, title: "On-Time Delivery", desc: "Reliable logistics you can plan around." },
-  { icon: Snowflake, title: "Cold Chain", desc: "Temperature controlled end-to-end." },
-  { icon: Star, title: "Customer First", desc: "Long-term partnerships, not transactions." },
-];
-
-const process = [
-  { title: "Farm Selection", desc: "Sourcing only from certified partner farms." },
-  { title: "Quality Inspection", desc: "Field and lab checks for every batch." },
-  { title: "Sorting & Packaging", desc: "Graded and packed to buyer specifications." },
-  { title: "Cold Storage", desc: "Temperature and humidity controlled." },
-  { title: "Container Loading", desc: "Refrigerated reefers loaded with care." },
-  { title: "International Shipping", desc: "Ocean and air freight worldwide." },
-  { title: "Delivery", desc: "Handed off fresh, on schedule." },
-];
-
-const regions = ["Europe", "Middle East", "Africa", "Asia"];
+function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
+  const { lang, setLang, c } = useLang();
+  return (
+    <div
+      aria-label={c.ui.language}
+      className={`inline-flex items-center gap-1 rounded-full border p-1 ${
+        compact
+          ? "border-border bg-white"
+          : "border-white/25 bg-white/10 backdrop-blur-md"
+      }`}
+    >
+      {(["en", "ar"] as const).map((l) => (
+        <button
+          key={l}
+          type="button"
+          onClick={() => setLang(l)}
+          aria-pressed={lang === l}
+          className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+            lang === l
+              ? "bg-gold text-gold-foreground shadow"
+              : compact
+                ? "text-muted-foreground hover:text-primary"
+                : "text-white/80 hover:text-white"
+          }`}
+        >
+          {l === "en" ? "EN" : "ع"}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function Index() {
   const [scrolled, setScrolled] = useState(false);
@@ -99,11 +97,31 @@ function Index() {
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
+  const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const { lang, c } = useLang();
 
   useEffect(() => {
+    initLang();
     setFooter(loadFooterConfig());
     setLogo(loadLogo());
   }, []);
+
+  useEffect(() => {
+    setFormMsg(null);
+    if (typeof document === "undefined") return;
+    document.title =
+      lang === "ar"
+        ? "فريش دايموند للتصدير | مُصدِّر فواكه وخضروات طازجة فاخرة"
+        : "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter";
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc)
+      desc.setAttribute(
+        "content",
+        lang === "ar"
+          ? "فريش دايموند للتصدير شركة رائدة في تصدير الفواكه والخضروات الطازجة الفاخرة منذ 2011، حاصلة على شهادة الأيزو 9001 وتخدم الأسواق الدولية بجودة عالية وموثوقية."
+          : "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified. Serving international markets with exceptional quality and reliable export services.",
+      );
+  }, [lang]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -118,13 +136,8 @@ function Index() {
     };
   }, []);
 
-  const nav = [
-    { href: "#about", label: "About" },
-    { href: "#products", label: "Products" },
-    { href: "#why", label: "Why Us" },
-    { href: "#process", label: "Process" },
-    { href: "#markets", label: "Markets" },
-  ];
+  const nav = c.nav;
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -137,8 +150,9 @@ function Index() {
               <div className="absolute inset-0 rounded-full blur-2xl bg-gold/40" />
             </div>
             <div className="text-primary-foreground font-display text-xl tracking-wide">
-              Fresh Diamond
+              {c.brand}
             </div>
+
           </div>
         </div>
       )}
@@ -164,14 +178,15 @@ function Index() {
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
-                Fresh Diamond
+                {c.brand}
+
               </div>
               <div
                 className={`text-[10px] uppercase tracking-[0.2em] ${
                   scrolled ? "text-muted-foreground" : "text-white/70"
                 }`}
               >
-                for Export
+                {c.brandSub}
               </div>
             </div>
           </a>
@@ -194,17 +209,21 @@ function Index() {
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
-              Request Quote <ArrowRight className="h-4 w-4" />
+              {c.ui.requestQuote} <ArrowRight className="h-4 w-4" />
             </a>
+            <LanguageSwitcher compact={scrolled} />
           </nav>
 
+          <div className="flex items-center gap-3 lg:hidden">
+            <LanguageSwitcher compact={scrolled} />
           <button
-            aria-label="Toggle menu"
+            aria-label={c.ui.toggleMenu}
             onClick={() => setMenuOpen(!menuOpen)}
             className={`lg:hidden ${scrolled ? "text-foreground" : "text-white"}`}
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
+          </div>
         </div>
 
         {menuOpen && (
@@ -225,7 +244,7 @@ function Index() {
                 onClick={() => setMenuOpen(false)}
                 className="mt-2 rounded-full bg-gold px-5 py-3 text-center font-semibold text-gold-foreground"
               >
-                Request Quote
+                {c.ui.requestQuote}
               </a>
             </nav>
           </div>
@@ -248,54 +267,52 @@ function Index() {
           <div className="max-w-3xl animate-fade-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full glass-dark px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
-              Est. 2011 — ISO 9001 Certified
+              {c.ui.heroBadge}
             </div>
             <h1 className="font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl xl:text-8xl">
-              Premium Fresh Fruits &{" "}
-              <span className="text-gradient-gold">Vegetables</span>
+              {c.ui.heroTitle1}{" "}
+              <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
-              Exported Worldwide
+              {c.ui.heroTitle2}
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-white/85 sm:text-xl">
-              Delivering exceptional quality, freshness, and reliability since 2011 — from
-              certified farms to your market, uninterrupted.
+              {c.ui.heroSub}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="#contact"
                 className="group inline-flex items-center gap-2 rounded-full bg-gold px-8 py-4 font-semibold text-gold-foreground shadow-xl transition-all hover:scale-[1.03] hover:shadow-2xl"
               >
-                Request a Quote
+                {c.ui.requestAQuote}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
               <a
                 href="#products"
                 className="inline-flex items-center gap-2 rounded-full glass-dark px-8 py-4 font-semibold text-white transition-all hover:bg-white/20"
               >
-                Explore Products
+                {c.ui.exploreProducts}
               </a>
             </div>
 
             <div className="mt-14 grid max-w-2xl grid-cols-3 gap-4">
-              {[
-                { icon: Award, label: "Since 2011" },
-                { icon: BadgeCheck, label: "ISO 9001" },
-                { icon: Globe2, label: "Global Export" },
-              ].map((b) => (
+              {c.badges.map((label, bi) => {
+                const BIcon = badgeIcons[bi];
+                return (
                 <div
-                  key={b.label}
+                  key={label}
                   className="glass-dark flex items-center gap-3 rounded-2xl px-4 py-3 text-white"
                 >
-                  <b.icon className="h-5 w-5 shrink-0 text-gold" />
-                  <span className="truncate text-sm font-medium">{b.label}</span>
+                  <BIcon className="h-5 w-5 shrink-0 text-gold" />
+                  <span className="truncate text-sm font-medium">{label}</span>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] animate-float">
-          Scroll
+          {c.ui.scroll}
         </div>
       </section>
 
@@ -305,28 +322,20 @@ function Index() {
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> About Us
+                <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                About Fresh <span className="text-gradient-gold">Diamond</span>
+                {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                Fresh Diamond for Export has been supplying premium-quality fresh fruits and
-                vegetables to international markets since 2011. We are committed to quality,
-                food safety, reliability, and customer satisfaction.
+                {c.ui.aboutP1}
               </p>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                With years of experience and strict quality control standards, we ensure every
-                shipment meets international export requirements.
+                {c.ui.aboutP2}
               </p>
 
               <div className="mt-10 grid grid-cols-2 gap-4">
-                {[
-                  { n: "14+", l: "Years of Experience" },
-                  { n: "50+", l: "Professional Team" },
-                  { n: "ISO", l: "9001 Standards" },
-                  { n: "24/7", l: "Fast Delivery" },
-                ].map((s) => (
+                {c.stats.map((s) => (
                   <div
                     key={s.l}
                     className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:border-fresh/50"
@@ -357,9 +366,9 @@ function Index() {
                   </div>
                   <div>
                     <div className="font-display text-lg font-bold text-primary">
-                      ISO 9001
+                      {c.ui.iso}
                     </div>
-                    <div className="text-xs text-muted-foreground">Certified Excellence</div>
+                    <div className="text-xs text-muted-foreground">{c.ui.certifiedExcellence}</div>
                   </div>
                 </div>
               </div>
@@ -373,35 +382,35 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Our Products{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.productsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              A Harvest of Excellence
+              {c.ui.productsTitle}
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Export-grade fruits and vegetables, selected for freshness, appearance, and shelf life.
+              {c.ui.productsSub}
             </p>
           </div>
 
           <div className="mt-16">
             <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              Fresh Fruits
+              {c.ui.freshFruits}
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {fruits.map((p) => (
-                <ProductCard key={p.name} {...p} />
+              {c.fruits.map((p, i) => (
+                <ProductCard key={p.name} {...p} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
 
           <div className="mt-20">
             <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              Fresh Vegetables
+              {c.ui.freshVegetables}
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {vegetables.map((p) => (
-                <ProductCard key={p.name} {...p} />
+              {c.vegetables.map((p, i) => (
+                <ProductCard key={p.name} {...p} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
@@ -413,15 +422,17 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Why Choose Us{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Built on Trust & Standards
+              {c.ui.whyTitle}
             </h2>
           </div>
           <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {whyUs.map((w) => (
+            {c.whyUs.map((w, wi) => {
+              const WIcon = whyIcons[wi];
+              return (
               <div
                 key={w.title}
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
@@ -429,7 +440,7 @@ function Index() {
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
                 <div className="relative">
                   <div className="grid h-12 w-12 place-items-center rounded-xl gradient-primary text-white shadow-lg">
-                    <w.icon className="h-6 w-6" />
+                    <WIcon className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 font-display text-xl font-semibold text-primary">
                     {w.title}
@@ -439,7 +450,8 @@ function Index() {
                   </p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -449,19 +461,19 @@ function Index() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Export Process{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.processEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              From Farm to <span className="text-gradient-gold">Global Market</span>
+              {c.ui.processTitle1} <span className="text-gradient-gold">{c.ui.processTitleGold}</span>
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
-              Seven controlled stages that keep every shipment fresh, traceable and on schedule.
+              {c.ui.processSub}
             </p>
           </div>
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {process.map((step, i) => (
+            {c.process.map((step, i) => (
               <div
                 key={step.title}
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
@@ -491,33 +503,31 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Certifications{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.certsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Standards You Can Trust
+              {c.ui.certsTitle}
             </h2>
           </div>
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: BadgeCheck, title: "ISO 9001", sub: "Quality Management" },
-              { icon: ShieldCheck, title: "Food Safety", sub: "Global Standards" },
-              { icon: Globe2, title: "Export Ready", sub: "International Compliance" },
-              { icon: Award, title: "Premium Grade", sub: "Quality Assurance" },
-            ].map((c) => (
+            {c.certs.map((cert, ci) => {
+              const CIcon = certIcons[ci];
+              return (
               <div
-                key={c.title}
+                key={cert.title}
                 className="group relative overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-card to-cream p-8 text-center transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-gold to-[oklch(0.68_0.14_75)] text-gold-foreground shadow-lg transition-transform group-hover:scale-110">
-                  <c.icon className="h-8 w-8" />
+                  <CIcon className="h-8 w-8" />
                 </div>
                 <div className="mt-5 font-display text-xl font-bold text-primary">
-                  {c.title}
+                  {cert.title}
                 </div>
-                <div className="mt-1 text-sm text-muted-foreground">{c.sub}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{cert.sub}</div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -531,18 +541,17 @@ function Index() {
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> Global Markets
+                <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                We Export to <span className="text-gradient-gold">the World</span>
+                {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
               </h2>
               <p className="mt-6 text-lg text-muted-foreground">
-                We proudly export to multiple international markets, delivering freshness across
-                continents with cold-chain reliability.
+                {c.ui.marketsSub}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                {regions.map((r) => (
+                {c.regions.map((r) => (
                   <span
                     key={r}
                     className="inline-flex items-center gap-2 rounded-full border border-fresh/30 bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm"
@@ -556,7 +565,7 @@ function Index() {
             <div className="relative">
               <div className="absolute inset-0 rounded-3xl gradient-primary opacity-10 blur-3xl" />
               <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-white shadow-[var(--shadow-soft)]">
-                <WorldMap />
+                <WorldMap labels={c.regions} />
               </div>
             </div>
           </div>
@@ -569,54 +578,67 @@ function Index() {
           <div className="grid gap-12 lg:grid-cols-5 lg:items-start">
             <div className="lg:col-span-2">
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> Contact
+                <span className="h-px w-8 bg-fresh" /> {c.ui.contactEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl">
-                Let's Ship <span className="text-gradient-gold">Freshness</span> Together
+                {c.ui.contactTitle1} <span className="text-gradient-gold">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Reach out for quotations, product specifications, or partnership inquiries. Our
-                team responds within one business day.
+                {c.ui.contactSub}
               </p>
 
               <div className="mt-8 space-y-4">
-                {[
-                  { icon: Mail, label: "info@freshdiamond-export.com" },
-                  { icon: Phone, label: "+20 100 000 0000" },
-                  { icon: MapPin, label: "Cairo, Egypt — Serving Worldwide" },
-                ].map((c) => (
-                  <div key={c.label} className="flex items-center gap-4">
+                {c.contact.map((label, ci) => {
+                  const CIcon = contactIcons[ci];
+                  return (
+                  <div key={label} className="flex items-center gap-4" dir="ltr">
                     <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white">
-                      <c.icon className="h-5 w-5" />
+                      <CIcon className="h-5 w-5" />
                     </div>
-                    <div className="min-w-0 text-foreground">{c.label}</div>
+                    <div className="min-w-0 text-foreground">{label}</div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const name = String(fd.get("name") ?? "").trim();
+                const email = String(fd.get("email") ?? "").trim();
+                const message = String(fd.get("message") ?? "").trim();
+                if (!name || !email || !message) {
+                  setFormMsg({ type: "error", text: c.ui.errRequired });
+                  return;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  setFormMsg({ type: "error", text: c.ui.errEmail });
+                  return;
+                }
+                setFormMsg({ type: "success", text: c.ui.okSent });
+                e.currentTarget.reset();
               }}
               className="lg:col-span-3 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] lg:p-10"
             >
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Name" type="text" name="name" />
-                <Field label="Company" type="text" name="company" />
-                <Field label="Country" type="text" name="country" />
-                <Field label="Email" type="email" name="email" />
-                <Field label="Phone" type="tel" name="phone" />
-                <Field label="Interested Product" type="text" name="product" />
+                <Field label={c.ui.fName} type="text" name="name" />
+                <Field label={c.ui.fCompany} type="text" name="company" />
+                <Field label={c.ui.fCountry} type="text" name="country" />
+                <Field label={c.ui.fEmail} type="email" name="email" />
+                <Field label={c.ui.fPhone} type="tel" name="phone" />
+                <Field label={c.ui.fProduct} type="text" name="product" />
               </div>
               <div className="mt-5">
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Message
+                  {c.ui.fMessage}
                 </label>
                 <textarea
+                  name="message"
                   rows={5}
                   className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-all focus:border-fresh focus:ring-2 focus:ring-fresh/20"
-                  placeholder="Tell us about your requirements..."
+                  placeholder={c.ui.fMessagePlaceholder}
                 />
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
@@ -624,15 +646,28 @@ function Index() {
                   type="submit"
                   className="group inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 font-semibold text-white shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl"
                 >
-                  Send Inquiry <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  {c.ui.sendInquiry} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <button
                   type="button"
+                  onClick={() => setFormMsg({ type: "success", text: c.ui.okQuote })}
                   className="inline-flex items-center gap-2 rounded-full border border-gold bg-gold/10 px-7 py-3.5 font-semibold text-primary transition-all hover:bg-gold hover:text-gold-foreground"
                 >
-                  Request Quotation
+                  {c.ui.requestQuotation}
                 </button>
               </div>
+              {formMsg && (
+                <div
+                  role="status"
+                  className={`mt-5 rounded-xl border px-4 py-3 text-sm font-medium ${
+                    formMsg.type === "error"
+                      ? "border-destructive/30 bg-destructive/10 text-destructive"
+                      : "border-fresh/40 bg-fresh/10 text-primary"
+                  }`}
+                >
+                  {formMsg.text}
+                </div>
+              )}
             </form>
           </div>
         </div>
@@ -652,9 +687,9 @@ function Index() {
                   )}
                 </div>
                 <div>
-                  <div className="font-display text-xl font-bold">Fresh Diamond</div>
+                  <div className="font-display text-xl font-bold">{c.brand}</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
-                    for Export
+                    {c.brandSub}
                   </div>
                 </div>
               </div>
@@ -687,9 +722,11 @@ function Index() {
           </div>
 
           <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-primary-foreground/60 sm:flex-row">
-            <div>© {new Date().getFullYear()} Fresh Diamond for Export. All rights reserved.</div>
+            <div>
+              © {new Date().getFullYear()} {c.brand} {c.brandSub}. {c.ui.rights}
+            </div>
             <div className="flex items-center gap-2">
-              <BadgeCheck className="h-4 w-4 text-gold" /> ISO 9001 Certified · Since 2011
+              <BadgeCheck className="h-4 w-4 text-gold" /> {c.ui.footerBadge}
             </div>
           </div>
         </div>
@@ -699,7 +736,7 @@ function Index() {
       {showTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Back to top"
+          aria-label={c.ui.backToTop}
           className="fixed bottom-8 right-8 z-40 grid h-12 w-12 place-items-center rounded-full gradient-primary text-white shadow-xl transition-all hover:scale-110"
         >
           <ArrowUp className="h-5 w-5" />
@@ -713,10 +750,14 @@ function ProductCard({
   name,
   desc,
   img,
+  premium,
+  learnMore,
 }: {
   name: string;
   desc: string;
   img: string;
+  premium: string;
+  learnMore: string;
 }) {
   return (
     <div className="group relative overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-2">
@@ -729,14 +770,14 @@ function ProductCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-60" />
         <div className="absolute right-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
-          Premium
+          {premium}
         </div>
       </div>
       <div className="p-6">
         <h4 className="font-display text-2xl font-semibold text-primary">{name}</h4>
         <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
         <button className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh transition-all hover:gap-3">
-          Learn More <ArrowRight className="h-4 w-4" />
+          {learnMore} <ArrowRight className="h-4 w-4" />
         </button>
       </div>
     </div>
@@ -790,13 +831,13 @@ function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
   );
 }
 
-function WorldMap() {
+function WorldMap({ labels }: { labels: string[] }) {
   // Highlight coords roughly matching Europe / MENA / Africa / Asia
   const highlights = [
-    { cx: 480, cy: 155, r: 26, label: "Europe" },
-    { cx: 545, cy: 220, r: 22, label: "Middle East" },
-    { cx: 510, cy: 290, r: 30, label: "Africa" },
-    { cx: 660, cy: 210, r: 30, label: "Asia" },
+    { cx: 480, cy: 155, r: 26, label: labels[0] },
+    { cx: 545, cy: 220, r: 22, label: labels[1] },
+    { cx: 510, cy: 290, r: 30, label: labels[2] },
+    { cx: 660, cy: 210, r: 30, label: labels[3] },
   ];
   return (
     <div className="relative h-full w-full bg-gradient-to-br from-white via-cream to-fresh/5 p-6">
