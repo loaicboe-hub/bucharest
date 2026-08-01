@@ -7,6 +7,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { loadLogo } from "@/lib/admin-branding";
+import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
   ShieldCheck,
@@ -185,7 +186,7 @@ function Index() {
                   scrolled ? "text-muted-foreground" : "text-white/70"
                 }`}
               >
-                for Export
+                {c.brandSub}
               </div>
             </div>
           </a>
@@ -208,17 +209,21 @@ function Index() {
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
-              Request Quote <ArrowRight className="h-4 w-4" />
+              {c.ui.requestQuote} <ArrowRight className="h-4 w-4" />
             </a>
+            <LanguageSwitcher compact={scrolled} />
           </nav>
 
+          <div className="flex items-center gap-3 lg:hidden">
+            <LanguageSwitcher compact={scrolled} />
           <button
-            aria-label="Toggle menu"
+            aria-label={c.ui.toggleMenu}
             onClick={() => setMenuOpen(!menuOpen)}
             className={`lg:hidden ${scrolled ? "text-foreground" : "text-white"}`}
           >
             {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
+          </div>
         </div>
 
         {menuOpen && (
@@ -239,7 +244,7 @@ function Index() {
                 onClick={() => setMenuOpen(false)}
                 className="mt-2 rounded-full bg-gold px-5 py-3 text-center font-semibold text-gold-foreground"
               >
-                Request Quote
+                {c.ui.requestQuote}
               </a>
             </nav>
           </div>
@@ -262,54 +267,52 @@ function Index() {
           <div className="max-w-3xl animate-fade-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full glass-dark px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
-              Est. 2011 — ISO 9001 Certified
+              {c.ui.heroBadge}
             </div>
             <h1 className="font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl xl:text-8xl">
-              Premium Fresh Fruits &{" "}
-              <span className="text-gradient-gold">Vegetables</span>
+              {c.ui.heroTitle1}{" "}
+              <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
-              Exported Worldwide
+              {c.ui.heroTitle2}
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-white/85 sm:text-xl">
-              Delivering exceptional quality, freshness, and reliability since 2011 — from
-              certified farms to your market, uninterrupted.
+              {c.ui.heroSub}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="#contact"
                 className="group inline-flex items-center gap-2 rounded-full bg-gold px-8 py-4 font-semibold text-gold-foreground shadow-xl transition-all hover:scale-[1.03] hover:shadow-2xl"
               >
-                Request a Quote
+                {c.ui.requestAQuote}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
               <a
                 href="#products"
                 className="inline-flex items-center gap-2 rounded-full glass-dark px-8 py-4 font-semibold text-white transition-all hover:bg-white/20"
               >
-                Explore Products
+                {c.ui.exploreProducts}
               </a>
             </div>
 
             <div className="mt-14 grid max-w-2xl grid-cols-3 gap-4">
-              {[
-                { icon: Award, label: "Since 2011" },
-                { icon: BadgeCheck, label: "ISO 9001" },
-                { icon: Globe2, label: "Global Export" },
-              ].map((b) => (
+              {c.badges.map((label, bi) => {
+                const BIcon = badgeIcons[bi];
+                return (
                 <div
-                  key={b.label}
+                  key={label}
                   className="glass-dark flex items-center gap-3 rounded-2xl px-4 py-3 text-white"
                 >
-                  <b.icon className="h-5 w-5 shrink-0 text-gold" />
-                  <span className="truncate text-sm font-medium">{b.label}</span>
+                  <BIcon className="h-5 w-5 shrink-0 text-gold" />
+                  <span className="truncate text-sm font-medium">{label}</span>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] animate-float">
-          Scroll
+          {c.ui.scroll}
         </div>
       </section>
 
@@ -319,28 +322,20 @@ function Index() {
           <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> About Us
+                <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                About Fresh <span className="text-gradient-gold">Diamond</span>
+                {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                Fresh Diamond for Export has been supplying premium-quality fresh fruits and
-                vegetables to international markets since 2011. We are committed to quality,
-                food safety, reliability, and customer satisfaction.
+                {c.ui.aboutP1}
               </p>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                With years of experience and strict quality control standards, we ensure every
-                shipment meets international export requirements.
+                {c.ui.aboutP2}
               </p>
 
               <div className="mt-10 grid grid-cols-2 gap-4">
-                {[
-                  { n: "14+", l: "Years of Experience" },
-                  { n: "50+", l: "Professional Team" },
-                  { n: "ISO", l: "9001 Standards" },
-                  { n: "24/7", l: "Fast Delivery" },
-                ].map((s) => (
+                {c.stats.map((s) => (
                   <div
                     key={s.l}
                     className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:border-fresh/50"
@@ -371,9 +366,9 @@ function Index() {
                   </div>
                   <div>
                     <div className="font-display text-lg font-bold text-primary">
-                      ISO 9001
+                      {c.ui.iso}
                     </div>
-                    <div className="text-xs text-muted-foreground">Certified Excellence</div>
+                    <div className="text-xs text-muted-foreground">{c.ui.certifiedExcellence}</div>
                   </div>
                 </div>
               </div>
@@ -387,35 +382,35 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Our Products{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.productsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              A Harvest of Excellence
+              {c.ui.productsTitle}
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Export-grade fruits and vegetables, selected for freshness, appearance, and shelf life.
+              {c.ui.productsSub}
             </p>
           </div>
 
           <div className="mt-16">
             <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              Fresh Fruits
+              {c.ui.freshFruits}
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {fruits.map((p) => (
-                <ProductCard key={p.name} {...p} />
+              {c.fruits.map((p, i) => (
+                <ProductCard key={p.name} {...p} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
 
           <div className="mt-20">
             <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              Fresh Vegetables
+              {c.ui.freshVegetables}
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {vegetables.map((p) => (
-                <ProductCard key={p.name} {...p} />
+              {c.vegetables.map((p, i) => (
+                <ProductCard key={p.name} {...p} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
@@ -427,15 +422,17 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Why Choose Us{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Built on Trust & Standards
+              {c.ui.whyTitle}
             </h2>
           </div>
           <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {whyUs.map((w) => (
+            {c.whyUs.map((w, wi) => {
+              const WIcon = whyIcons[wi];
+              return (
               <div
                 key={w.title}
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
@@ -443,7 +440,7 @@ function Index() {
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
                 <div className="relative">
                   <div className="grid h-12 w-12 place-items-center rounded-xl gradient-primary text-white shadow-lg">
-                    <w.icon className="h-6 w-6" />
+                    <WIcon className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 font-display text-xl font-semibold text-primary">
                     {w.title}
@@ -453,7 +450,8 @@ function Index() {
                   </p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -463,19 +461,19 @@ function Index() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Export Process{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.processEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              From Farm to <span className="text-gradient-gold">Global Market</span>
+              {c.ui.processTitle1} <span className="text-gradient-gold">{c.ui.processTitleGold}</span>
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
-              Seven controlled stages that keep every shipment fresh, traceable and on schedule.
+              {c.ui.processSub}
             </p>
           </div>
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {process.map((step, i) => (
+            {c.process.map((step, i) => (
               <div
                 key={step.title}
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
@@ -505,33 +503,31 @@ function Index() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> Certifications{" "}
+              <span className="h-px w-8 bg-fresh" /> {c.ui.certsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-              Standards You Can Trust
+              {c.ui.certsTitle}
             </h2>
           </div>
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: BadgeCheck, title: "ISO 9001", sub: "Quality Management" },
-              { icon: ShieldCheck, title: "Food Safety", sub: "Global Standards" },
-              { icon: Globe2, title: "Export Ready", sub: "International Compliance" },
-              { icon: Award, title: "Premium Grade", sub: "Quality Assurance" },
-            ].map((c) => (
+            {c.certs.map((cert, ci) => {
+              const CIcon = certIcons[ci];
+              return (
               <div
-                key={c.title}
+                key={cert.title}
                 className="group relative overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-card to-cream p-8 text-center transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-gold to-[oklch(0.68_0.14_75)] text-gold-foreground shadow-lg transition-transform group-hover:scale-110">
-                  <c.icon className="h-8 w-8" />
+                  <CIcon className="h-8 w-8" />
                 </div>
                 <div className="mt-5 font-display text-xl font-bold text-primary">
-                  {c.title}
+                  {cert.title}
                 </div>
-                <div className="mt-1 text-sm text-muted-foreground">{c.sub}</div>
+                <div className="mt-1 text-sm text-muted-foreground">{cert.sub}</div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -545,18 +541,17 @@ function Index() {
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> Global Markets
+                <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                We Export to <span className="text-gradient-gold">the World</span>
+                {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
               </h2>
               <p className="mt-6 text-lg text-muted-foreground">
-                We proudly export to multiple international markets, delivering freshness across
-                continents with cold-chain reliability.
+                {c.ui.marketsSub}
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                {regions.map((r) => (
+                {c.regions.map((r) => (
                   <span
                     key={r}
                     className="inline-flex items-center gap-2 rounded-full border border-fresh/30 bg-white px-5 py-2.5 text-sm font-semibold text-primary shadow-sm"
@@ -583,29 +578,27 @@ function Index() {
           <div className="grid gap-12 lg:grid-cols-5 lg:items-start">
             <div className="lg:col-span-2">
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> Contact
+                <span className="h-px w-8 bg-fresh" /> {c.ui.contactEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl">
-                Let's Ship <span className="text-gradient-gold">Freshness</span> Together
+                {c.ui.contactTitle1} <span className="text-gradient-gold">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
               </h2>
               <p className="mt-4 text-muted-foreground">
-                Reach out for quotations, product specifications, or partnership inquiries. Our
-                team responds within one business day.
+                {c.ui.contactSub}
               </p>
 
               <div className="mt-8 space-y-4">
-                {[
-                  { icon: Mail, label: "info@freshdiamond-export.com" },
-                  { icon: Phone, label: "+20 100 000 0000" },
-                  { icon: MapPin, label: "Cairo, Egypt — Serving Worldwide" },
-                ].map((c) => (
-                  <div key={c.label} className="flex items-center gap-4">
+                {c.contact.map((label, ci) => {
+                  const CIcon = contactIcons[ci];
+                  return (
+                  <div key={label} className="flex items-center gap-4" dir="ltr">
                     <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white">
-                      <c.icon className="h-5 w-5" />
+                      <CIcon className="h-5 w-5" />
                     </div>
-                    <div className="min-w-0 text-foreground">{c.label}</div>
+                    <div className="min-w-0 text-foreground">{label}</div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
