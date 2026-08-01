@@ -565,7 +565,7 @@ function Index() {
             <div className="relative">
               <div className="absolute inset-0 rounded-3xl gradient-primary opacity-10 blur-3xl" />
               <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-white shadow-[var(--shadow-soft)]">
-                <WorldMap />
+                <WorldMap labels={c.regions} />
               </div>
             </div>
           </div>
@@ -831,13 +831,13 @@ function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
   );
 }
 
-function WorldMap() {
+function WorldMap({ labels }: { labels: string[] }) {
   // Highlight coords roughly matching Europe / MENA / Africa / Asia
   const highlights = [
-    { cx: 480, cy: 155, r: 26, label: "Europe" },
-    { cx: 545, cy: 220, r: 22, label: "Middle East" },
-    { cx: 510, cy: 290, r: 30, label: "Africa" },
-    { cx: 660, cy: 210, r: 30, label: "Asia" },
+    { cx: 480, cy: 155, r: 26, label: labels[0] },
+    { cx: 545, cy: 220, r: 22, label: labels[1] },
+    { cx: 510, cy: 290, r: 30, label: labels[2] },
+    { cx: 660, cy: 210, r: 30, label: labels[3] },
   ];
   return (
     <div className="relative h-full w-full bg-gradient-to-br from-white via-cream to-fresh/5 p-6">
