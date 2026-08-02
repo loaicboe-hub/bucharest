@@ -122,6 +122,11 @@ const en: SiteContent = {
       "Export-grade fruits and vegetables, selected for freshness, appearance, and shelf life.",
     freshFruits: "Fresh Fruits",
     freshVegetables: "Fresh Vegetables",
+    exportProducts: "Export Products",
+    importProducts: "Import Products",
+    importEmpty:
+      "Our import programme is being prepared. Contact us to discuss import requirements and sourcing.",
+
     premium: "Premium",
     learnMore: "Learn More",
     whyEyebrow: "Why Choose Us",
