@@ -7,6 +7,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { loadLogo } from "@/lib/admin-branding";
+import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
@@ -97,6 +98,7 @@ function Index() {
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
+  const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const { lang, c } = useLang();
 
@@ -104,24 +106,18 @@ function Index() {
     initLang();
     setFooter(loadFooterConfig());
     setLogo(loadLogo());
+    loadSiteSettings().then(setSite);
   }, []);
 
   useEffect(() => {
     setFormMsg(null);
     if (typeof document === "undefined") return;
-    document.title =
-      lang === "ar"
-        ? "فريش دايموند للتصدير | مُصدِّر فواكه وخضروات طازجة فاخرة"
-        : "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter";
+    document.title = site.seoTitle || site.companyName;
     const desc = document.querySelector('meta[name="description"]');
-    if (desc)
-      desc.setAttribute(
-        "content",
-        lang === "ar"
-          ? "فريش دايموند للتصدير شركة رائدة في تصدير الفواكه والخضروات الطازجة الفاخرة منذ 2011، حاصلة على شهادة الأيزو 9001 وتخدم الأسواق الدولية بجودة عالية وموثوقية."
-          : "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified. Serving international markets with exceptional quality and reliable export services.",
-      );
-  }, [lang]);
+    if (desc) desc.setAttribute("content", site.seoDescription);
+    const kw = document.querySelector('meta[name="keywords"]');
+    if (kw) kw.setAttribute("content", site.seoKeywords);
+  }, [lang, site]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -150,7 +146,7 @@ function Index() {
               <div className="absolute inset-0 rounded-full blur-2xl bg-gold/40" />
             </div>
             <div className="text-primary-foreground font-display text-xl tracking-wide">
-              {c.brand}
+              {site.companyName || c.brand}
             </div>
 
           </div>
@@ -178,7 +174,7 @@ function Index() {
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
-                {c.brand}
+                {site.companyName || c.brand}
 
               </div>
               <div
@@ -588,7 +584,7 @@ function Index() {
               </p>
 
               <div className="mt-8 space-y-4">
-                {c.contact.map((label, ci) => {
+                {[site.email, site.phone, site.address].filter(Boolean).map((label, ci) => {
                   const CIcon = contactIcons[ci];
                   return (
                   <div key={label} className="flex items-center gap-4" dir="ltr">
@@ -687,7 +683,7 @@ function Index() {
                   )}
                 </div>
                 <div>
-                  <div className="font-display text-xl font-bold">{c.brand}</div>
+                  <div className="font-display text-xl font-bold">{site.companyName || c.brand}</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
                     {c.brandSub}
                   </div>
@@ -697,9 +693,9 @@ function Index() {
               <div className="mt-6 flex gap-3">
                 {(
                   [
-                    [Facebook, footer.social.facebook],
-                    [Instagram, footer.social.instagram],
-                    [Linkedin, footer.social.linkedin],
+                    [Facebook, site.facebook || footer.social.facebook],
+                    [Instagram, site.instagram || footer.social.instagram],
+                    [Linkedin, site.linkedin || footer.social.linkedin],
                   ] as const
                 ).map(([I, href], i) => (
                   <a
@@ -723,7 +719,7 @@ function Index() {
 
           <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-primary-foreground/60 sm:flex-row">
             <div>
-              © {new Date().getFullYear()} {c.brand} {c.brandSub}. {c.ui.rights}
+              © {new Date().getFullYear()} {site.companyName || c.brand}. {c.ui.rights}
             </div>
             <div className="flex items-center gap-2">
               <BadgeCheck className="h-4 w-4 text-gold" /> {c.ui.footerBadge}

@@ -50,6 +50,10 @@ export type Database = {
           linkedin: string
           maps_url: string
           phone: string
+          seo_description: string
+          seo_keywords: string
+          seo_og_image: string
+          seo_title: string
           twitter: string
           updated_at: string
           whatsapp: string
@@ -65,6 +69,10 @@ export type Database = {
           linkedin?: string
           maps_url?: string
           phone?: string
+          seo_description?: string
+          seo_keywords?: string
+          seo_og_image?: string
+          seo_title?: string
           twitter?: string
           updated_at?: string
           whatsapp?: string
@@ -80,6 +88,10 @@ export type Database = {
           linkedin?: string
           maps_url?: string
           phone?: string
+          seo_description?: string
+          seo_keywords?: string
+          seo_og_image?: string
+          seo_title?: string
           twitter?: string
           updated_at?: string
           whatsapp?: string
