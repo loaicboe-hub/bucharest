@@ -154,7 +154,7 @@ function LoginPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="new-password"
-                      minLength={8}
+                      minLength={10}
                       required
                     />
                   </div>
