@@ -2,19 +2,20 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { isAuthenticated, getUser } from "@/lib/admin-auth";
+import { getAdminSession } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/admin/_authed")({
-  beforeLoad: () => {
-    if (!isAuthenticated()) {
-      throw redirect({ to: "/admin/login" });
-    }
+  beforeLoad: async () => {
+    const session = await getAdminSession();
+    if (!session) throw redirect({ to: "/admin/login" });
+    if (!session.isAdmin) throw redirect({ to: "/admin/login", search: { denied: true } });
+    return { session };
   },
   component: AuthedLayout,
 });
 
 function AuthedLayout() {
-  const user = getUser();
+  const { session } = Route.useRouteContext();
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-slate-50">
@@ -26,7 +27,7 @@ function AuthedLayout() {
               <span className="text-sm font-medium text-muted-foreground">Admin Panel</span>
             </div>
             <div className="text-sm text-muted-foreground">
-              Signed in as <span className="font-medium text-foreground">{user?.username ?? "admin"}</span>
+              Signed in as <span className="font-medium text-foreground">{session.email}</span>
             </div>
           </header>
           <main className="admin-scope flex-1 p-4 sm:p-6 lg:p-8">
