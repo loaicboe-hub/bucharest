@@ -139,6 +139,8 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SplashScreen />
+
       {/* Loading */}
       {loading && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-primary">
