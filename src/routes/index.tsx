@@ -444,7 +444,7 @@ function Index() {
                 href="#contact"
                 className="mt-6 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.03]"
               >
-                {c.ui.requestQuote ?? c.ui.learnMore}
+                {c.ui.requestQuote}
               </a>
             </div>
           )}
