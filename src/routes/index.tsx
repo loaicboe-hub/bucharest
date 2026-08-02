@@ -399,7 +399,7 @@ function Index() {
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {c.fruits.map((p, i) => (
-                <ProductCard key={p.name} {...p} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
+                <ProductCard key={p.name} {...p} slug={FRUIT_SLUGS[i]} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
@@ -410,7 +410,7 @@ function Index() {
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {c.vegetables.map((p, i) => (
-                <ProductCard key={p.name} {...p} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
+                <ProductCard key={p.name} {...p} slug={VEG_SLUGS[i]} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
               ))}
             </div>
           </div>
@@ -746,21 +746,29 @@ function Index() {
   );
 }
 
+const FRUIT_SLUGS = ["oranges", "grapes", "mangoes", "pomegranates", "strawberries", "lemons"];
+const VEG_SLUGS = ["potatoes", "onions", "garlic", "sweet-potatoes", "green-beans", "peppers"];
+
 function ProductCard({
   name,
   desc,
   img,
   premium,
   learnMore,
+  slug,
 }: {
   name: string;
   desc: string;
   img: string;
   premium: string;
   learnMore: string;
+  slug: string;
 }) {
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-2">
+    <Link
+      to="/products/$slug"
+      params={{ slug }}
+      className="group relative block overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-2">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={img}
@@ -776,11 +784,11 @@ function ProductCard({
       <div className="p-6">
         <h4 className="font-display text-2xl font-semibold text-primary">{name}</h4>
         <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
-        <button className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh transition-all hover:gap-3">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh transition-all group-hover:gap-3">
           {learnMore} <ArrowRight className="h-4 w-4" />
-        </button>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
