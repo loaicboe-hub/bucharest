@@ -12,6 +12,10 @@ export type SiteSettings = {
   instagram: string;
   linkedin: string;
   twitter: string;
+  seoTitle: string;
+  seoDescription: string;
+  seoKeywords: string;
+  seoOgImage: string;
 };
 
 export const defaultSiteSettings: SiteSettings = {
