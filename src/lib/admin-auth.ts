@@ -1,39 +1,56 @@
-// ⚠️ Placeholder client-side auth for UI scaffolding only.
-// Replace with Lovable Cloud (Supabase) auth + user_roles table before production.
-// Do NOT rely on this for real access control — it is trivially bypassable.
+// Admin authentication backed by Lovable Cloud (auth + user_roles table).
+// Access control is enforced server-side by RLS policies and the has_role() function.
 
-const KEY = "fd_admin_auth";
-const DEMO_USER = "admin";
-const DEMO_PASS = "admin123";
+import { supabase } from "@/integrations/supabase/client";
 
-export function login(username: string, password: string): boolean {
-  if (username === DEMO_USER && password === DEMO_PASS) {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(KEY, JSON.stringify({ username, at: Date.now() }));
-    }
-    return true;
+export type AdminSession = {
+  userId: string;
+  email: string;
+  isAdmin: boolean;
+};
+
+export async function signIn(email: string, password: string) {
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  return error?.message ?? null;
+}
+
+export async function signUp(email: string, password: string, fullName: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/admin/login`,
+      data: { full_name: fullName },
+    },
+  });
+  if (error) return error.message;
+
+  if (data.session && data.user) {
+    await supabase
+      .from("profiles")
+      .upsert({ id: data.user.id, email, full_name: fullName });
+    // Grants admin only when no admin exists yet (one-time bootstrap).
+    await supabase.rpc("claim_first_admin");
   }
-  return false;
+  return null;
 }
 
-export function logout() {
-  if (typeof window !== "undefined") localStorage.removeItem(KEY);
+export async function signOut() {
+  await supabase.auth.signOut();
 }
 
-export function isAuthenticated(): boolean {
-  if (typeof window === "undefined") return false;
-  return !!localStorage.getItem(KEY);
-}
+export async function getAdminSession(): Promise<AdminSession | null> {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) return null;
 
-export function getUser(): { username: string } | null {
-  if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem(KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
+  const { data: isAdmin } = await supabase.rpc("has_role", {
+    _user_id: data.user.id,
+    _role: "admin",
+  });
 
-export const DEMO_CREDENTIALS = { username: DEMO_USER, password: DEMO_PASS };
+  return {
+    userId: data.user.id,
+    email: data.user.email ?? "",
+    isAdmin: Boolean(isAdmin),
+  };
+}

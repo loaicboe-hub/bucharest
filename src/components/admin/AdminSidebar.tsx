@@ -25,7 +25,7 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { logout } from "@/lib/admin-auth";
+import { signOut } from "@/lib/admin-auth";
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -44,8 +44,8 @@ export function AdminSidebar() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     navigate({ to: "/admin/login" });
   };
 
