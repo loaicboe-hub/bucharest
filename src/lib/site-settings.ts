@@ -29,6 +29,11 @@ export const defaultSiteSettings: SiteSettings = {
   instagram: "https://instagram.com/freshdiamond",
   linkedin: "https://linkedin.com/company/freshdiamond",
   twitter: "",
+  seoTitle: "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter",
+  seoDescription:
+    "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified.",
+  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, ISO 9001",
+  seoOgImage: "",
 };
 
 export async function loadSiteSettings(): Promise<SiteSettings> {
@@ -51,6 +56,10 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
     instagram: data.instagram,
     linkedin: data.linkedin,
     twitter: data.twitter,
+    seoTitle: data.seo_title || defaultSiteSettings.seoTitle,
+    seoDescription: data.seo_description || defaultSiteSettings.seoDescription,
+    seoKeywords: data.seo_keywords || defaultSiteSettings.seoKeywords,
+    seoOgImage: data.seo_og_image,
   };
 }
 
@@ -67,6 +76,10 @@ export async function saveSiteSettings(s: SiteSettings): Promise<string | null> 
     instagram: s.instagram,
     linkedin: s.linkedin,
     twitter: s.twitter,
+    seo_title: s.seoTitle,
+    seo_description: s.seoDescription,
+    seo_keywords: s.seoKeywords,
+    seo_og_image: s.seoOgImage,
   });
   return error?.message ?? null;
 }
