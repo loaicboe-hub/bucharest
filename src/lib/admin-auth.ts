@@ -23,7 +23,15 @@ export async function signUp(email: string, password: string, fullName: string) 
       data: { full_name: fullName },
     },
   });
-  if (error) return error.message;
+  if (error) {
+    if (error.message.toLowerCase().includes("weak") || error.message.toLowerCase().includes("pwned")) {
+      return "That password is too common and has appeared in known data breaches. Please choose a longer, unique password (at least 10 characters).";
+    }
+    if (error.message.toLowerCase().includes("already registered")) {
+      return "An account with this email already exists. Use the Sign in tab instead.";
+    }
+    return error.message;
+  }
 
   if (data.session && data.user) {
     await supabase
