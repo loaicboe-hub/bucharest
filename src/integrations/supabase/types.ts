@@ -38,6 +38,54 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          address: string
+          company_name: string
+          created_at: string
+          email: string
+          facebook: string
+          id: string
+          instagram: string
+          linkedin: string
+          maps_url: string
+          phone: string
+          twitter: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          address?: string
+          company_name?: string
+          created_at?: string
+          email?: string
+          facebook?: string
+          id?: string
+          instagram?: string
+          linkedin?: string
+          maps_url?: string
+          phone?: string
+          twitter?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Update: {
+          address?: string
+          company_name?: string
+          created_at?: string
+          email?: string
+          facebook?: string
+          id?: string
+          instagram?: string
+          linkedin?: string
+          maps_url?: string
+          phone?: string
+          twitter?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

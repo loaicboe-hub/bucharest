@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,30 +8,54 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { toast } from "sonner";
+import {
+  defaultSiteSettings,
+  loadSiteSettings,
+  saveSiteSettings,
+  type SiteSettings,
+} from "@/lib/site-settings";
 
 export const Route = createFileRoute("/admin/_authed/settings")({
   component: SettingsPage,
 });
 
 function SettingsPage() {
-  const [g, setG] = useState({
-    companyName: "Fresh Diamond for Export",
-    phone: "+20 100 000 0000",
-    email: "info@freshdiamond.com",
-    whatsapp: "+20 100 000 0000",
-    address: "Cairo, Egypt",
-    maps: "https://maps.google.com/?q=Cairo",
-    facebook: "https://facebook.com/freshdiamond",
-    instagram: "https://instagram.com/freshdiamond",
-    linkedin: "https://linkedin.com/company/freshdiamond",
-    twitter: "",
-  });
+  const [g, setG] = useState<SiteSettings>(defaultSiteSettings);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const upd = (k: keyof typeof g, v: string) => setG((s) => ({ ...s, [k]: v }));
+  useEffect(() => {
+    loadSiteSettings().then((s) => {
+      setG(s);
+      setLoading(false);
+    });
+  }, []);
+
+  const upd = (k: keyof SiteSettings, v: string) => setG((s) => ({ ...s, [k]: v }));
+
+  const handleSave = async () => {
+    setSaving(true);
+    const error = await saveSiteSettings(g);
+    setSaving(false);
+    if (error) {
+      toast.error(error);
+      return;
+    }
+    toast.success("Settings saved");
+  };
 
   return (
     <div>
-      <PageHeader title="General Settings" description="Company details, contact info and social links" actions={<Button onClick={() => toast.success("Settings saved")}>Save Changes</Button>} />
+      <PageHeader
+        title="General Settings"
+        description="Company details, contact info and social links"
+        actions={
+          <Button onClick={handleSave} disabled={loading || saving}>
+            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Save Changes
+          </Button>
+        }
+      />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card className="rounded-2xl border-border/60 shadow-sm">
           <CardHeader><CardTitle>Company Information</CardTitle></CardHeader>
