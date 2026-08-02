@@ -5,36 +5,66 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { DEMO_CREDENTIALS, isAuthenticated, login } from "@/lib/admin-auth";
+import { getAdminSession, signIn, signUp } from "@/lib/admin-auth";
 
 export const Route = createFileRoute("/admin/login")({
-  head: () => ({ meta: [{ title: "Admin Login | Fresh Diamond" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({
+    meta: [{ title: "Admin Login | Fresh Diamond" }, { name: "robots", content: "noindex" }],
+  }),
   component: LoginPage,
 });
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated()) navigate({ to: "/admin/dashboard" });
+    getAdminSession().then((session) => {
+      if (session?.isAdmin) navigate({ to: "/admin/dashboard" });
+    });
   }, [navigate]);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      if (login(username, password)) {
-        toast.success("Welcome back");
-        navigate({ to: "/admin/dashboard" });
-      } else {
-        toast.error("Invalid credentials");
-        setLoading(false);
-      }
-    }, 400);
+    const error = await signIn(email, password);
+    if (error) {
+      toast.error(error);
+      setLoading(false);
+      return;
+    }
+    const session = await getAdminSession();
+    if (!session?.isAdmin) {
+      toast.error("This account does not have admin access.");
+      setLoading(false);
+      return;
+    }
+    toast.success("Welcome back");
+    navigate({ to: "/admin/dashboard" });
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const error = await signUp(email, password, fullName);
+    if (error) {
+      toast.error(error);
+      setLoading(false);
+      return;
+    }
+    const session = await getAdminSession();
+    if (session?.isAdmin) {
+      toast.success("Admin account created");
+      navigate({ to: "/admin/dashboard" });
+      return;
+    }
+    toast.success("Account created. Confirm your email, then sign in.");
+    setLoading(false);
   };
 
   return (
@@ -50,40 +80,95 @@ function LoginPage() {
 
         <Card className="border-border/60 shadow-xl">
           <CardHeader>
-            <CardTitle>Sign in</CardTitle>
-            <CardDescription>Enter your admin credentials to continue</CardDescription>
+            <CardTitle>Admin access</CardTitle>
+            <CardDescription>
+              Sign in, or create the first admin account for this site.
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={onSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Sign in
-              </Button>
-              <p className="rounded-md bg-muted/60 p-3 text-center text-xs text-muted-foreground">
-                Demo credentials — <span className="font-medium text-foreground">{DEMO_CREDENTIALS.username}</span> / <span className="font-medium text-foreground">{DEMO_CREDENTIALS.password}</span>
-              </p>
-            </form>
+            <Tabs defaultValue="signin">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="signin">Sign in</TabsTrigger>
+                <TabsTrigger value="signup">Create account</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="signin">
+                <form onSubmit={handleSignIn} className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="current-password"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Sign in
+                  </Button>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="signup">
+                <form onSubmit={handleSignUp} className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Full name</Label>
+                    <Input
+                      id="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      autoComplete="new-password"
+                      minLength={8}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Create admin account
+                  </Button>
+                  <p className="rounded-md bg-muted/60 p-3 text-center text-xs text-muted-foreground">
+                    The first account created becomes the site administrator. Later accounts must be
+                    granted admin access.
+                  </p>
+                </form>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
       </div>
