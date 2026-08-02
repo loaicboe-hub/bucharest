@@ -27,6 +27,7 @@ export type Product = {
   id: string;
   name: string;
   category: "Fruits" | "Vegetables";
+  trade: "Export Products" | "Import Products";
   description: string;
   image: string;
   order: number;
@@ -55,13 +56,13 @@ export const quoteRequests: QuoteRequest[] = [
 ];
 
 export const products: Product[] = [
-  { id: "p1", name: "Oranges", category: "Fruits", description: "Premium Valencia oranges", image: "/placeholder.svg", order: 1, published: true },
-  { id: "p2", name: "Grapes", category: "Fruits", description: "Fresh table grapes", image: "/placeholder.svg", order: 2, published: true },
-  { id: "p3", name: "Mangoes", category: "Fruits", description: "Sweet Egyptian mangoes", image: "/placeholder.svg", order: 3, published: true },
-  { id: "p4", name: "Pomegranates", category: "Fruits", description: "Ruby-red pomegranates", image: "/placeholder.svg", order: 4, published: true },
-  { id: "p5", name: "Potatoes", category: "Vegetables", description: "Export-grade potatoes", image: "/placeholder.svg", order: 5, published: true },
-  { id: "p6", name: "Onions", category: "Vegetables", description: "Yellow and red onions", image: "/placeholder.svg", order: 6, published: true },
-  { id: "p7", name: "Garlic", category: "Vegetables", description: "White garlic bulbs", image: "/placeholder.svg", order: 7, published: false },
+  { id: "p1", name: "Oranges", category: "Fruits", trade: "Export Products", description: "Premium Valencia oranges", image: "/placeholder.svg", order: 1, published: true },
+  { id: "p2", name: "Grapes", category: "Fruits", trade: "Export Products", description: "Fresh table grapes", image: "/placeholder.svg", order: 2, published: true },
+  { id: "p3", name: "Mangoes", category: "Fruits", trade: "Export Products", description: "Sweet Egyptian mangoes", image: "/placeholder.svg", order: 3, published: true },
+  { id: "p4", name: "Pomegranates", category: "Fruits", trade: "Export Products", description: "Ruby-red pomegranates", image: "/placeholder.svg", order: 4, published: true },
+  { id: "p5", name: "Potatoes", category: "Vegetables", trade: "Export Products", description: "Export-grade potatoes", image: "/placeholder.svg", order: 5, published: true },
+  { id: "p6", name: "Onions", category: "Vegetables", trade: "Export Products", description: "Yellow and red onions", image: "/placeholder.svg", order: 6, published: true },
+  { id: "p7", name: "Garlic", category: "Vegetables", trade: "Export Products", description: "White garlic bulbs", image: "/placeholder.svg", order: 7, published: false },
 ];
 
 export const markets: Market[] = [
