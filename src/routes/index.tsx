@@ -7,6 +7,8 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { loadLogo } from "@/lib/admin-branding";
+import { SplashScreen } from "@/components/SplashScreen";
+
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { useLang, initLang } from "@/lib/i18n";
 import {
