@@ -122,6 +122,11 @@ const en: SiteContent = {
       "Export-grade fruits and vegetables, selected for freshness, appearance, and shelf life.",
     freshFruits: "Fresh Fruits",
     freshVegetables: "Fresh Vegetables",
+    exportProducts: "Export Products",
+    importProducts: "Import Products",
+    importEmpty:
+      "Our import programme is being prepared. Contact us to discuss import requirements and sourcing.",
+
     premium: "Premium",
     learnMore: "Learn More",
     whyEyebrow: "Why Choose Us",
@@ -257,6 +262,11 @@ const ar: SiteContent = {
       "فواكه وخضروات بدرجة تصديرية، مختارة بعناية من حيث النضارة والمظهر ومدة الصلاحية.",
     freshFruits: "فواكه طازجة",
     freshVegetables: "خضروات طازجة",
+    exportProducts: "منتجات التصدير",
+    importProducts: "منتجات الاستيراد",
+    importEmpty:
+      "برنامج الاستيراد قيد الإعداد. تواصل معنا لمناقشة احتياجات الاستيراد والتوريد.",
+
     premium: "فاخر",
     learnMore: "اعرف المزيد",
     whyEyebrow: "لماذا تختارنا",

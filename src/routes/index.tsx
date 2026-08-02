@@ -94,6 +94,8 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
 function Index() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [trade, setTrade] = useState<"export" | "import">("export");
+
   const [showTop, setShowTop] = useState(false);
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
@@ -389,27 +391,64 @@ function Index() {
             </p>
           </div>
 
-          <div className="mt-16">
-            <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              {c.ui.freshFruits}
-            </h3>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {c.fruits.map((p, i) => (
-                <ProductCard key={p.name} {...p} slug={FRUIT_SLUGS[i]} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
+          <div className="mt-10 flex justify-center">
+            <div className="inline-flex rounded-full border border-border bg-card p-1 shadow-sm">
+              {(["export", "import"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTrade(t)}
+                  className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
+                    trade === t
+                      ? "bg-fresh text-white shadow"
+                      : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {t === "export" ? c.ui.exportProducts : c.ui.importProducts}
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="mt-20">
-            <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-              {c.ui.freshVegetables}
-            </h3>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {c.vegetables.map((p, i) => (
-                <ProductCard key={p.name} {...p} slug={VEG_SLUGS[i]} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
-              ))}
+          {trade === "export" ? (
+            <>
+              <div className="mt-12">
+                <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
+                  {c.ui.freshFruits}
+                </h3>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {c.fruits.map((p, i) => (
+                    <ProductCard key={p.name} {...p} slug={FRUIT_SLUGS[i]} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-20">
+                <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
+                  {c.ui.freshVegetables}
+                </h3>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {c.vegetables.map((p, i) => (
+                    <ProductCard key={p.name} {...p} slug={VEG_SLUGS[i]} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+              <h3 className="font-display text-2xl font-semibold text-primary">
+                {c.ui.importProducts}
+              </h3>
+              <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{c.ui.importEmpty}</p>
+              <a
+                href="#contact"
+                className="mt-6 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.03]"
+              >
+                {c.ui.requestQuote}
+              </a>
             </div>
-          </div>
+          )}
+
         </div>
       </section>
 

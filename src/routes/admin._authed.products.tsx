@@ -25,7 +25,7 @@ function ProductsPage() {
   const [open, setOpen] = useState(false);
 
   const openNew = () => {
-    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
+    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", trade: "Export Products", description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
     setOpen(true);
   };
   const openEdit = (p: Product) => { setEditing({ ...p }); setOpen(true); };
@@ -71,6 +71,7 @@ function ProductsPage() {
                 <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>Sub Category</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -89,6 +90,7 @@ function ProductsPage() {
                   </TableCell>
                   <TableCell className="font-medium">{p.name}</TableCell>
                   <TableCell><Badge variant="secondary">{p.category}</Badge></TableCell>
+                  <TableCell><Badge variant={p.trade === "Export Products" ? "default" : "outline"}>{p.trade}</Badge></TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Switch checked={p.published} onCheckedChange={() => togglePublish(p.id)} />
@@ -121,6 +123,16 @@ function ProductsPage() {
                   <SelectContent>
                     <SelectItem value="Fruits">Fruits</SelectItem>
                     <SelectItem value="Vegetables">Vegetables</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Sub Category</Label>
+                <Select value={editing.trade} onValueChange={(v) => setEditing({ ...editing, trade: v as Product["trade"] })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Export Products">Export Products</SelectItem>
+                    <SelectItem value="Import Products">Import Products</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
