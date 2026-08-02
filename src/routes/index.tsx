@@ -94,6 +94,8 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
 function Index() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [trade, setTrade] = useState<"export" | "import">("export");
+
   const [showTop, setShowTop] = useState(false);
   const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
