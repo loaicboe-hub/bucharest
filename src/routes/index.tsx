@@ -8,7 +8,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
-import { loadLogo } from "@/lib/admin-branding";
+import { getLogoUrl } from "@/lib/admin-branding";
 import {
   categoryName,
   listCategories,
