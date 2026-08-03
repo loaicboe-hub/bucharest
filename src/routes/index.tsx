@@ -728,13 +728,14 @@ function Index() {
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-xl bg-gold text-gold-foreground">
+                <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground lg:h-20 lg:w-20">
                   {logo ? (
                     <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
                   ) : (
-                    <Leaf className="h-6 w-6" />
+                    <Leaf className="h-8 w-8 lg:h-10 lg:w-10" />
                   )}
                 </div>
+
                 <div>
                   <div className="font-display text-xl font-bold">{site.companyName || c.brand}</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
