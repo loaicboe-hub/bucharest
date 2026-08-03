@@ -13,6 +13,7 @@ import {
   Receipt,
   Palette,
   Handshake,
+  Home,
 } from "lucide-react";
 import {
   Sidebar,
@@ -92,6 +93,14 @@ export function AdminSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip={t("viewSite")}>
+              <Link to="/" className="flex items-center gap-2">
+                <Home className="h-4 w-4" />
+                <span>{t("viewSite")}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
               <LogOut className="h-4 w-4" />
