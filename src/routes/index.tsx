@@ -9,6 +9,15 @@ import {
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { loadLogo } from "@/lib/admin-branding";
+import {
+  categoryName,
+  listCategories,
+  listPublishedProducts,
+  localized,
+  productImage,
+  type ProductCategory,
+  type ProductRow,
+} from "@/lib/products-db";
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { getAboutVideoUrl } from "@/lib/about-video";
@@ -56,8 +65,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const fruitImgs = [oranges, grapes, mangoes, pomegranates, strawberries, lemons];
-const vegImgs = [potatoes, onions, garlic, sweetPotatoes, greenBeans, peppers];
 const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
 const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
 const badgeIcons = [Award, BadgeCheck, Globe2];
@@ -106,6 +113,8 @@ function Index() {
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
+  const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
   const { lang, c } = useLang();
   const footer = localizeFooterConfig(footerRaw, lang);
 
@@ -115,6 +124,8 @@ function Index() {
     setLogo(loadLogo());
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
+    listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
+    listCategories(true).then(setCategories).catch(() => setCategories([]));
   }, []);
 
   useEffect(() => {
@@ -422,44 +433,55 @@ function Index() {
             </div>
           </div>
 
-          {trade === "export" ? (
-            <>
-              <div className="mt-12">
-                <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-                  {c.ui.freshFruits}
-                </h3>
+          {(() => {
+            const list = dbProducts.filter((p) => p.trade === trade);
+            if (!list.length) {
+              return (
+                <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
+                  <h3 className="font-display text-2xl font-semibold text-primary">
+                    {trade === "export" ? c.ui.exportProducts : c.ui.importProducts}
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{c.ui.importEmpty}</p>
+                  <a
+                    href="#contact"
+                    className="mt-6 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.03]"
+                  >
+                    {c.ui.requestQuote}
+                  </a>
+                </div>
+              );
+            }
+            const groups = categories
+              .map((cat) => ({ cat, items: list.filter((p) => p.category_id === cat.id) }))
+              .filter((g) => g.items.length);
+            const ungrouped = list.filter((p) => !categories.some((cat) => cat.id === p.category_id));
+            if (ungrouped.length) groups.push({ cat: null as never, items: ungrouped });
+            return groups.map((g, gi) => (
+              <div key={g.cat?.id ?? `other-${gi}`} className={gi === 0 ? "mt-12" : "mt-20"}>
+                {g.cat && (
+                  <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
+                    {categoryName(g.cat, lang)}
+                  </h3>
+                )}
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {c.fruits.map((p, i) => (
-                    <ProductCard key={p.name} {...p} slug={FRUIT_SLUGS[i]} img={fruitImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
-                  ))}
+                  {g.items.map((p) => {
+                    const l = localized(p, lang);
+                    return (
+                      <ProductCard
+                        key={p.id}
+                        name={l.name}
+                        desc={l.intro}
+                        img={productImage(p)}
+                        slug={p.slug}
+                        premium={c.ui.premium}
+                        learnMore={c.ui.learnMore}
+                      />
+                    );
+                  })}
                 </div>
               </div>
-
-              <div className="mt-20">
-                <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-                  {c.ui.freshVegetables}
-                </h3>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {c.vegetables.map((p, i) => (
-                    <ProductCard key={p.name} {...p} slug={VEG_SLUGS[i]} img={vegImgs[i]} premium={c.ui.premium} learnMore={c.ui.learnMore} />
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
-              <h3 className="font-display text-2xl font-semibold text-primary">
-                {c.ui.importProducts}
-              </h3>
-              <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{c.ui.importEmpty}</p>
-              <a
-                href="#contact"
-                className="mt-6 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.03]"
-              >
-                {c.ui.requestQuote}
-              </a>
-            </div>
-          )}
+            ));
+          })()}
 
         </div>
       </section>
@@ -804,8 +826,6 @@ function Index() {
   );
 }
 
-const FRUIT_SLUGS = ["oranges", "grapes", "mangoes", "pomegranates", "strawberries", "lemons"];
-const VEG_SLUGS = ["potatoes", "onions", "garlic", "sweet-potatoes", "green-beans", "peppers"];
 
 function ProductCard({
   name,

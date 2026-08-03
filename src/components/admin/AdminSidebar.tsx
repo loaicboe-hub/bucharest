@@ -15,7 +15,7 @@ import {
   Handshake,
   Home,
   Video,
-  Newspaper,
+  Newspaper, Tags,
 } from "lucide-react";
 import {
   Sidebar,
@@ -39,6 +39,7 @@ const items = [
   { key: "nav.invoices", url: "/admin/invoices", icon: Receipt },
   { key: "nav.markets", url: "/admin/markets", icon: Globe },
   { key: "nav.partners", url: "/admin/partners", icon: Handshake },
+  { key: "nav.categories", url: "/admin/categories", icon: Tags },
   { key: "nav.about-video", url: "/admin/about-video", icon: Video },
   { key: "nav.news", url: "/admin/news", icon: Newspaper },
   { key: "nav.content", url: "/admin/content", icon: Type },
