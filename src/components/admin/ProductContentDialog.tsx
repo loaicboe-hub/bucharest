@@ -36,6 +36,14 @@ export function ProductContentDialog({
     setDraft({ ...draft, [lang]: { ...draft[lang], ...patch } });
   const setSpec = (lang: "en" | "ar", key: keyof ProductSpecs, value: string) =>
     setDraft({ ...draft, [lang]: { ...draft[lang], specs: { ...draft[lang].specs, [key]: value } } });
+  const toggleSpecVisible = (key: keyof ProductSpecs) => {
+    const hidden = draft.hiddenSpecs ?? [];
+    setDraft({
+      ...draft,
+      hiddenSpecs: hidden.includes(key) ? hidden.filter((k) => k !== key) : [...hidden, key],
+    });
+  };
+
 
   const onMainImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
