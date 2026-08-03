@@ -97,7 +97,7 @@ function UsersPage() {
     const current = permsQuery.data?.[moduleKey] ?? emptyPermission(moduleKey);
     const next: ModulePermission = {
       ...current,
-      can_view: action === "view" ? value : current.can_view || (value && action !== "view"),
+      can_view: action === "view" ? value : current.can_view || value,
       can_create: action === "create" ? value : current.can_create,
       can_edit: action === "edit" ? value : current.can_edit,
       can_delete: action === "delete" ? value : current.can_delete,
