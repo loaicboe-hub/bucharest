@@ -4,6 +4,7 @@ import {
   defaultFooterConfig,
   loadFooterConfig,
   type FooterConfig,
+  localizeFooterConfig,
   type FooterLink,
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
@@ -99,11 +100,12 @@ function Index() {
   const [trade, setTrade] = useState<"export" | "import">("export");
 
   const [showTop, setShowTop] = useState(false);
-  const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
+  const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const { lang, c } = useLang();
+  const footer = localizeFooterConfig(footerRaw, lang);
 
   useEffect(() => {
     initLang();

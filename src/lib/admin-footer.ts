@@ -68,3 +68,42 @@ export function saveFooterConfig(cfg: FooterConfig) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(KEY, JSON.stringify(cfg));
 }
+
+/* ------------------------------ Arabic labels ----------------------------- */
+
+const AR_TEXT: Record<string, string> = {
+  // tagline
+  [defaultFooterConfig.tagline]:
+    "فواكه وخضروات طازجة فاخرة تُصدَّر إلى العالم منذ 2011. جودة معتمدة بشهادة الأيزو 9001 يمكنكم الاعتماد عليها.",
+  // column titles
+  Company: "الشركة",
+  Products: "المنتجات",
+  More: "المزيد",
+  // links
+  About: "من نحن",
+  "Why Us": "لماذا نحن",
+  "Export Process": "مراحل التصدير",
+  "Global Markets": "الأسواق العالمية",
+  "Fresh Fruits": "فواكه طازجة",
+  Vegetables: "خضروات",
+  Seasonal: "منتجات موسمية",
+  Packaging: "التعبئة والتغليف",
+  Certifications: "الشهادات",
+  Contact: "تواصل معنا",
+  "Request Quote": "اطلب عرض سعر",
+  "Back to Top": "العودة إلى الأعلى",
+};
+
+export function localizeFooterConfig(cfg: FooterConfig, lang: "en" | "ar"): FooterConfig {
+  if (lang !== "ar") return cfg;
+  const t = (s: string) => AR_TEXT[s] ?? s;
+  return {
+    ...cfg,
+    tagline: t(cfg.tagline),
+    columns: cfg.columns.map((col) => ({
+      title: t(col.title),
+      links: col.links.map((l) => ({ ...l, label: t(l.label) })),
+    })),
+  };
+}
+
