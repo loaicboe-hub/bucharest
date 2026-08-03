@@ -349,6 +349,8 @@ function Index() {
                     muted
                     loop
                     playsInline
+                    controls
+                    controlsList="nodownload"
                     preload="metadata"
                     poster={farm}
                     aria-label="About Nailvlora"
