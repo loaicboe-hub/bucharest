@@ -40,7 +40,23 @@ export type ProductRow = {
   sort_order: number;
 };
 
-export const EMPTY_SPECS: ProductSpecs = EMPTY_SPECS_KEYS;
+export const EMPTY_SPECS: ProductSpecs = {
+  scientificName: "",
+  origin: "",
+  category: "",
+  variety: "",
+  season: "",
+  sizes: "",
+  color: "",
+  taste: "",
+  packaging: "",
+  shelfLife: "",
+  storageTemp: "",
+  transportation: "",
+  moq: "",
+  loading: "",
+  certifications: "",
+};
 
 export function slugify(value: string) {
   return value
