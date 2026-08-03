@@ -42,12 +42,15 @@ function ProductsPage() {
   const remove = (id: string) => { setRows((rs) => rs.filter((r) => r.id !== id)); toast.success("Deleted"); };
   const move = (id: string, dir: -1 | 1) => {
     setRows((rs) => {
-      const idx = rs.findIndex((r) => r.id === id);
+      const group = rs.filter((r) => r.trade === tab);
+      const idx = group.findIndex((r) => r.id === id);
       const swap = idx + dir;
-      if (swap < 0 || swap >= rs.length) return rs;
-      const next = [...rs];
-      [next[idx], next[swap]] = [next[swap], next[idx]];
-      return next.map((r, i) => ({ ...r, order: i + 1 }));
+      if (idx < 0 || swap < 0 || swap >= group.length) return rs;
+      [group[idx], group[swap]] = [group[swap], group[idx]];
+      const ordered = group.map((r, i) => ({ ...r, order: i + 1 }));
+      const byId = new Map(ordered.map((r) => [r.id, r]));
+      let g = 0;
+      return rs.map((r) => (r.trade === tab ? ordered[g++] ?? byId.get(r.id)! : r));
     });
   };
   const togglePublish = (id: string) => setRows((rs) => rs.map((r) => r.id === id ? { ...r, published: !r.published } : r));
