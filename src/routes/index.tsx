@@ -104,6 +104,7 @@ function Index() {
   const [logo, setLogo] = useState<string | null>(null);
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [aboutVideo, setAboutVideo] = useState<string | null>(null);
   const { lang, c } = useLang();
   const footer = localizeFooterConfig(footerRaw, lang);
 
@@ -112,6 +113,7 @@ function Index() {
     setFooter(loadFooterConfig());
     setLogo(loadLogo());
     loadSiteSettings().then(setSite);
+    getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
   }, []);
 
   useEffect(() => {
