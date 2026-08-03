@@ -56,10 +56,11 @@ function UsersPage() {
   const router = useRouter();
   const qc = useQueryClient();
 
-  const modules = useMemo(
-    () => discoverModules(router.flatRoutes.map((r) => r.fullPath as string)),
-    [router],
-  );
+  const modules = useMemo(() => {
+    const ids = Object.keys((router as unknown as { routesById: Record<string, unknown> }).routesById);
+    return discoverModules(ids.map((id) => id.replace("/_authed", "")));
+  }, [router]);
+
 
   const usersQuery = useQuery({ queryKey: ["admin-users"], queryFn: listAdminUsers });
   const [selectedId, setSelectedId] = useState<string | null>(null);

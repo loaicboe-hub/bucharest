@@ -17,6 +17,7 @@ import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminAuthedRouteImport } from './routes/admin._authed'
+import { Route as AdminAuthedUsersRouteImport } from './routes/admin._authed.users'
 import { Route as AdminAuthedSettingsRouteImport } from './routes/admin._authed.settings'
 import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
 import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
@@ -73,6 +74,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 const AdminAuthedRoute = AdminAuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuthedUsersRoute = AdminAuthedUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminAuthedRoute,
 } as any)
 const AdminAuthedSettingsRoute = AdminAuthedSettingsRouteImport.update({
   id: '/settings',
@@ -186,6 +192,7 @@ export interface FileRoutesByFullPath {
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
   '/admin/settings': typeof AdminAuthedSettingsRoute
+  '/admin/users': typeof AdminAuthedUsersRoute
   '/admin/invoices/$id': typeof AdminAuthedInvoicesIdRoute
   '/admin/invoices/': typeof AdminAuthedInvoicesIndexRoute
 }
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
   '/admin/settings': typeof AdminAuthedSettingsRoute
+  '/admin/users': typeof AdminAuthedUsersRoute
   '/admin/invoices/$id': typeof AdminAuthedInvoicesIdRoute
   '/admin/invoices': typeof AdminAuthedInvoicesIndexRoute
 }
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/_authed/seo': typeof AdminAuthedSeoRoute
   '/admin/_authed/settings': typeof AdminAuthedSettingsRoute
+  '/admin/_authed/users': typeof AdminAuthedUsersRoute
   '/admin/_authed/invoices/$id': typeof AdminAuthedInvoicesIdRoute
   '/admin/_authed/invoices/': typeof AdminAuthedInvoicesIndexRoute
 }
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/admin/quote-requests'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/users'
     | '/admin/invoices/$id'
     | '/admin/invoices/'
   fileRoutesByTo: FileRoutesByTo
@@ -290,6 +300,7 @@ export interface FileRouteTypes {
     | '/admin/quote-requests'
     | '/admin/seo'
     | '/admin/settings'
+    | '/admin/users'
     | '/admin/invoices/$id'
     | '/admin/invoices'
   id:
@@ -317,6 +328,7 @@ export interface FileRouteTypes {
     | '/admin/_authed/quote-requests'
     | '/admin/_authed/seo'
     | '/admin/_authed/settings'
+    | '/admin/_authed/users'
     | '/admin/_authed/invoices/$id'
     | '/admin/_authed/invoices/'
   fileRoutesById: FileRoutesById
@@ -386,6 +398,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AdminAuthedRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/_authed/users': {
+      id: '/admin/_authed/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminAuthedUsersRouteImport
+      parentRoute: typeof AdminAuthedRoute
     }
     '/admin/_authed/settings': {
       id: '/admin/_authed/settings'
@@ -538,6 +557,7 @@ interface AdminAuthedRouteChildren {
   AdminAuthedQuoteRequestsRoute: typeof AdminAuthedQuoteRequestsRoute
   AdminAuthedSeoRoute: typeof AdminAuthedSeoRoute
   AdminAuthedSettingsRoute: typeof AdminAuthedSettingsRoute
+  AdminAuthedUsersRoute: typeof AdminAuthedUsersRoute
 }
 
 const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
@@ -556,6 +576,7 @@ const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedQuoteRequestsRoute: AdminAuthedQuoteRequestsRoute,
   AdminAuthedSeoRoute: AdminAuthedSeoRoute,
   AdminAuthedSettingsRoute: AdminAuthedSettingsRoute,
+  AdminAuthedUsersRoute: AdminAuthedUsersRoute,
 }
 
 const AdminAuthedRouteWithChildren = AdminAuthedRoute._addFileChildren(
