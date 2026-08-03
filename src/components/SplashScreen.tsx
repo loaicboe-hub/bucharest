@@ -5,7 +5,7 @@ const SESSION_KEY = "nv_splash_seen";
 
 function removeCover() {
   const cover = document.getElementById("splash-cover");
-  if (cover?.parentNode) cover.parentNode.removeChild(cover);
+  if (cover) cover.style.display = "none";
 }
 
 /**
