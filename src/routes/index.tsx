@@ -100,7 +100,6 @@ function Index() {
   const [trade, setTrade] = useState<"export" | "import">("export");
 
   const [showTop, setShowTop] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
@@ -130,10 +129,8 @@ function Index() {
       setShowTop(window.scrollY > 600);
     };
     window.addEventListener("scroll", onScroll);
-    const t = setTimeout(() => setLoading(false), 600);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      clearTimeout(t);
     };
   }, []);
 
