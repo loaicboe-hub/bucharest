@@ -152,7 +152,7 @@ function Index() {
           <a href="#top" className="flex items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16 lg:h-20 lg:w-20">
               {logo ? (
-                <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
+                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.35] object-contain p-0.5" />
               ) : (
                 <Leaf className="h-7 w-7 text-white sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
               )}
@@ -712,7 +712,7 @@ function Index() {
               <div className="flex items-center gap-3">
                 <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground lg:h-20 lg:w-20">
                   {logo ? (
-                    <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
+                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.35] object-contain p-0.5" />
                   ) : (
                     <Leaf className="h-8 w-8 lg:h-10 lg:w-10" />
                   )}
