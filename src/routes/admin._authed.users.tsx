@@ -82,7 +82,11 @@ function UsersPage() {
   const superFn = useServerFn(setSuperAdmin);
 
   const createMutation = useMutation({
-    mutationFn: () => createFn({ data: form }),
+    mutationFn: async () => {
+      if (!form.email.includes("@")) throw new Error("A valid email is required");
+      if (form.password.length < 10) throw new Error("Password must be at least 10 characters");
+      return createFn({ data: form });
+    },
     onSuccess: () => {
       toast.success("User created");
       setAddOpen(false);
@@ -131,6 +135,10 @@ function UsersPage() {
   const handlePassword = async (userId: string) => {
     const password = window.prompt("New password (min 10 characters)");
     if (!password) return;
+    if (password.length < 10) {
+      toast.error("Password must be at least 10 characters");
+      return;
+    }
     try {
       await passwordFn({ data: { userId, password } });
       toast.success("Password updated");
@@ -299,6 +307,7 @@ function UsersPage() {
               <Input
                 id="password"
                 type="password"
+                minLength={10}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
