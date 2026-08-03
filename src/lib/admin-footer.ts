@@ -18,7 +18,6 @@ export const defaultFooterConfig: FooterConfig = {
         { label: "About", href: "#about" },
         { label: "Why Us", href: "#why" },
         { label: "Export Process", href: "#process" },
-        { label: "Global Markets", href: "#markets" },
       ],
     },
     {
@@ -26,14 +25,11 @@ export const defaultFooterConfig: FooterConfig = {
       links: [
         { label: "Fresh Fruits", href: "#products" },
         { label: "Vegetables", href: "#products" },
-        { label: "Seasonal", href: "#products" },
-        { label: "Packaging", href: "#process" },
       ],
     },
     {
       title: "More",
       links: [
-        { label: "Certifications", href: "#about" },
         { label: "Contact", href: "#contact" },
         { label: "Request Quote", href: "#contact" },
         { label: "Back to Top", href: "#top" },
