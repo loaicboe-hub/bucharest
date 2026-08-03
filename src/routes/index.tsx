@@ -65,8 +65,6 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const fruitImgs = [oranges, grapes, mangoes, pomegranates, strawberries, lemons];
-const vegImgs = [potatoes, onions, garlic, sweetPotatoes, greenBeans, peppers];
 const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
 const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
 const badgeIcons = [Award, BadgeCheck, Globe2];
@@ -829,8 +827,6 @@ function Index() {
   );
 }
 
-const FRUIT_SLUGS = ["oranges", "grapes", "mangoes", "pomegranates", "strawberries", "lemons"];
-const VEG_SLUGS = ["potatoes", "onions", "garlic", "sweet-potatoes", "green-beans", "peppers"];
 
 function ProductCard({
   name,
