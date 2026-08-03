@@ -167,17 +167,17 @@ function Index() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-          <a href="#top" className="flex items-center gap-2.5">
-            <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl gradient-primary shadow-[var(--shadow-glow)]">
+          <a href="#top" className="flex items-center gap-3.5">
+            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16 lg:h-20 lg:w-20">
               {logo ? (
                 <img src={logo} alt="Fresh Diamond for Export logo" className="h-full w-full object-contain" />
               ) : (
-                <Leaf className="h-5 w-5 text-white" />
+                <Leaf className="h-7 w-7 text-white sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
               )}
             </div>
             <div className="min-w-0">
               <div
-                className={`font-display text-lg font-bold leading-none ${
+                className={`font-display text-xl font-bold leading-none sm:text-2xl lg:text-3xl ${
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
