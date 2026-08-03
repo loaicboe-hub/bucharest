@@ -32,7 +32,7 @@ export function SplashScreen() {
     document.body.style.overflow = "hidden";
 
     const skipTimer = window.setTimeout(() => setShowSkip(true), 1000);
-    const endTimer = window.setTimeout(() => dismiss(), 2900);
+    const endTimer = window.setTimeout(() => dismiss(), 5400);
 
     return () => {
       window.clearTimeout(skipTimer);
@@ -52,7 +52,7 @@ export function SplashScreen() {
     setVisible(false);
   }
 
-  const ease = [0.22, 1, 0.36, 1] as const;
+  const ease = [0.65, 0, 0.35, 1] as const;
 
   return (
     <AnimatePresence>
@@ -62,7 +62,7 @@ export function SplashScreen() {
           role="presentation"
           className="fixed inset-0 z-[200] flex items-center justify-center bg-white"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeInOut" } }}
+          exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
         >
           <svg
             viewBox="0 0 400 280"
@@ -88,7 +88,7 @@ export function SplashScreen() {
                   height="60"
                   initial={{ width: 0 }}
                   animate={{ width: 340 }}
-                  transition={{ duration: 0.6, delay: 1.75, ease }}
+                  transition={{ duration: 1.1, delay: 3.0, ease }}
                 />
               </clipPath>
             </defs>
@@ -104,7 +104,7 @@ export function SplashScreen() {
               fill="#1E4620"
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 1.15, ease }}
+              transition={{ duration: 0.9, delay: 2.0, ease }}
               style={{ transformOrigin: "196px 120px" }}
             >
               N
@@ -114,14 +114,14 @@ export function SplashScreen() {
             <motion.g
               initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease }}
+              transition={{ duration: 1.0, ease }}
               style={{ transformOrigin: "252px 74px" }}
             >
               <circle cx="252" cy="74" r="32" fill="#ffffff" />
               <g clipPath="url(#nvGlobeClip)">
                 <motion.g
                   animate={{ x: [-64, 0] }}
-                  transition={{ duration: 3.4, ease: "linear", repeat: Infinity }}
+                  transition={{ duration: 6.5, ease: "linear", repeat: Infinity }}
                 >
                   {[0, 64, 128].map((dx) => (
                     <g key={dx} transform={`translate(${dx - 128} -22) scale(0.7)`}>
@@ -168,12 +168,12 @@ export function SplashScreen() {
               strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 0.55, delay: 0.35, ease }}
+              transition={{ duration: 1.0, delay: 0.7, ease }}
               transform="rotate(-90 252 74)"
             />
 
             {/* 4. Golden arrow drawn around the globe */}
-            <motion.g initial="hidden" animate="shown" transition={{ delayChildren: 0.85 }}>
+            <motion.g initial="hidden" animate="shown" transition={{ delayChildren: 1.5 }}>
               <motion.path
                 d="M206 118c14 16 38 22 60 14 24-9 38-30 40-56"
                 fill="none"
@@ -181,7 +181,7 @@ export function SplashScreen() {
                 strokeWidth="6"
                 strokeLinecap="round"
                 variants={{ hidden: { pathLength: 0 }, shown: { pathLength: 1 } }}
-                transition={{ duration: 0.65, ease }}
+                transition={{ duration: 1.1, ease }}
               />
               <motion.path
                 d="M292 84l14 6 10-14"
@@ -191,7 +191,7 @@ export function SplashScreen() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 variants={{ hidden: { opacity: 0, scale: 0.6 }, shown: { opacity: 1, scale: 1 } }}
-                transition={{ duration: 0.25, delay: 0.55, ease }}
+                transition={{ duration: 0.45, delay: 0.95, ease }}
                 style={{ transformOrigin: "304px 82px" }}
               />
             </motion.g>
@@ -200,7 +200,7 @@ export function SplashScreen() {
             <motion.g
               initial={{ opacity: 0, scale: 0.2, rotate: -25 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 0.55, delay: 1.45, ease }}
+              transition={{ duration: 0.95, delay: 2.55, ease }}
               style={{ transformOrigin: "142px 132px" }}
             >
               <path d="M142 132c-2-18 12-34 34-36 2 20-12 36-34 36z" fill="#3d7a33" />
@@ -234,7 +234,7 @@ export function SplashScreen() {
             <motion.g
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 2.2, ease: "easeOut" }}
+              transition={{ duration: 0.8, delay: 3.9, ease: "easeInOut" }}
             >
               <line x1="60" y1="244" x2="112" y2="244" stroke="#c99a3c" strokeWidth="1.5" />
               <text
