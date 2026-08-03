@@ -196,6 +196,14 @@ function Index() {
                 {n.label}
               </a>
             ))}
+            <Link
+              to="/news"
+              className={`text-sm font-medium transition-colors ${
+                scrolled ? "text-foreground hover:text-fresh" : "text-white/90 hover:text-gold"
+              }`}
+            >
+              {lang === "ar" ? "أخبارنا" : "Our News"}
+            </Link>
             <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
