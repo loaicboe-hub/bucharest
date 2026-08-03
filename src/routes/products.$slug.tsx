@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
 import { getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
-import { loadLogo } from "@/lib/admin-branding";
+import { getLogoUrl } from "@/lib/admin-branding";
 import {
   getProductBySlug,
   listPublishedProducts,
@@ -80,7 +80,7 @@ function ProductDetail() {
 
   useEffect(() => {
     initLang();
-    setLogo(loadLogo());
+    getLogoUrl().then(setLogo).catch(() => setLogo(null));
   }, []);
   useEffect(() => {
     let alive = true;

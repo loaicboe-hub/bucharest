@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { useAdminLang } from "@/lib/admin-i18n";
 import { toast } from "sonner";
 import { Upload, Trash2 } from "lucide-react";
-import { loadLogo, saveLogo, clearLogo, readFileAsDataUrl } from "@/lib/admin-branding";
+import { getLogoUrl, uploadLogo, deleteLogo } from "@/lib/admin-branding";
 
 export const Route = createFileRoute("/admin/_authed/branding")({
   component: BrandingPage,
@@ -15,26 +15,37 @@ export const Route = createFileRoute("/admin/_authed/branding")({
 function BrandingPage() {
   const { t } = useAdminLang();
   const [logo, setLogo] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setLogo(loadLogo());
+    getLogoUrl().then(setLogo).catch(() => setLogo(null));
   }, []);
 
   const onPick = async (file?: File | null) => {
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please choose an image file (PNG, JPG or SVG)");
-      return;
+    if (!file || busy) return;
+    setBusy(true);
+    const err = await uploadLogo(file);
+    if (err) {
+      toast.error(err);
+    } else {
+      setLogo(await getLogoUrl());
+      toast.success("Logo saved — it now shows on the website and invoice PDFs");
     }
-    if (file.size > 1.5 * 1024 * 1024) {
-      toast.error("Logo must be smaller than 1.5 MB");
-      return;
+    setBusy(false);
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const onRemove = async () => {
+    if (busy) return;
+    setBusy(true);
+    const err = await deleteLogo();
+    if (err) toast.error(err);
+    else {
+      setLogo(null);
+      toast.success("Logo removed");
     }
-    const dataUrl = await readFileAsDataUrl(file);
-    saveLogo(dataUrl);
-    setLogo(dataUrl);
-    toast.success("Logo saved — it now shows on the website and invoice PDFs");
+    setBusy(false);
   };
 
   return (
@@ -82,14 +93,7 @@ function BrandingPage() {
               )}
             </div>
             {logo && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  clearLogo();
-                  setLogo(null);
-                  toast.success("Logo removed");
-                }}
-              >
+              <Button variant="outline" onClick={onRemove} disabled={busy}>
                 <Trash2 className="mr-2 h-4 w-4" /> Remove Logo
               </Button>
             )}
