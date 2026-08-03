@@ -108,8 +108,8 @@ const en: SiteContent = {
       "Delivering exceptional quality, freshness, and reliability since 2011 — from certified farms to your market, uninterrupted.",
     scroll: "Scroll",
     aboutEyebrow: "About Us",
-    aboutTitle1: "About Fresh",
-    aboutTitleGold: "Diamond",
+    aboutTitle1: "About",
+    aboutTitleGold: "Nailvlora",
     aboutP1:
       "Nailvlora Import and Export has been supplying premium-quality fresh fruits and vegetables to international markets since 2011. We are committed to quality, food safety, reliability, and customer satisfaction.",
     aboutP2:
@@ -248,8 +248,8 @@ const ar: SiteContent = {
       "نقدّم جودة استثنائية ونضارة دائمة والتزامًا كاملًا منذ عام 2011 — من المزارع المعتمدة إلى سوقكم دون انقطاع.",
     scroll: "مرّر للأسفل",
     aboutEyebrow: "من نحن",
-    aboutTitle1: "عن فريش",
-    aboutTitleGold: "دايموند",
+    aboutTitle1: "عن",
+    aboutTitleGold: "نايلفلورا",
     aboutP1:
       "تعمل شركة فريش دايموند للتصدير على توريد الفواكه والخضروات الطازجة عالية الجودة إلى الأسواق الدولية منذ عام 2011، بالتزام كامل بالجودة وسلامة الغذاء والموثوقية ورضا العملاء.",
     aboutP2:
