@@ -22,6 +22,18 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSent, setResetSent] = useState(false);
+  const [resetting, setResetting] = useState(false);
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetting(true);
+    await requestPasswordReset(resetEmail);
+    setResetting(false);
+    setResetSent(true);
+  };
 
   useEffect(() => {
     getAdminSession().then((session) => {
