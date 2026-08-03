@@ -43,17 +43,22 @@ export const defaultFooterConfig: FooterConfig = {
   },
 };
 
+const REMOVED_LABELS = new Set(["Certifications", "Seasonal", "Packaging", "Global Markets"]);
+
 export function loadFooterConfig(): FooterConfig {
   if (typeof window === "undefined") return defaultFooterConfig;
   try {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return defaultFooterConfig;
     const parsed = JSON.parse(raw) as FooterConfig;
+    const columns = (parsed.columns?.length ? parsed.columns : defaultFooterConfig.columns).map(
+      (c) => ({ ...c, links: (c.links ?? []).filter((l) => !REMOVED_LABELS.has(l.label)) }),
+    );
     return {
       ...defaultFooterConfig,
       ...parsed,
       social: { ...defaultFooterConfig.social, ...(parsed.social ?? {}) },
-      columns: parsed.columns?.length ? parsed.columns : defaultFooterConfig.columns,
+      columns,
     };
   } catch {
     return defaultFooterConfig;
