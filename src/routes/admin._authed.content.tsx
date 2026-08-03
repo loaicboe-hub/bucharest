@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { toast } from "sonner";
 import { Upload, Plus, Trash2 } from "lucide-react";
 import {
@@ -38,6 +39,7 @@ const initial: Record<string, Section> = {
 };
 
 function ContentPage() {
+  const { t } = useAdminLang();
   const [data, setData] = useState(initial);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
 
@@ -78,7 +80,7 @@ function ContentPage() {
 
   return (
     <div>
-      <PageHeader title="Website Content" description="Edit copy, imagery and CTAs across your public site" actions={<Button onClick={save}>Save Changes</Button>} />
+      <PageHeader title={t("nav.content")} description={t("content.desc")} actions={<Button onClick={save}>Save Changes</Button>} />
 
       <Tabs defaultValue="home" className="w-full">
         <TabsList className="mb-4 flex w-full flex-wrap justify-start bg-muted/60">

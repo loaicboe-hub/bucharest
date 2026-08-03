@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { markets as seed, type Market } from "@/lib/admin-mock-data";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/admin/_authed/markets")({
 });
 
 function MarketsPage() {
+  const { t } = useAdminLang();
   const [rows, setRows] = useState<Market[]>(seed);
   const [editing, setEditing] = useState<Market | null>(null);
   const [open, setOpen] = useState(false);
@@ -34,8 +36,8 @@ function MarketsPage() {
   return (
     <div>
       <PageHeader
-        title="Markets"
-        description="Countries and regions your business exports to"
+        title={t("nav.markets")}
+        description={t("markets.desc")}
         actions={<Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Market</Button>}
       />
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">

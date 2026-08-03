@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { toast } from "sonner";
 import {
   defaultSiteSettings,
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/admin/_authed/settings")({
 });
 
 function SettingsPage() {
+  const { t } = useAdminLang();
   const [g, setG] = useState<SiteSettings>(defaultSiteSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -47,8 +49,8 @@ function SettingsPage() {
   return (
     <div>
       <PageHeader
-        title="General Settings"
-        description="Company details, contact info and social links"
+        title={t("nav.settings")}
+        description={t("settings.desc")}
         actions={
           <Button onClick={handleSave} disabled={loading || saving}>
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

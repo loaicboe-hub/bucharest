@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { quoteRequests as seed, type QuoteRequest } from "@/lib/admin-mock-data";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ const statusColors: Record<QuoteRequest["status"], string> = {
 };
 
 function QuoteRequestsPage() {
+  const { t } = useAdminLang();
   const [rows, setRows] = useState<QuoteRequest[]>(seed);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
@@ -50,8 +52,8 @@ function QuoteRequestsPage() {
   return (
     <div>
       <PageHeader
-        title="Quote Requests"
-        description="Requests for pricing and quantity quotations"
+        title={t("nav.quote-requests")}
+        description={t("quote-requests.desc")}
         actions={<Button onClick={exportCSV} variant="outline" className="gap-2"><Download className="h-4 w-4" /> Export CSV</Button>}
       />
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">

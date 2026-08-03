@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { contactRequests as seed, type ContactRequest } from "@/lib/admin-mock-data";
 import { toast } from "sonner";
 
@@ -30,6 +31,7 @@ const statusColors: Record<ContactRequest["status"], string> = {
 };
 
 function ContactRequestsPage() {
+  const { t } = useAdminLang();
   const [rows, setRows] = useState<ContactRequest[]>(seed);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<string>("all");
@@ -66,8 +68,8 @@ function ContactRequestsPage() {
   return (
     <div>
       <PageHeader
-        title="Contact Requests"
-        description="Inquiries submitted through the website contact form"
+        title={t("nav.contact-requests")}
+        description={t("contact-requests.desc")}
         actions={
           <Button onClick={exportCSV} variant="outline" className="gap-2">
             <Download className="h-4 w-4" /> Export CSV
