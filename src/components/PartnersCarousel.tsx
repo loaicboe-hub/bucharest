@@ -50,7 +50,7 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
                 aria-hidden={i >= partners.length}
               >
                 {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" title={p.name}>
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" title={p.name} className="block h-full w-full">
                     {img}
                   </a>
                 ) : (
