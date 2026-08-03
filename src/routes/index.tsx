@@ -238,6 +238,13 @@ function Index() {
                   {n.label}
                 </a>
               ))}
+              <Link
+                to="/news"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-4 py-3 text-foreground transition-colors hover:bg-fresh/10"
+              >
+                {lang === "ar" ? "أخبارنا" : "Our News"}
+              </Link>
               <a
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
