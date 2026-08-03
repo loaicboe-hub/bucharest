@@ -76,5 +76,7 @@ function AuthedLayout() {
       </div>
       <Toaster />
     </SidebarProvider>
+    </PermissionsProvider>
   );
+
 }
