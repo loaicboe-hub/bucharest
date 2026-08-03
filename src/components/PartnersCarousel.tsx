@@ -46,7 +46,7 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
             return (
               <div
                 key={`${p.id}-${i}`}
-                className="flex h-28 w-52 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card p-4 shadow-sm sm:h-36 sm:w-64 sm:p-6"
+                className="flex h-40 w-40 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card p-3 shadow-sm sm:h-52 sm:w-52 sm:p-4"
                 aria-hidden={i >= partners.length}
               >
                 {p.url ? (
