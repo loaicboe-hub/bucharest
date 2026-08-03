@@ -76,10 +76,10 @@ export const PermissionsProvider = Ctx.Provider;
 export function useAdminPermissions() {
   const ctx = useContext(Ctx);
   const can = (moduleKey: string, action: PermissionAction) => {
-    if (ctx.isSuper) return true;
-    const p = ctx.permissions[moduleKey];
+    if (ctx?.isSuper) return true;
+    const p = ctx?.permissions?.[moduleKey];
     if (!p) return false;
     return action === "view" ? p.can_view : action === "create" ? p.can_create : action === "edit" ? p.can_edit : p.can_delete;
   };
-  return { ...ctx, can };
+  return { isSuper: Boolean(ctx?.isSuper), permissions: ctx?.permissions ?? {}, can };
 }
