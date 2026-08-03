@@ -230,13 +230,14 @@ function ProductDetail() {
           <h2 className="mb-8 font-display text-3xl font-bold text-primary">{t.info}</h2>
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
             <dl className="grid gap-px bg-border sm:grid-cols-2">
-              {SPEC_ORDER.map((key) => (
+              {visibleSpecs.map((key) => (
                 <div key={key} className="bg-card p-5">
                   <dt className="text-xs font-semibold uppercase tracking-wide text-fresh">{labels[key]}</dt>
                   <dd className="mt-1.5 text-sm text-foreground">{data.specs[key]}</dd>
                 </div>
               ))}
             </dl>
+
           </div>
         </div>
       </section>
