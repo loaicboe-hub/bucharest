@@ -11,6 +11,7 @@ import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { loadLogo } from "@/lib/admin-branding";
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
+import { getAboutVideoUrl } from "@/lib/about-video";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
