@@ -14,6 +14,7 @@ import {
   Palette,
   Handshake,
   Home,
+  Video,
 } from "lucide-react";
 import {
   Sidebar,
