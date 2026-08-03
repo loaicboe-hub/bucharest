@@ -150,9 +150,9 @@ function Index() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
           <a href="#top" className="flex items-center gap-3.5">
-            <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)]">
+            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
               {logo ? (
-                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.18] object-contain p-[2px]" />
+                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
               ) : (
                 <Leaf className="h-6 w-6 text-white" />
               )}
@@ -711,9 +711,9 @@ function Index() {
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
+                <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
                   {logo ? (
-                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.18] object-contain p-[2px]" />
+                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
                   ) : (
                     <Leaf className="h-7 w-7" />
                   )}
