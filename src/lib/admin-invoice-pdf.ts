@@ -8,7 +8,7 @@ const GOLD: [number, number, number] = [212, 175, 55];
 const DARK: [number, number, number] = [30, 41, 59];
 const MUTED: [number, number, number] = [100, 116, 139];
 
-export function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = "save") {
+export async function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = "save") {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const M = 40;
@@ -23,7 +23,7 @@ export function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = "save"
 
   // Optional company logo (admin uploaded)
   let tx = M;
-  const logo = loadLogo();
+  const logo = await getLogoDataUrl();
   if (logo) {
     try {
       const fmt = logo.includes("image/jpeg") || logo.includes("image/jpg") ? "JPEG" : "PNG";
