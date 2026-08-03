@@ -338,14 +338,29 @@ function Index() {
             <div className="relative">
               <div className="absolute -inset-4 rounded-3xl gradient-primary opacity-20 blur-2xl" />
               <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-                <img
-                  src={farm}
-                  alt="Vast farm fields"
-                  loading="lazy"
-                  width={1200}
-                  height={900}
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                />
+                {aboutVideo ? (
+                  <video
+                    key={aboutVideo}
+                    src={aboutVideo}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={farm}
+                    aria-label="About Nailvlora"
+                    className="aspect-[4/3] h-full w-full bg-black object-cover"
+                  />
+                ) : (
+                  <img
+                    src={farm}
+                    alt="Vast farm fields"
+                    loading="lazy"
+                    width={1200}
+                    height={900}
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                )}
               </div>
               <div className="absolute -bottom-6 -left-6 hidden rounded-2xl glass p-5 shadow-xl sm:block">
                 <div className="flex items-center gap-4">
