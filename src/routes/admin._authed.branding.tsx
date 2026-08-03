@@ -93,14 +93,7 @@ function BrandingPage() {
               )}
             </div>
             {logo && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  clearLogo();
-                  setLogo(null);
-                  toast.success("Logo removed");
-                }}
-              >
+              <Button variant="outline" onClick={onRemove} disabled={busy}>
                 <Trash2 className="mr-2 h-4 w-4" /> Remove Logo
               </Button>
             )}
