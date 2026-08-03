@@ -1,34 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const SESSION_KEY = "nv_splash_seen";
 
+function removeCover() {
+  const cover = document.getElementById("splash-cover");
+  if (cover?.parentNode) cover.parentNode.removeChild(cover);
+}
+
 /**
  * Premium logo splash. Pure SVG + Framer Motion (no media files),
  * shown once per browser session, fully skippable.
+ * Renders before the page paints (a static cover in the HTML shell
+ * hides everything until this mounts).
  */
 export function SplashScreen() {
   const [visible, setVisible] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
 
-  useEffect(() => {
+  // Runs synchronously before the browser paints the hydrated page.
+  useLayoutEffect(() => {
     let seen = true;
     try {
       seen = window.sessionStorage.getItem(SESSION_KEY) === "1";
     } catch {
       seen = false;
     }
-    if (seen) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (seen || reduced) {
       try {
         window.sessionStorage.setItem(SESSION_KEY, "1");
       } catch {
         /* ignore */
       }
+      removeCover();
       return;
     }
-
     setVisible(true);
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+    // Splash now paints over everything: drop the static cover.
+    removeCover();
     document.body.style.overflow = "hidden";
 
     const skipTimer = window.setTimeout(() => setShowSkip(true), 1000);
@@ -40,7 +54,7 @@ export function SplashScreen() {
       document.body.style.overflow = "";
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visible]);
 
   function dismiss() {
     try {
@@ -49,8 +63,10 @@ export function SplashScreen() {
       /* ignore */
     }
     document.body.style.overflow = "";
+    removeCover();
     setVisible(false);
   }
+
 
   const ease = [0.65, 0, 0.35, 1] as const;
 
