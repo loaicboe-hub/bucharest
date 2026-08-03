@@ -47,8 +47,10 @@ function ProductsPage() {
   const visible = rows.filter((r) => r.trade === tab);
   const catName = (id: string | null) => cats.find((c) => c.id === id)?.name_en ?? "—";
 
-  const openNew = () =>
-    setDraft(blankProduct(tab, cats[0]?.id ?? null)) || setOpen(true);
+  const openNew = () => {
+    setDraft(blankProduct(tab, cats[0]?.id ?? null));
+    setOpen(true);
+  };
   const openEdit = (p: ProductRow) => { setDraft({ ...p }); setOpen(true); };
 
   const remove = async (p: ProductRow) => {
