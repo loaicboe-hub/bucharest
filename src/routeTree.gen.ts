@@ -19,6 +19,7 @@ import { Route as AdminAuthedSettingsRouteImport } from './routes/admin._authed.
 import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
 import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
 import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
+import { Route as AdminAuthedPartnersRouteImport } from './routes/admin._authed.partners'
 import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
 import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
 import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.invoices'
@@ -77,6 +78,11 @@ const AdminAuthedQuoteRequestsRoute =
 const AdminAuthedProductsRoute = AdminAuthedProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedPartnersRoute = AdminAuthedPartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
 const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/admin/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/seo': typeof AdminAuthedSeoRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/admin/_authed/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/_authed/markets': typeof AdminAuthedMarketsRoute
   '/admin/_authed/media': typeof AdminAuthedMediaRoute
+  '/admin/_authed/partners': typeof AdminAuthedPartnersRoute
   '/admin/_authed/products': typeof AdminAuthedProductsRoute
   '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
   '/admin/_authed/seo': typeof AdminAuthedSeoRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
     | '/admin/seo'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
     | '/admin/seo'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/admin/_authed/invoices'
     | '/admin/_authed/markets'
     | '/admin/_authed/media'
+    | '/admin/_authed/partners'
     | '/admin/_authed/products'
     | '/admin/_authed/quote-requests'
     | '/admin/_authed/seo'
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/admin/products'
       preLoaderRoute: typeof AdminAuthedProductsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/partners': {
+      id: '/admin/_authed/partners'
+      path: '/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AdminAuthedPartnersRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
     '/admin/_authed/media': {
@@ -414,6 +433,7 @@ interface AdminAuthedRouteChildren {
   AdminAuthedInvoicesRoute: typeof AdminAuthedInvoicesRouteWithChildren
   AdminAuthedMarketsRoute: typeof AdminAuthedMarketsRoute
   AdminAuthedMediaRoute: typeof AdminAuthedMediaRoute
+  AdminAuthedPartnersRoute: typeof AdminAuthedPartnersRoute
   AdminAuthedProductsRoute: typeof AdminAuthedProductsRoute
   AdminAuthedQuoteRequestsRoute: typeof AdminAuthedQuoteRequestsRoute
   AdminAuthedSeoRoute: typeof AdminAuthedSeoRoute
@@ -428,6 +448,7 @@ const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedInvoicesRoute: AdminAuthedInvoicesRouteWithChildren,
   AdminAuthedMarketsRoute: AdminAuthedMarketsRoute,
   AdminAuthedMediaRoute: AdminAuthedMediaRoute,
+  AdminAuthedPartnersRoute: AdminAuthedPartnersRoute,
   AdminAuthedProductsRoute: AdminAuthedProductsRoute,
   AdminAuthedQuoteRequestsRoute: AdminAuthedQuoteRequestsRoute,
   AdminAuthedSeoRoute: AdminAuthedSeoRoute,
@@ -460,13 +481,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

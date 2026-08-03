@@ -6,6 +6,7 @@ import {
   type FooterConfig,
   type FooterLink,
 } from "@/lib/admin-footer";
+import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { loadLogo } from "@/lib/admin-branding";
 import { SplashScreen } from "@/components/SplashScreen";
 
@@ -711,6 +712,15 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <PartnersCarousel
+        title={lang === "ar" ? "شركاؤنا" : "Our Partners"}
+        subtitle={
+          lang === "ar"
+            ? "نفخر بالتعاون مع شركاء موثوقين حول العالم"
+            : "Proudly working with trusted partners around the world"
+        }
+      />
 
       {/* Footer */}
       <footer className="relative bg-primary text-primary-foreground">
