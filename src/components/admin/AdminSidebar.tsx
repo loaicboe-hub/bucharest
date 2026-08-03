@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut } from "@/lib/admin-auth";
 import { useAdminLang, type AdminKey } from "@/lib/admin-i18n";
+import { useAdminPermissions } from "@/lib/admin-permissions";
+import { moduleKeyFromPath } from "@/lib/admin-modules";
 
 const items = [
   { key: "nav.dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -53,6 +55,10 @@ export function AdminSidebar() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { t, dir } = useAdminLang();
+  const { isSuper, can } = useAdminPermissions();
+
+  const visibleItems = items.filter((item) => can(moduleKeyFromPath(item.url) ?? "", "view"));
+
 
   const handleLogout = async () => {
     await signOut();
