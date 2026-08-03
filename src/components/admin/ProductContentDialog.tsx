@@ -151,13 +151,29 @@ export function ProductContentDialog({
                 <Textarea rows={4} value={draft[lang].description} onChange={(e) => setLocale(lang, { description: e.target.value })} />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                {SPEC_KEYS.map((key) => (
-                  <div key={key} className="space-y-1.5">
-                    <Label className="text-xs">{SPEC_LABELS[lang][key]}</Label>
-                    <Input value={draft[lang].specs[key]} onChange={(e) => setSpec(lang, key, e.target.value)} />
-                  </div>
-                ))}
+                {SPEC_KEYS.map((key) => {
+                  const hidden = (draft.hiddenSpecs ?? []).includes(key);
+                  return (
+                    <div key={key} className="space-y-1.5 rounded-md border border-border p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <Label className="text-xs">{SPEC_LABELS[lang][key]}</Label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-muted-foreground">
+                            {hidden ? (lang === "ar" ? "مخفي" : "Hidden") : lang === "ar" ? "ظاهر" : "Shown"}
+                          </span>
+                          <Switch checked={!hidden} onCheckedChange={() => toggleSpecVisible(key)} />
+                        </div>
+                      </div>
+                      <Input
+                        value={draft[lang].specs[key]}
+                        disabled={hidden}
+                        onChange={(e) => setSpec(lang, key, e.target.value)}
+                      />
+                    </div>
+                  );
+                })}
               </div>
+
             </TabsContent>
           ))}
         </Tabs>
