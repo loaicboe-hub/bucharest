@@ -85,8 +85,8 @@ function ProductDetail() {
     setActive(0);
   }, [slug]);
   useEffect(() => {
-    document.title = `${data.name} Export from Egypt | ${c.brand}`;
-  }, [data.name, c.brand]);
+    if (data?.name) document.title = `${data.name} Export from Egypt | ${c.brand}`;
+  }, [data?.name, c.brand]);
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setLightbox(false);
