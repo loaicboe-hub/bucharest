@@ -82,7 +82,11 @@ function UsersPage() {
   const superFn = useServerFn(setSuperAdmin);
 
   const createMutation = useMutation({
-    mutationFn: () => createFn({ data: form }),
+    mutationFn: async () => {
+      if (!form.email.includes("@")) throw new Error("A valid email is required");
+      if (form.password.length < 10) throw new Error("Password must be at least 10 characters");
+      return createFn({ data: form });
+    },
     onSuccess: () => {
       toast.success("User created");
       setAddOpen(false);
