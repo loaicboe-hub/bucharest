@@ -77,6 +77,113 @@ export type Database = {
         }
         Relationships: []
       }
+      product_categories: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name_ar: string
+          name_en: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_en?: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_en?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          description_ar: string
+          description_en: string
+          gallery: string[]
+          hidden_specs: string[]
+          id: string
+          intro_ar: string
+          intro_en: string
+          main_image: string
+          name_ar: string
+          name_en: string
+          published: boolean
+          slug: string
+          sort_order: number
+          specs_ar: Json
+          specs_en: Json
+          trade: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          description_ar?: string
+          description_en?: string
+          gallery?: string[]
+          hidden_specs?: string[]
+          id?: string
+          intro_ar?: string
+          intro_en?: string
+          main_image?: string
+          name_ar?: string
+          name_en?: string
+          published?: boolean
+          slug: string
+          sort_order?: number
+          specs_ar?: Json
+          specs_en?: Json
+          trade?: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          description_ar?: string
+          description_en?: string
+          gallery?: string[]
+          hidden_specs?: string[]
+          id?: string
+          intro_ar?: string
+          intro_en?: string
+          main_image?: string
+          name_ar?: string
+          name_en?: string
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          specs_ar?: Json
+          specs_en?: Json
+          trade?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "product_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
