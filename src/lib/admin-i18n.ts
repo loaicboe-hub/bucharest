@@ -122,6 +122,8 @@ export const adminDict = {
     "aboutVideo.uploaded": "تم رفع الفيديو",
     "aboutVideo.deleted": "تم حذف الفيديو",
     "aboutVideo.hint": "MP4 أو WebM بحد أقصى 50 ميجابايت. يعمل تلقائياً وبدون صوت وبشكل متكرر على جميع الأجهزة.",
+    "nav.news": "إدارة الأخبار",
+    "news.desc": "إنشاء وتحرير ونشر أخبار الشركة الظاهرة في صفحة أخبارنا",
     "nav.content": "محتوى الموقع",
     "nav.media": "مكتبة الوسائط",
     "nav.branding": "الشعار والهوية",
