@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
@@ -65,7 +65,7 @@ function ProductDetail() {
   const { lang, c, dir } = useLang();
   const t = PAGE_UI[lang];
   const labels = SPEC_LABELS[lang];
-  const data = product[lang];
+  const data = product?.[lang];
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -93,6 +93,19 @@ function ProductDetail() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox]);
+
+  if (!product || !data) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-primary">Product not found</h1>
+          <Link to="/" hash="products" className="mt-4 inline-block text-sm font-semibold text-fresh underline">
+            Back to products
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const related = CATALOG.filter((p) => p.slug !== slug).slice(0, 4);
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
