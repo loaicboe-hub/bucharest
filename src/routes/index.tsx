@@ -8,7 +8,6 @@ import {
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { loadLogo } from "@/lib/admin-branding";
-import { SplashScreen } from "@/components/SplashScreen";
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { useLang, initLang } from "@/lib/i18n";
@@ -139,7 +138,6 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SplashScreen />
 
 
 
