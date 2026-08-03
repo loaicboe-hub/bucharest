@@ -19,18 +19,31 @@ export const Route = createFileRoute("/admin/_authed")({
 
 function AuthedLayout() {
   const { session } = Route.useRouteContext();
+  const { t, lang, setLang, dir } = useAdminLang();
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-slate-50">
+      <div dir={dir} className="flex min-h-screen w-full bg-slate-50">
         <AdminSidebar />
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-background px-4">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
-              <span className="text-sm font-medium text-muted-foreground">Admin Panel</span>
+              <span className="text-sm font-medium text-muted-foreground">{t("adminPanel")}</span>
             </div>
-            <div className="text-sm text-muted-foreground">
-              Signed in as <span className="font-medium text-foreground">{session.email}</span>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => setLang(lang === "ar" ? "en" : "ar")}
+                title={t("language")}
+              >
+                <Languages className="h-4 w-4" />
+                {lang === "ar" ? "English" : "العربية"}
+              </Button>
+              <span className="hidden text-sm text-muted-foreground sm:inline">
+                {t("signedInAs")} <span className="font-medium text-foreground">{session.email}</span>
+              </span>
             </div>
           </header>
           <main className="admin-scope flex-1 p-4 sm:p-6 lg:p-8">
