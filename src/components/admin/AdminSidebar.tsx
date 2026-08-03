@@ -15,7 +15,7 @@ import {
   Handshake,
   Home,
   Video,
-  Newspaper, Tags,
+  Newspaper, Tags, ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar,
@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/sidebar";
 import { signOut } from "@/lib/admin-auth";
 import { useAdminLang, type AdminKey } from "@/lib/admin-i18n";
+import { useAdminPermissions } from "@/lib/admin-permissions";
+import { moduleKeyFromPath } from "@/lib/admin-modules";
 
 const items = [
   { key: "nav.dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
@@ -53,6 +55,10 @@ export function AdminSidebar() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { t, dir } = useAdminLang();
+  const { isSuper, can } = useAdminPermissions();
+
+  const visibleItems = items.filter((item) => can(moduleKeyFromPath(item.url) ?? "", "view"));
+
 
   const handleLogout = async () => {
     await signOut();
@@ -78,7 +84,7 @@ export function AdminSidebar() {
           <SidebarGroupLabel>{t("management")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {visibleItems.map((item) => {
                 const active = pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.url}>
@@ -91,7 +97,22 @@ export function AdminSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              {isSuper ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/admin/users"}
+                    tooltip={t("nav.users")}
+                  >
+                    <Link to="/admin/users" className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      <span>{t("nav.users")}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : null}
             </SidebarMenu>
+
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

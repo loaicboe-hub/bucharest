@@ -6,24 +6,47 @@ import { Button } from "@/components/ui/button";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { getAdminSession } from "@/lib/admin-auth";
 import { useAdminLang } from "@/lib/admin-i18n";
+import { moduleKeyFromPath } from "@/lib/admin-modules";
+import {
+  PermissionsProvider,
+  fetchPermissions,
+  isSuperAdmin,
+  type PermissionMap,
+} from "@/lib/admin-permissions";
 
 export const Route = createFileRoute("/admin/_authed")({
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const session = await getAdminSession();
     if (!session) throw redirect({ to: "/admin/login" });
     if (!session.isAdmin) throw redirect({ to: "/admin/login", search: { denied: true } });
-    return { session };
+
+    const isSuper = await isSuperAdmin(session.userId);
+    const permissions: PermissionMap = isSuper ? {} : await fetchPermissions(session.userId);
+
+    if (!isSuper) {
+      const moduleKey = moduleKeyFromPath(location.pathname);
+      const allowed = Object.values(permissions).filter((p) => p.can_view);
+      if (moduleKey && moduleKey !== "" && !permissions[moduleKey]?.can_view) {
+        const first = allowed[0];
+        if (!first) throw redirect({ to: "/admin/login", search: { denied: true } });
+        throw redirect({ to: `/admin/${first.module_key}` });
+      }
+    }
+
+    return { session, isSuper, permissions };
   },
   component: AuthedLayout,
 });
 
 function AuthedLayout() {
-  const { session } = Route.useRouteContext();
+  const { session, isSuper, permissions } = Route.useRouteContext();
   const { t, lang, setLang, dir } = useAdminLang();
   return (
+    <PermissionsProvider value={{ isSuper, permissions }}>
     <SidebarProvider>
       <div dir={dir} className="flex min-h-screen w-full bg-slate-50">
         <AdminSidebar />
+
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-background px-4">
             <div className="flex items-center gap-2">
@@ -53,5 +76,7 @@ function AuthedLayout() {
       </div>
       <Toaster />
     </SidebarProvider>
+    </PermissionsProvider>
   );
+
 }

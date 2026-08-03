@@ -75,6 +75,13 @@ export const adminDict = {
     "nav.branding": "Logo & Branding",
     "nav.seo": "SEO Settings",
     "nav.settings": "General Settings",
+    "nav.users": "Users & Permissions",
+
+    "users.desc": "Create admin users and control what each of them can view, create, edit or delete",
+    "users.add": "Add User",
+    "users.permissions": "Permissions",
+    "users.superAdmin": "Super Admin",
+    "users.saved": "Permissions updated",
 
     "dashboard.desc": "Overview of your website performance and activity",
     "dashboard.totalProducts": "Total Products",
@@ -135,6 +142,13 @@ export const adminDict = {
     "nav.branding": "الشعار والهوية",
     "nav.seo": "إعدادات SEO",
     "nav.settings": "الإعدادات العامة",
+    "nav.users": "المستخدمون والصلاحيات",
+
+    "users.desc": "إنشاء مستخدمي لوحة التحكم والتحكم في صلاحيات العرض والإضافة والتعديل والحذف",
+    "users.add": "إضافة مستخدم",
+    "users.permissions": "الصلاحيات",
+    "users.superAdmin": "مدير عام",
+    "users.saved": "تم تحديث الصلاحيات",
 
     "dashboard.desc": "نظرة عامة على أداء موقعك ونشاطه",
     "dashboard.totalProducts": "إجمالي المنتجات",
