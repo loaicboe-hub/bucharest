@@ -84,7 +84,7 @@ export function AdminSidebar() {
           <SidebarGroupLabel>{t("management")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => {
+              {visibleItems.map((item) => {
                 const active = pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.url}>
@@ -97,7 +97,22 @@ export function AdminSidebar() {
                   </SidebarMenuItem>
                 );
               })}
+              {isSuper ? (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/admin/users"}
+                    tooltip={t("nav.users")}
+                  >
+                    <Link to="/admin/users" className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4" />
+                      <span>{t("nav.users")}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ) : null}
             </SidebarMenu>
+
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
