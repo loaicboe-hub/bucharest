@@ -121,7 +121,7 @@ function Index() {
   useEffect(() => {
     initLang();
     setFooter(loadFooterConfig());
-    setLogo(loadLogo());
+    getLogoUrl().then(setLogo).catch(() => setLogo(null));
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
