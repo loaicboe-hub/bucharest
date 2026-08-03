@@ -365,19 +365,6 @@ function Index() {
                   />
                 )}
               </div>
-              <div className="absolute -bottom-6 -left-6 hidden rounded-2xl glass p-5 shadow-xl sm:block">
-                <div className="flex items-center gap-4">
-                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl gradient-primary">
-                    <BadgeCheck className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="font-display text-lg font-bold text-primary">
-                      {c.ui.iso}
-                    </div>
-                    <div className="text-xs text-muted-foreground">{c.ui.certifiedExcellence}</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
