@@ -1,14 +1,18 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
 import { CATALOG, getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
 import { loadLogo } from "@/lib/admin-branding";
+import { getProductContent, type ProductContent } from "@/lib/product-content";
+import type { CatalogProduct } from "@/lib/products-catalog";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
     const product = getProduct(params.slug);
-    if (!product) throw notFound();
+    // Admin-created products live in browser storage, so a missing static entry
+    // is resolved on the client instead of 404-ing during SSR.
+    if (!product) return { slug: params.slug, name: params.slug, intro: "" };
     return { slug: product.slug, name: product.en.name, intro: product.en.intro };
   },
   head: ({ loaderData }) => {
@@ -56,11 +60,12 @@ const SPEC_ORDER: (keyof ProductSpecs)[] = [
 
 function ProductDetail() {
   const { slug } = Route.useParams();
-  const product = getProduct(slug)!;
+  const [override, setOverride] = useState<ProductContent | null>(null);
+  const product = (override ?? getProduct(slug)) as ProductContent | CatalogProduct | undefined;
   const { lang, c, dir } = useLang();
   const t = PAGE_UI[lang];
   const labels = SPEC_LABELS[lang];
-  const data = product[lang];
+  const data = product?.[lang];
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -71,17 +76,36 @@ function ProductDetail() {
     setLogo(loadLogo());
   }, []);
   useEffect(() => {
+    const sync = () => setOverride(getProductContent(slug) ?? null);
+    sync();
+    window.addEventListener("fd:product-content", sync);
+    return () => window.removeEventListener("fd:product-content", sync);
+  }, [slug]);
+  useEffect(() => {
     setActive(0);
   }, [slug]);
   useEffect(() => {
-    document.title = `${data.name} Export from Egypt | ${c.brand}`;
-  }, [data.name, c.brand]);
+    if (data?.name) document.title = `${data.name} Export from Egypt | ${c.brand}`;
+  }, [data?.name, c.brand]);
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setLightbox(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox]);
+
+  if (!product || !data) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-primary">Product not found</h1>
+          <Link to="/" hash="products" className="mt-4 inline-block text-sm font-semibold text-fresh underline">
+            Back to products
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const related = CATALOG.filter((p) => p.slug !== slug).slice(0, 4);
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
