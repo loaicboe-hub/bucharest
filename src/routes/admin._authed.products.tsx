@@ -66,6 +66,12 @@ function ProductsPage() {
         description="Manage your product catalog and display order"
         actions={<Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Product</Button>}
       />
+      <Tabs value={tab} onValueChange={(v) => setTab(v as Product["trade"])} className="mb-4">
+        <TabsList>
+          <TabsTrigger value="Export Products">Export Products ({rows.filter((r) => r.trade === "Export Products").length})</TabsTrigger>
+          <TabsTrigger value="Import Products">Import Products ({rows.filter((r) => r.trade === "Import Products").length})</TabsTrigger>
+        </TabsList>
+      </Tabs>
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">
         <div className="overflow-x-auto">
           <Table>
@@ -81,12 +87,19 @@ function ProductsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((p, i) => (
+              {visible.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                    No products in {tab} yet. Click “Add Product” to create one.
+                  </TableCell>
+                </TableRow>
+              )}
+              {visible.map((p, i) => (
                 <TableRow key={p.id}>
                   <TableCell>
                     <div className="flex flex-col">
                       <button onClick={() => move(p.id, -1)} disabled={i === 0} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowUp className="h-4 w-4" /></button>
-                      <button onClick={() => move(p.id, 1)} disabled={i === rows.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
+                      <button onClick={() => move(p.id, 1)} disabled={i === visible.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -113,6 +126,7 @@ function ProductsPage() {
           </Table>
         </div>
       </Card>
+
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
