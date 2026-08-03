@@ -135,6 +135,10 @@ function UsersPage() {
   const handlePassword = async (userId: string) => {
     const password = window.prompt("New password (min 10 characters)");
     if (!password) return;
+    if (password.length < 10) {
+      toast.error("Password must be at least 10 characters");
+      return;
+    }
     try {
       await passwordFn({ data: { userId, password } });
       toast.success("Password updated");
