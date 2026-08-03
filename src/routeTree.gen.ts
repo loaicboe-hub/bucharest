@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminAuthedRouteImport } from './routes/admin._authed'
 import { Route as AdminAuthedSettingsRouteImport } from './routes/admin._authed.settings'
@@ -20,6 +22,7 @@ import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
 import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
 import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
 import { Route as AdminAuthedPartnersRouteImport } from './routes/admin._authed.partners'
+import { Route as AdminAuthedNewsRouteImport } from './routes/admin._authed.news'
 import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
 import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
 import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.invoices'
@@ -41,6 +44,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,6 +57,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const ProductsSlugRoute = ProductsSlugRouteImport.update({
   id: '/products/$slug',
   path: '/products/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/news/$slug',
+  path: '/news/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -84,6 +97,11 @@ const AdminAuthedProductsRoute = AdminAuthedProductsRouteImport.update({
 const AdminAuthedPartnersRoute = AdminAuthedPartnersRouteImport.update({
   id: '/partners',
   path: '/partners',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
+const AdminAuthedNewsRoute = AdminAuthedNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
 const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
@@ -143,8 +161,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -153,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/admin/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/news': typeof AdminAuthedNewsRoute
   '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -165,7 +186,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/news': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -173,6 +196,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/news': typeof AdminAuthedNewsRoute
   '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -187,8 +211,10 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/admin/_authed': typeof AdminAuthedRouteWithChildren
   '/admin/login': typeof AdminLoginRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/admin/_authed/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/_authed/branding': typeof AdminAuthedBrandingRoute
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -197,6 +223,7 @@ export interface FileRoutesById {
   '/admin/_authed/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/_authed/markets': typeof AdminAuthedMarketsRoute
   '/admin/_authed/media': typeof AdminAuthedMediaRoute
+  '/admin/_authed/news': typeof AdminAuthedNewsRoute
   '/admin/_authed/partners': typeof AdminAuthedPartnersRoute
   '/admin/_authed/products': typeof AdminAuthedProductsRoute
   '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -211,8 +238,10 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/admin/login'
+    | '/news/$slug'
     | '/products/$slug'
     | '/admin/'
+    | '/news/'
     | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
@@ -221,6 +250,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/news'
     | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
@@ -233,7 +263,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/admin/login'
+    | '/news/$slug'
     | '/products/$slug'
+    | '/news'
     | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
@@ -241,6 +273,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/news'
     | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
@@ -254,8 +287,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/_authed'
     | '/admin/login'
+    | '/news/$slug'
     | '/products/$slug'
     | '/admin/'
+    | '/news/'
     | '/admin/_authed/about-video'
     | '/admin/_authed/branding'
     | '/admin/_authed/contact-requests'
@@ -264,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/_authed/invoices'
     | '/admin/_authed/markets'
     | '/admin/_authed/media'
+    | '/admin/_authed/news'
     | '/admin/_authed/partners'
     | '/admin/_authed/products'
     | '/admin/_authed/quote-requests'
@@ -276,7 +312,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  NewsSlugRoute: typeof NewsSlugRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
+  NewsIndexRoute: typeof NewsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -295,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -307,6 +352,13 @@ declare module '@tanstack/react-router' {
       path: '/products/$slug'
       fullPath: '/products/$slug'
       preLoaderRoute: typeof ProductsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/news/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -356,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/partners'
       fullPath: '/admin/partners'
       preLoaderRoute: typeof AdminAuthedPartnersRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
+    '/admin/_authed/news': {
+      id: '/admin/_authed/news'
+      path: '/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AdminAuthedNewsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
     '/admin/_authed/media': {
@@ -453,6 +512,7 @@ interface AdminAuthedRouteChildren {
   AdminAuthedInvoicesRoute: typeof AdminAuthedInvoicesRouteWithChildren
   AdminAuthedMarketsRoute: typeof AdminAuthedMarketsRoute
   AdminAuthedMediaRoute: typeof AdminAuthedMediaRoute
+  AdminAuthedNewsRoute: typeof AdminAuthedNewsRoute
   AdminAuthedPartnersRoute: typeof AdminAuthedPartnersRoute
   AdminAuthedProductsRoute: typeof AdminAuthedProductsRoute
   AdminAuthedQuoteRequestsRoute: typeof AdminAuthedQuoteRequestsRoute
@@ -469,6 +529,7 @@ const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedInvoicesRoute: AdminAuthedInvoicesRouteWithChildren,
   AdminAuthedMarketsRoute: AdminAuthedMarketsRoute,
   AdminAuthedMediaRoute: AdminAuthedMediaRoute,
+  AdminAuthedNewsRoute: AdminAuthedNewsRoute,
   AdminAuthedPartnersRoute: AdminAuthedPartnersRoute,
   AdminAuthedProductsRoute: AdminAuthedProductsRoute,
   AdminAuthedQuoteRequestsRoute: AdminAuthedQuoteRequestsRoute,
@@ -497,7 +558,9 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  NewsSlugRoute: NewsSlugRoute,
   ProductsSlugRoute: ProductsSlugRoute,
+  NewsIndexRoute: NewsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
