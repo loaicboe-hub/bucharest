@@ -18,7 +18,6 @@ export const defaultFooterConfig: FooterConfig = {
         { label: "About", href: "#about" },
         { label: "Why Us", href: "#why" },
         { label: "Export Process", href: "#process" },
-        { label: "Global Markets", href: "#markets" },
       ],
     },
     {
@@ -26,14 +25,11 @@ export const defaultFooterConfig: FooterConfig = {
       links: [
         { label: "Fresh Fruits", href: "#products" },
         { label: "Vegetables", href: "#products" },
-        { label: "Seasonal", href: "#products" },
-        { label: "Packaging", href: "#process" },
       ],
     },
     {
       title: "More",
       links: [
-        { label: "Certifications", href: "#about" },
         { label: "Contact", href: "#contact" },
         { label: "Request Quote", href: "#contact" },
         { label: "Back to Top", href: "#top" },
@@ -47,17 +43,22 @@ export const defaultFooterConfig: FooterConfig = {
   },
 };
 
+const REMOVED_LABELS = new Set(["Certifications", "Seasonal", "Packaging", "Global Markets"]);
+
 export function loadFooterConfig(): FooterConfig {
   if (typeof window === "undefined") return defaultFooterConfig;
   try {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return defaultFooterConfig;
     const parsed = JSON.parse(raw) as FooterConfig;
+    const columns = (parsed.columns?.length ? parsed.columns : defaultFooterConfig.columns).map(
+      (c) => ({ ...c, links: (c.links ?? []).filter((l) => !REMOVED_LABELS.has(l.label)) }),
+    );
     return {
       ...defaultFooterConfig,
       ...parsed,
       social: { ...defaultFooterConfig.social, ...(parsed.social ?? {}) },
-      columns: parsed.columns?.length ? parsed.columns : defaultFooterConfig.columns,
+      columns,
     };
   } catch {
     return defaultFooterConfig;
