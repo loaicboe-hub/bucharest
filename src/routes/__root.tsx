@@ -134,7 +134,7 @@ function RootShell({ children }: { children: ReactNode }) {
         />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(sessionStorage.getItem('nv_splash_seen')==='1'){var c=document.getElementById('splash-cover');if(c&&c.parentNode)c.parentNode.removeChild(c);}}catch(e){}setTimeout(function(){var c=document.getElementById('splash-cover');if(c&&c.parentNode)c.parentNode.removeChild(c);},8000);})();`,
+            __html: `(function(){try{if(sessionStorage.getItem('nv_splash_seen')==='1'){var c=document.getElementById('splash-cover');if(c)c.style.display='none';}}catch(e){}setTimeout(function(){var c=document.getElementById('splash-cover');if(c)c.style.display='none';},8000);})();`,
           }}
         />
         {children}
