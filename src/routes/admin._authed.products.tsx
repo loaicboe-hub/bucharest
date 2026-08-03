@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { products as seed, type Product } from "@/lib/admin-mock-data";
@@ -23,9 +24,12 @@ function ProductsPage() {
   const [rows, setRows] = useState<Product[]>([...seed].sort((a, b) => a.order - b.order));
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<Product["trade"]>("Export Products");
+
+  const visible = rows.filter((r) => r.trade === tab);
 
   const openNew = () => {
-    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", trade: "Export Products", description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
+    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", trade: tab, description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
     setOpen(true);
   };
   const openEdit = (p: Product) => { setEditing({ ...p }); setOpen(true); };
@@ -38,12 +42,15 @@ function ProductsPage() {
   const remove = (id: string) => { setRows((rs) => rs.filter((r) => r.id !== id)); toast.success("Deleted"); };
   const move = (id: string, dir: -1 | 1) => {
     setRows((rs) => {
-      const idx = rs.findIndex((r) => r.id === id);
+      const group = rs.filter((r) => r.trade === tab);
+      const idx = group.findIndex((r) => r.id === id);
       const swap = idx + dir;
-      if (swap < 0 || swap >= rs.length) return rs;
-      const next = [...rs];
-      [next[idx], next[swap]] = [next[swap], next[idx]];
-      return next.map((r, i) => ({ ...r, order: i + 1 }));
+      if (idx < 0 || swap < 0 || swap >= group.length) return rs;
+      [group[idx], group[swap]] = [group[swap], group[idx]];
+      const ordered = group.map((r, i) => ({ ...r, order: i + 1 }));
+      const byId = new Map(ordered.map((r) => [r.id, r]));
+      let g = 0;
+      return rs.map((r) => (r.trade === tab ? ordered[g++] ?? byId.get(r.id)! : r));
     });
   };
   const togglePublish = (id: string) => setRows((rs) => rs.map((r) => r.id === id ? { ...r, published: !r.published } : r));
@@ -62,6 +69,12 @@ function ProductsPage() {
         description="Manage your product catalog and display order"
         actions={<Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Product</Button>}
       />
+      <Tabs value={tab} onValueChange={(v) => setTab(v as Product["trade"])} className="mb-4">
+        <TabsList>
+          <TabsTrigger value="Export Products">Export Products ({rows.filter((r) => r.trade === "Export Products").length})</TabsTrigger>
+          <TabsTrigger value="Import Products">Import Products ({rows.filter((r) => r.trade === "Import Products").length})</TabsTrigger>
+        </TabsList>
+      </Tabs>
       <Card className="rounded-2xl border-border/60 p-4 shadow-sm">
         <div className="overflow-x-auto">
           <Table>
@@ -77,12 +90,19 @@ function ProductsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map((p, i) => (
+              {visible.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                    No products in {tab} yet. Click “Add Product” to create one.
+                  </TableCell>
+                </TableRow>
+              )}
+              {visible.map((p, i) => (
                 <TableRow key={p.id}>
                   <TableCell>
                     <div className="flex flex-col">
                       <button onClick={() => move(p.id, -1)} disabled={i === 0} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowUp className="h-4 w-4" /></button>
-                      <button onClick={() => move(p.id, 1)} disabled={i === rows.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
+                      <button onClick={() => move(p.id, 1)} disabled={i === visible.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-30"><ArrowDown className="h-4 w-4" /></button>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -109,6 +129,7 @@ function ProductsPage() {
           </Table>
         </div>
       </Card>
+
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
