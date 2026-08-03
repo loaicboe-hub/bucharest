@@ -711,13 +711,14 @@ function Index() {
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground lg:h-20 lg:w-20">
+                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
                   {logo ? (
-                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.35] object-contain p-0.5" />
+                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.18] object-contain p-[2px]" />
                   ) : (
-                    <Leaf className="h-8 w-8 lg:h-10 lg:w-10" />
+                    <Leaf className="h-7 w-7" />
                   )}
                 </div>
+
 
                 <div>
                   <div className="font-display text-xl font-bold">{site.companyName || c.brand}</div>
