@@ -9,9 +9,17 @@ const KEY = "fd_product_content";
 export type ProductContent = CatalogProduct & {
   /** Export Products | Import Products */
   trade: "Export Products" | "Import Products";
+  /** Spec fields hidden on the public product page for THIS product only. */
+  hiddenSpecs?: (keyof ProductSpecs)[];
   /** true when the entry was created from the admin (not part of the static catalog) */
   custom?: boolean;
 };
+
+/** True when a spec field should be shown on the website for this product. */
+export function isSpecVisible(product: Pick<ProductContent, "hiddenSpecs">, key: keyof ProductSpecs) {
+  return !(product.hiddenSpecs ?? []).includes(key);
+}
+
 
 export const EMPTY_SPECS: ProductSpecs = {
   scientificName: "",

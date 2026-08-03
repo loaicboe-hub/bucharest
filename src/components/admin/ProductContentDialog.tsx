@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SPEC_LABELS, type ProductSpecs } from "@/lib/products-catalog";
@@ -34,6 +36,14 @@ export function ProductContentDialog({
     setDraft({ ...draft, [lang]: { ...draft[lang], ...patch } });
   const setSpec = (lang: "en" | "ar", key: keyof ProductSpecs, value: string) =>
     setDraft({ ...draft, [lang]: { ...draft[lang], specs: { ...draft[lang].specs, [key]: value } } });
+  const toggleSpecVisible = (key: keyof ProductSpecs) => {
+    const hidden = draft.hiddenSpecs ?? [];
+    setDraft({
+      ...draft,
+      hiddenSpecs: hidden.includes(key) ? hidden.filter((k) => k !== key) : [...hidden, key],
+    });
+  };
+
 
   const onMainImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -151,13 +161,29 @@ export function ProductContentDialog({
                 <Textarea rows={4} value={draft[lang].description} onChange={(e) => setLocale(lang, { description: e.target.value })} />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                {SPEC_KEYS.map((key) => (
-                  <div key={key} className="space-y-1.5">
-                    <Label className="text-xs">{SPEC_LABELS[lang][key]}</Label>
-                    <Input value={draft[lang].specs[key]} onChange={(e) => setSpec(lang, key, e.target.value)} />
-                  </div>
-                ))}
+                {SPEC_KEYS.map((key) => {
+                  const hidden = (draft.hiddenSpecs ?? []).includes(key);
+                  return (
+                    <div key={key} className="space-y-1.5 rounded-md border border-border p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <Label className="text-xs">{SPEC_LABELS[lang][key]}</Label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-muted-foreground">
+                            {hidden ? (lang === "ar" ? "مخفي" : "Hidden") : lang === "ar" ? "ظاهر" : "Shown"}
+                          </span>
+                          <Switch checked={!hidden} onCheckedChange={() => toggleSpecVisible(key)} />
+                        </div>
+                      </div>
+                      <Input
+                        value={draft[lang].specs[key]}
+                        disabled={hidden}
+                        onChange={(e) => setSpec(lang, key, e.target.value)}
+                      />
+                    </div>
+                  );
+                })}
               </div>
+
             </TabsContent>
           ))}
         </Tabs>
