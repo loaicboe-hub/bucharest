@@ -132,7 +132,58 @@ function LoginPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
+                  {!forgotOpen && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setForgotOpen(true);
+                        setResetEmail(email);
+                      }}
+                      className="w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
                 </form>
+
+                {forgotOpen && (
+                  <div className="mt-4 rounded-lg border border-border/60 bg-muted/40 p-4">
+                    {resetSent ? (
+                      <p className="text-xs text-muted-foreground">
+                        If an account exists for that email, a reset link is on its way. Check your
+                        inbox and spam folder.
+                      </p>
+                    ) : (
+                      <form onSubmit={handleForgot} className="space-y-3">
+                        <Label htmlFor="reset-email" className="text-xs">
+                          Enter your email to receive a reset link
+                        </Label>
+                        <Input
+                          id="reset-email"
+                          type="email"
+                          value={resetEmail}
+                          onChange={(e) => setResetEmail(e.target.value)}
+                          autoComplete="email"
+                          required
+                        />
+                        <div className="flex gap-2">
+                          <Button type="submit" size="sm" disabled={resetting}>
+                            {resetting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Send reset link
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setForgotOpen(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                )}
               </TabsContent>
 
               <TabsContent value="signup">
