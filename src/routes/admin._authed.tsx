@@ -1,8 +1,11 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Languages } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { Button } from "@/components/ui/button";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { getAdminSession } from "@/lib/admin-auth";
+import { useAdminLang } from "@/lib/admin-i18n";
 
 export const Route = createFileRoute("/admin/_authed")({
   beforeLoad: async () => {
