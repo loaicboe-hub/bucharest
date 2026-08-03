@@ -19,12 +19,12 @@ export const Route = createFileRoute("/products/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Product Not Found | Fresh Diamond for Export" },
+          { title: "Product Not Found | Nailvlora Import and Export" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
-    const title = `${loaderData.name} Export from Egypt | Fresh Diamond for Export`;
+    const title = `${loaderData.name} Export from Egypt | Nailvlora Import and Export`;
     const description = `${loaderData.intro} Premium Egyptian ${loaderData.name.toLowerCase()} for international buyers — specifications, packaging, sizes and shipping terms.`;
     return {
       meta: [

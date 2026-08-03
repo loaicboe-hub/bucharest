@@ -100,7 +100,6 @@ function Index() {
   const [trade, setTrade] = useState<"export" | "import">("export");
 
   const [showTop, setShowTop] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [footer, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
@@ -130,10 +129,8 @@ function Index() {
       setShowTop(window.scrollY > 600);
     };
     window.addEventListener("scroll", onScroll);
-    const t = setTimeout(() => setLoading(false), 600);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      clearTimeout(t);
     };
   }, []);
 
@@ -144,21 +141,8 @@ function Index() {
     <div className="min-h-screen bg-background text-foreground">
       <SplashScreen />
 
-      {/* Loading */}
-      {loading && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-primary">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <Leaf className="h-12 w-12 text-gold animate-float" />
-              <div className="absolute inset-0 rounded-full blur-2xl bg-gold/40" />
-            </div>
-            <div className="text-primary-foreground font-display text-xl tracking-wide">
-              {site.companyName || c.brand}
-            </div>
 
-          </div>
-        </div>
-      )}
+
 
       {/* Navbar */}
       <header
