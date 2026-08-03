@@ -307,6 +307,7 @@ function UsersPage() {
               <Input
                 id="password"
                 type="password"
+                minLength={10}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
