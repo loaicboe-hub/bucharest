@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      news: {
+        Row: {
+          author: string
+          category: string
+          content: string
+          content_ar: string
+          created_at: string
+          excerpt: string
+          excerpt_ar: string
+          featured_image: string
+          gallery: string[]
+          id: string
+          published: boolean
+          published_at: string
+          slug: string
+          tags: string[]
+          title: string
+          title_ar: string
+          updated_at: string
+          video_url: string
+        }
+        Insert: {
+          author?: string
+          category?: string
+          content?: string
+          content_ar?: string
+          created_at?: string
+          excerpt?: string
+          excerpt_ar?: string
+          featured_image?: string
+          gallery?: string[]
+          id?: string
+          published?: boolean
+          published_at?: string
+          slug: string
+          tags?: string[]
+          title?: string
+          title_ar?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Update: {
+          author?: string
+          category?: string
+          content?: string
+          content_ar?: string
+          created_at?: string
+          excerpt?: string
+          excerpt_ar?: string
+          featured_image?: string
+          gallery?: string[]
+          id?: string
+          published?: boolean
+          published_at?: string
+          slug?: string
+          tags?: string[]
+          title?: string
+          title_ar?: string
+          updated_at?: string
+          video_url?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
