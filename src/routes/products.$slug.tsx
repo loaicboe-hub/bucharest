@@ -2,10 +2,16 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
-import { CATALOG, getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
+import { getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
 import { loadLogo } from "@/lib/admin-branding";
-import { getProductContent, type ProductContent } from "@/lib/product-content";
-import type { CatalogProduct } from "@/lib/products-catalog";
+import {
+  getProductBySlug,
+  listPublishedProducts,
+  localized,
+  productGallery,
+  productImage,
+  type ProductRow,
+} from "@/lib/products-db";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -60,12 +66,13 @@ const SPEC_ORDER: (keyof ProductSpecs)[] = [
 
 function ProductDetail() {
   const { slug } = Route.useParams();
-  const [override, setOverride] = useState<ProductContent | null>(null);
-  const product = (override ?? getProduct(slug)) as ProductContent | CatalogProduct | undefined;
+  const [product, setProduct] = useState<ProductRow | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [related, setRelated] = useState<ProductRow[]>([]);
   const { lang, c, dir } = useLang();
   const t = PAGE_UI[lang];
   const labels = SPEC_LABELS[lang];
-  const data = product?.[lang];
+  const data = product ? localized(product, lang) : undefined;
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
@@ -76,10 +83,19 @@ function ProductDetail() {
     setLogo(loadLogo());
   }, []);
   useEffect(() => {
-    const sync = () => setOverride(getProductContent(slug) ?? null);
-    sync();
-    window.addEventListener("fd:product-content", sync);
-    return () => window.removeEventListener("fd:product-content", sync);
+    let alive = true;
+    setLoading(true);
+    getProductBySlug(slug).then((p) => {
+      if (!alive) return;
+      setProduct(p);
+      setLoading(false);
+    });
+    listPublishedProducts().then((all) => {
+      if (alive) setRelated(all.filter((p) => p.slug !== slug).slice(0, 4));
+    });
+    return () => {
+      alive = false;
+    };
   }, [slug]);
   useEffect(() => {
     setActive(0);
@@ -94,6 +110,10 @@ function ProductDetail() {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox]);
 
+  if (loading) {
+    return <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">Loading…</div>;
+  }
+
   if (!product || !data) {
     return (
       <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
@@ -107,9 +127,10 @@ function ProductDetail() {
     );
   }
 
-  const hiddenSpecs = (product as ProductContent).hiddenSpecs ?? [];
-  const visibleSpecs = SPEC_ORDER.filter((key) => !hiddenSpecs.includes(key));
-  const related = CATALOG.filter((p) => p.slug !== slug).slice(0, 4);
+  const visibleSpecs = SPEC_ORDER.filter(
+    (key) => !product.hidden_specs.includes(key) && !!data.specs[key],
+  );
+  const gallery = productGallery(product);
 
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
@@ -177,7 +198,7 @@ function ProductDetail() {
           </div>
           <div className="relative overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
             <img
-              src={product.main}
+              src={productImage(product)}
               alt={data.name}
               width={1024}
               height={768}
@@ -197,7 +218,7 @@ function ProductDetail() {
             className="block w-full overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]"
           >
             <img
-              src={product.gallery[active]}
+              src={gallery[active]}
               alt={`${data.name} ${active + 1}`}
               loading="lazy"
               width={1024}
@@ -206,7 +227,7 @@ function ProductDetail() {
             />
           </button>
           <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-8">
-            {product.gallery.map((img, i) => (
+            {gallery.map((img, i) => (
               <button
                 key={img + i}
                 type="button"
@@ -277,13 +298,13 @@ function ProductDetail() {
                 className="group overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1"
               >
                 <img
-                  src={p.main}
-                  alt={p[lang].name}
+                  src={productImage(p)}
+                  alt={localized(p, lang).name}
                   loading="lazy"
                   className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="p-4">
-                  <h3 className="font-display text-lg font-semibold text-primary">{p[lang].name}</h3>
+                  <h3 className="font-display text-lg font-semibold text-primary">{localized(p, lang).name}</h3>
                   <span className="mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh">
                     {t.viewProduct} <Arrow className="h-4 w-4" />
                   </span>
@@ -308,7 +329,7 @@ function ProductDetail() {
             <X className="h-5 w-5" />
           </button>
           <img
-            src={product.gallery[active]}
+            src={gallery[active]}
             alt={data.name}
             className="max-h-[85vh] max-w-full rounded-2xl object-contain"
             onClick={(e) => e.stopPropagation()}
