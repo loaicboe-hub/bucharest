@@ -24,9 +24,12 @@ function ProductsPage() {
   const [rows, setRows] = useState<Product[]>([...seed].sort((a, b) => a.order - b.order));
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<Product["trade"]>("Export Products");
+
+  const visible = rows.filter((r) => r.trade === tab);
 
   const openNew = () => {
-    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", trade: "Export Products", description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
+    setEditing({ id: `p_${Date.now()}`, name: "", category: "Fruits", trade: tab, description: "", image: "/placeholder.svg", order: rows.length + 1, published: true });
     setOpen(true);
   };
   const openEdit = (p: Product) => { setEditing({ ...p }); setOpen(true); };
