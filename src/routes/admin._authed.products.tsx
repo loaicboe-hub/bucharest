@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { products as seed, type Product } from "@/lib/admin-mock-data";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/admin/_authed/products")({
 });
 
 function ProductsPage() {
+  const { t } = useAdminLang();
   const [rows, setRows] = useState<Product[]>([...seed].sort((a, b) => a.order - b.order));
   const [editing, setEditing] = useState<Product | null>(null);
   const [open, setOpen] = useState(false);
@@ -80,8 +82,8 @@ function ProductsPage() {
   return (
     <div>
       <PageHeader
-        title="Products"
-        description="Manage your product catalog and display order"
+        title={t("nav.products")}
+        description={t("products.desc")}
         actions={
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => openWebsite(null)} className="gap-2">

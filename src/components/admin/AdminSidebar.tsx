@@ -26,23 +26,25 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { signOut } from "@/lib/admin-auth";
+import { useAdminLang, type AdminKey } from "@/lib/admin-i18n";
 
 const items = [
-  { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-  { title: "Quote Requests", url: "/admin/quote-requests", icon: FileText },
-  { title: "Products", url: "/admin/products", icon: Package },
-  { title: "Billing & Invoices", url: "/admin/invoices", icon: Receipt },
-  { title: "Markets", url: "/admin/markets", icon: Globe },
-  { title: "Website Content", url: "/admin/content", icon: Type },
-  { title: "Media Library", url: "/admin/media", icon: Image },
-  { title: "Logo & Branding", url: "/admin/branding", icon: Palette },
-  { title: "SEO Settings", url: "/admin/seo", icon: Search },
-  { title: "General Settings", url: "/admin/settings", icon: Settings },
-];
+  { key: "nav.dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+  { key: "nav.quote-requests", url: "/admin/quote-requests", icon: FileText },
+  { key: "nav.products", url: "/admin/products", icon: Package },
+  { key: "nav.invoices", url: "/admin/invoices", icon: Receipt },
+  { key: "nav.markets", url: "/admin/markets", icon: Globe },
+  { key: "nav.content", url: "/admin/content", icon: Type },
+  { key: "nav.media", url: "/admin/media", icon: Image },
+  { key: "nav.branding", url: "/admin/branding", icon: Palette },
+  { key: "nav.seo", url: "/admin/seo", icon: Search },
+  { key: "nav.settings", url: "/admin/settings", icon: Settings },
+] satisfies { key: AdminKey; url: string; icon: typeof Globe }[];
 
 export function AdminSidebar() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { t, dir } = useAdminLang();
 
   const handleLogout = async () => {
     await signOut();
@@ -50,7 +52,7 @@ export function AdminSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" side={dir === "rtl" ? "right" : "left"}>
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -58,24 +60,24 @@ export function AdminSidebar() {
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-semibold text-sidebar-foreground">Fresh Diamond</span>
-            <span className="text-xs text-muted-foreground">Admin Panel</span>
+            <span className="text-xs text-muted-foreground">{t("adminPanel")}</span>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("management")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
                 const active = pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton asChild isActive={active} tooltip={item.title}>
+                    <SidebarMenuButton asChild isActive={active} tooltip={t(item.key)}>
                       <Link to={item.url} className="flex items-center gap-2">
                         <item.icon className="h-4 w-4" />
-                        <span>{item.title}</span>
+                        <span>{t(item.key)}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -89,9 +91,9 @@ export function AdminSidebar() {
       <SidebarFooter className="border-t border-sidebar-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
+            <SidebarMenuButton onClick={handleLogout} tooltip={t("logout")}>
               <LogOut className="h-4 w-4" />
-              <span>Logout</span>
+              <span>{t("logout")}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

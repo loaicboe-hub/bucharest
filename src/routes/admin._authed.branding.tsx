@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import { toast } from "sonner";
 import { Upload, Trash2 } from "lucide-react";
 import { loadLogo, saveLogo, clearLogo, readFileAsDataUrl } from "@/lib/admin-branding";
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/admin/_authed/branding")({
 });
 
 function BrandingPage() {
+  const { t } = useAdminLang();
   const [logo, setLogo] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -38,8 +40,8 @@ function BrandingPage() {
   return (
     <div>
       <PageHeader
-        title="Logo & Branding"
-        description="Upload the company logo used in the website header, footer and invoice PDFs"
+        title={t("nav.branding")}
+        description={t("branding.desc")}
         actions={
           <Button onClick={() => inputRef.current?.click()}>
             <Upload className="mr-2 h-4 w-4" /> Upload Logo

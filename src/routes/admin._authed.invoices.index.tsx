@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PageHeader } from "@/components/admin/PageHeader";
+import { useAdminLang } from "@/lib/admin-i18n";
 import {
   computeTotals,
   deleteInvoice,
@@ -58,6 +59,7 @@ const STATUS_STYLES: Record<PaymentStatus, string> = {
 };
 
 function InvoicesList() {
+  const { t } = useAdminLang();
   const navigate = useNavigate();
   const [rows, setRows] = useState<Invoice[]>([]);
   const [q, setQ] = useState("");
@@ -92,8 +94,8 @@ function InvoicesList() {
   return (
     <div>
       <PageHeader
-        title="Billing & Invoices"
-        description="Create and manage professional Commercial Invoices for international buyers."
+        title={t("nav.invoices")}
+        description={t("invoices.desc")}
         actions={
           <Button onClick={() => navigate({ to: "/admin/invoices/$id", params: { id: "new" } })} className="gap-2">
             <Plus className="h-4 w-4" /> New Invoice
