@@ -228,7 +228,9 @@ function ProductDetail() {
       </section>
 
       {/* Info */}
+      {visibleSpecs.length > 0 && (
       <section className="bg-cream py-16 lg:py-20">
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <h2 className="mb-8 font-display text-3xl font-bold text-primary">{t.info}</h2>
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)]">
