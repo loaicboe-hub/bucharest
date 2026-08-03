@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -39,6 +40,11 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -166,6 +173,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/news': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/admin/_authed/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/_authed/branding': typeof AdminAuthedBrandingRoute
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
@@ -213,6 +222,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/products/$slug'
     | '/admin/'
+    | '/news/'
     | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
@@ -234,6 +244,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/login'
     | '/products/$slug'
+    | '/news'
     | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/products/$slug'
     | '/admin/'
+    | '/news/'
     | '/admin/_authed/about-video'
     | '/admin/_authed/branding'
     | '/admin/_authed/contact-requests'
@@ -277,6 +289,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   ProductsSlugRoute: typeof ProductsSlugRoute
+  NewsIndexRoute: typeof NewsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -498,6 +518,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   ProductsSlugRoute: ProductsSlugRoute,
+  NewsIndexRoute: NewsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
