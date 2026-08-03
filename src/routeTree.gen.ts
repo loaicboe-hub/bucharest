@@ -22,6 +22,7 @@ import { Route as AdminAuthedSeoRouteImport } from './routes/admin._authed.seo'
 import { Route as AdminAuthedQuoteRequestsRouteImport } from './routes/admin._authed.quote-requests'
 import { Route as AdminAuthedProductsRouteImport } from './routes/admin._authed.products'
 import { Route as AdminAuthedPartnersRouteImport } from './routes/admin._authed.partners'
+import { Route as AdminAuthedNewsRouteImport } from './routes/admin._authed.news'
 import { Route as AdminAuthedMediaRouteImport } from './routes/admin._authed.media'
 import { Route as AdminAuthedMarketsRouteImport } from './routes/admin._authed.markets'
 import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.invoices'
@@ -98,6 +99,11 @@ const AdminAuthedPartnersRoute = AdminAuthedPartnersRouteImport.update({
   path: '/partners',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
+const AdminAuthedNewsRoute = AdminAuthedNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
 const AdminAuthedMediaRoute = AdminAuthedMediaRouteImport.update({
   id: '/media',
   path: '/media',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/admin/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/news': typeof AdminAuthedNewsRoute
   '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
   '/admin/markets': typeof AdminAuthedMarketsRoute
   '/admin/media': typeof AdminAuthedMediaRoute
+  '/admin/news': typeof AdminAuthedNewsRoute
   '/admin/partners': typeof AdminAuthedPartnersRoute
   '/admin/products': typeof AdminAuthedProductsRoute
   '/admin/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/admin/_authed/invoices': typeof AdminAuthedInvoicesRouteWithChildren
   '/admin/_authed/markets': typeof AdminAuthedMarketsRoute
   '/admin/_authed/media': typeof AdminAuthedMediaRoute
+  '/admin/_authed/news': typeof AdminAuthedNewsRoute
   '/admin/_authed/partners': typeof AdminAuthedPartnersRoute
   '/admin/_authed/products': typeof AdminAuthedProductsRoute
   '/admin/_authed/quote-requests': typeof AdminAuthedQuoteRequestsRoute
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/admin/invoices'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/news'
     | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/markets'
     | '/admin/media'
+    | '/admin/news'
     | '/admin/partners'
     | '/admin/products'
     | '/admin/quote-requests'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/admin/_authed/invoices'
     | '/admin/_authed/markets'
     | '/admin/_authed/media'
+    | '/admin/_authed/news'
     | '/admin/_authed/partners'
     | '/admin/_authed/products'
     | '/admin/_authed/quote-requests'
@@ -398,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedPartnersRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/news': {
+      id: '/admin/_authed/news'
+      path: '/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AdminAuthedNewsRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
     '/admin/_authed/media': {
       id: '/admin/_authed/media'
       path: '/media'
@@ -493,6 +512,7 @@ interface AdminAuthedRouteChildren {
   AdminAuthedInvoicesRoute: typeof AdminAuthedInvoicesRouteWithChildren
   AdminAuthedMarketsRoute: typeof AdminAuthedMarketsRoute
   AdminAuthedMediaRoute: typeof AdminAuthedMediaRoute
+  AdminAuthedNewsRoute: typeof AdminAuthedNewsRoute
   AdminAuthedPartnersRoute: typeof AdminAuthedPartnersRoute
   AdminAuthedProductsRoute: typeof AdminAuthedProductsRoute
   AdminAuthedQuoteRequestsRoute: typeof AdminAuthedQuoteRequestsRoute
@@ -509,6 +529,7 @@ const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedInvoicesRoute: AdminAuthedInvoicesRouteWithChildren,
   AdminAuthedMarketsRoute: AdminAuthedMarketsRoute,
   AdminAuthedMediaRoute: AdminAuthedMediaRoute,
+  AdminAuthedNewsRoute: AdminAuthedNewsRoute,
   AdminAuthedPartnersRoute: AdminAuthedPartnersRoute,
   AdminAuthedProductsRoute: AdminAuthedProductsRoute,
   AdminAuthedQuoteRequestsRoute: AdminAuthedQuoteRequestsRoute,

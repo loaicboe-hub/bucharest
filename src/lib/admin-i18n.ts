@@ -67,6 +67,8 @@ export const adminDict = {
     "aboutVideo.uploaded": "Video uploaded",
     "aboutVideo.deleted": "Video deleted",
     "aboutVideo.hint": "MP4 or WebM, up to 50 MB. It plays muted, looped and inline on all devices.",
+    "nav.news": "News Management",
+    "news.desc": "Create, edit and publish company news articles shown on the Our News page",
     "nav.content": "Website Content",
     "nav.media": "Media Library",
     "nav.branding": "Logo & Branding",
