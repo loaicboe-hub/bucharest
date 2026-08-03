@@ -121,6 +121,21 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        {/* Pre-hydration cover: paints white before any page content is visible. */}
+        <div
+          id="splash-cover"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "#ffffff",
+            zIndex: 300,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(sessionStorage.getItem('nv_splash_seen')==='1'){var c=document.getElementById('splash-cover');if(c&&c.parentNode)c.parentNode.removeChild(c);}}catch(e){}})();`,
+          }}
+        />
         {children}
         <Scripts />
       </body>
@@ -133,8 +148,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SplashScreen />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
   );
 }
+
