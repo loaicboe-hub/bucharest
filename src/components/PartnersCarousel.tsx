@@ -31,7 +31,7 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
 
       <div className="group relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
         <div
-          className="flex w-max items-center gap-10 sm:gap-14 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
+          className="flex w-max items-center gap-12 sm:gap-16 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
           style={{ animation: `partners-marquee ${Math.max(18, partners.length * 6)}s linear infinite` }}
         >
           {loop.map((p, i) => {
@@ -40,13 +40,17 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
                 src={p.logo}
                 alt={p.name ? `${p.name} logo` : "Partner logo"}
                 loading="lazy"
-                className="h-14 w-36 object-contain opacity-70 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0 sm:h-16 sm:w-44"
+                className="h-full w-full object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
               />
             );
             return (
-              <div key={`${p.id}-${i}`} className="shrink-0" aria-hidden={i >= partners.length}>
+              <div
+                key={`${p.id}-${i}`}
+                className="flex h-28 w-52 shrink-0 items-center justify-center rounded-2xl border border-border/60 bg-card p-4 shadow-sm sm:h-36 sm:w-64 sm:p-6"
+                aria-hidden={i >= partners.length}
+              >
                 {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" title={p.name}>
+                  <a href={p.url} target="_blank" rel="noopener noreferrer" title={p.name} className="block h-full w-full">
                     {img}
                   </a>
                 ) : (
