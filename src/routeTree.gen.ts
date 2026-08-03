@@ -29,6 +29,7 @@ import { Route as AdminAuthedInvoicesRouteImport } from './routes/admin._authed.
 import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed.dashboard'
 import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
 import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
+import { Route as AdminAuthedCategoriesRouteImport } from './routes/admin._authed.categories'
 import { Route as AdminAuthedBrandingRouteImport } from './routes/admin._authed.branding'
 import { Route as AdminAuthedAboutVideoRouteImport } from './routes/admin._authed.about-video'
 import { Route as AdminAuthedInvoicesIndexRouteImport } from './routes/admin._authed.invoices.index'
@@ -135,6 +136,11 @@ const AdminAuthedContactRequestsRoute =
     path: '/contact-requests',
     getParentRoute: () => AdminAuthedRoute,
   } as any)
+const AdminAuthedCategoriesRoute = AdminAuthedCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
 const AdminAuthedBrandingRoute = AdminAuthedBrandingRouteImport.update({
   id: '/branding',
   path: '/branding',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/news/': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
+  '/admin/categories': typeof AdminAuthedCategoriesRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/news': typeof NewsIndexRoute
   '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
+  '/admin/categories': typeof AdminAuthedCategoriesRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
   '/admin/dashboard': typeof AdminAuthedDashboardRoute
@@ -217,6 +225,7 @@ export interface FileRoutesById {
   '/news/': typeof NewsIndexRoute
   '/admin/_authed/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/_authed/branding': typeof AdminAuthedBrandingRoute
+  '/admin/_authed/categories': typeof AdminAuthedCategoriesRoute
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/_authed/content': typeof AdminAuthedContentRoute
   '/admin/_authed/dashboard': typeof AdminAuthedDashboardRoute
@@ -244,6 +253,7 @@ export interface FileRouteTypes {
     | '/news/'
     | '/admin/about-video'
     | '/admin/branding'
+    | '/admin/categories'
     | '/admin/contact-requests'
     | '/admin/content'
     | '/admin/dashboard'
@@ -268,6 +278,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/admin/about-video'
     | '/admin/branding'
+    | '/admin/categories'
     | '/admin/contact-requests'
     | '/admin/content'
     | '/admin/dashboard'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/news/'
     | '/admin/_authed/about-video'
     | '/admin/_authed/branding'
+    | '/admin/_authed/categories'
     | '/admin/_authed/contact-requests'
     | '/admin/_authed/content'
     | '/admin/_authed/dashboard'
@@ -459,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedContactRequestsRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/categories': {
+      id: '/admin/_authed/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminAuthedCategoriesRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
     '/admin/_authed/branding': {
       id: '/admin/_authed/branding'
       path: '/branding'
@@ -506,6 +525,7 @@ const AdminAuthedInvoicesRouteWithChildren =
 interface AdminAuthedRouteChildren {
   AdminAuthedAboutVideoRoute: typeof AdminAuthedAboutVideoRoute
   AdminAuthedBrandingRoute: typeof AdminAuthedBrandingRoute
+  AdminAuthedCategoriesRoute: typeof AdminAuthedCategoriesRoute
   AdminAuthedContactRequestsRoute: typeof AdminAuthedContactRequestsRoute
   AdminAuthedContentRoute: typeof AdminAuthedContentRoute
   AdminAuthedDashboardRoute: typeof AdminAuthedDashboardRoute
@@ -523,6 +543,7 @@ interface AdminAuthedRouteChildren {
 const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
   AdminAuthedAboutVideoRoute: AdminAuthedAboutVideoRoute,
   AdminAuthedBrandingRoute: AdminAuthedBrandingRoute,
+  AdminAuthedCategoriesRoute: AdminAuthedCategoriesRoute,
   AdminAuthedContactRequestsRoute: AdminAuthedContactRequestsRoute,
   AdminAuthedContentRoute: AdminAuthedContentRoute,
   AdminAuthedDashboardRoute: AdminAuthedDashboardRoute,
