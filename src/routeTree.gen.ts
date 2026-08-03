@@ -27,6 +27,7 @@ import { Route as AdminAuthedDashboardRouteImport } from './routes/admin._authed
 import { Route as AdminAuthedContentRouteImport } from './routes/admin._authed.content'
 import { Route as AdminAuthedContactRequestsRouteImport } from './routes/admin._authed.contact-requests'
 import { Route as AdminAuthedBrandingRouteImport } from './routes/admin._authed.branding'
+import { Route as AdminAuthedAboutVideoRouteImport } from './routes/admin._authed.about-video'
 import { Route as AdminAuthedInvoicesIndexRouteImport } from './routes/admin._authed.invoices.index'
 import { Route as AdminAuthedInvoicesIdRouteImport } from './routes/admin._authed.invoices.$id'
 
@@ -121,6 +122,11 @@ const AdminAuthedBrandingRoute = AdminAuthedBrandingRouteImport.update({
   path: '/branding',
   getParentRoute: () => AdminAuthedRoute,
 } as any)
+const AdminAuthedAboutVideoRoute = AdminAuthedAboutVideoRouteImport.update({
+  id: '/about-video',
+  path: '/about-video',
+  getParentRoute: () => AdminAuthedRoute,
+} as any)
 const AdminAuthedInvoicesIndexRoute =
   AdminAuthedInvoicesIndexRouteImport.update({
     id: '/',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
+  '/admin/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/branding': typeof AdminAuthedBrandingRoute
   '/admin/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/content': typeof AdminAuthedContentRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/_authed/about-video': typeof AdminAuthedAboutVideoRoute
   '/admin/_authed/branding': typeof AdminAuthedBrandingRoute
   '/admin/_authed/contact-requests': typeof AdminAuthedContactRequestsRoute
   '/admin/_authed/content': typeof AdminAuthedContentRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/products/$slug'
     | '/admin/'
+    | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
     | '/admin/content'
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/login'
     | '/products/$slug'
+    | '/admin/about-video'
     | '/admin/branding'
     | '/admin/contact-requests'
     | '/admin/content'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/products/$slug'
     | '/admin/'
+    | '/admin/_authed/about-video'
     | '/admin/_authed/branding'
     | '/admin/_authed/contact-requests'
     | '/admin/_authed/content'
@@ -395,6 +407,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuthedBrandingRouteImport
       parentRoute: typeof AdminAuthedRoute
     }
+    '/admin/_authed/about-video': {
+      id: '/admin/_authed/about-video'
+      path: '/about-video'
+      fullPath: '/admin/about-video'
+      preLoaderRoute: typeof AdminAuthedAboutVideoRouteImport
+      parentRoute: typeof AdminAuthedRoute
+    }
     '/admin/_authed/invoices/': {
       id: '/admin/_authed/invoices/'
       path: '/'
@@ -426,6 +445,7 @@ const AdminAuthedInvoicesRouteWithChildren =
   AdminAuthedInvoicesRoute._addFileChildren(AdminAuthedInvoicesRouteChildren)
 
 interface AdminAuthedRouteChildren {
+  AdminAuthedAboutVideoRoute: typeof AdminAuthedAboutVideoRoute
   AdminAuthedBrandingRoute: typeof AdminAuthedBrandingRoute
   AdminAuthedContactRequestsRoute: typeof AdminAuthedContactRequestsRoute
   AdminAuthedContentRoute: typeof AdminAuthedContentRoute
@@ -441,6 +461,7 @@ interface AdminAuthedRouteChildren {
 }
 
 const AdminAuthedRouteChildren: AdminAuthedRouteChildren = {
+  AdminAuthedAboutVideoRoute: AdminAuthedAboutVideoRoute,
   AdminAuthedBrandingRoute: AdminAuthedBrandingRoute,
   AdminAuthedContactRequestsRoute: AdminAuthedContactRequestsRoute,
   AdminAuthedContentRoute: AdminAuthedContentRoute,
