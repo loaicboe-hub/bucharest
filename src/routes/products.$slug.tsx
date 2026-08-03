@@ -139,17 +139,17 @@ function ProductDetail() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-          <Link to="/" className="flex items-center gap-3">
-            {logo ? (
-              <img src={logo} alt={c.brand} className="h-10 w-auto object-contain" />
-            ) : (
-              <div className="grid h-10 w-10 place-items-center rounded-xl gradient-primary text-white">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-            )}
+          <Link to="/" className="flex items-center gap-3.5">
+            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
+              {logo ? (
+                <img src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
+              ) : (
+                <ShieldCheck className="h-6 w-6 text-white" />
+              )}
+            </div>
             <div className="leading-tight">
-              <div className="font-display text-lg font-bold text-primary">{c.brand}</div>
-              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{c.brandSub}</div>
+              <div className="font-display text-xl font-bold leading-none text-primary sm:text-2xl lg:text-3xl">{c.brand}</div>
+              <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{c.brandSub}</div>
             </div>
           </Link>
           <Link
