@@ -3,7 +3,7 @@
 // bilingual website content, images, specs and visibility toggles.
 
 import { supabase } from "@/integrations/supabase/client";
-import { CATALOG, EMPTY_SPECS_KEYS, type ProductSpecs } from "@/lib/products-catalog";
+import { CATALOG, type ProductSpecs } from "@/lib/products-catalog";
 
 const BUCKET = "site-media";
 const FOLDER = "products";
