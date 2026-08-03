@@ -41,9 +41,9 @@ export const defaultFooterConfig: FooterConfig = {
     },
   ],
   social: {
-    facebook: "https://facebook.com/freshdiamond",
-    instagram: "https://instagram.com/freshdiamond",
-    linkedin: "https://linkedin.com/company/freshdiamond",
+    facebook: "https://facebook.com/nailvlora",
+    instagram: "https://instagram.com/nailvlora",
+    linkedin: "https://linkedin.com/company/nailvlora",
   },
 };
 

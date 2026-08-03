@@ -87,7 +87,7 @@ export type SiteContent = {
 };
 
 const en: SiteContent = {
-  brand: "Fresh Diamond",
+  brand: "Nailvlora",
   brandSub: "for Export",
   nav: [
     { href: "#about", label: "About" },
@@ -111,7 +111,7 @@ const en: SiteContent = {
     aboutTitle1: "About Fresh",
     aboutTitleGold: "Diamond",
     aboutP1:
-      "Fresh Diamond for Export has been supplying premium-quality fresh fruits and vegetables to international markets since 2011. We are committed to quality, food safety, reliability, and customer satisfaction.",
+      "Nailvlora Import and Export has been supplying premium-quality fresh fruits and vegetables to international markets since 2011. We are committed to quality, food safety, reliability, and customer satisfaction.",
     aboutP2:
       "With years of experience and strict quality control standards, we ensure every shipment meets international export requirements.",
     iso: "ISO 9001",
@@ -220,7 +220,7 @@ const en: SiteContent = {
     { title: "Premium Grade", sub: "Quality Assurance" },
   ],
   contact: [
-    "info@freshdiamond-export.com",
+    "info@nailvlora-export.com",
     "+20 100 000 0000",
     "Cairo, Egypt — Serving Worldwide",
   ],
@@ -360,7 +360,7 @@ const ar: SiteContent = {
     { title: "درجة فاخرة", sub: "ضمان الجودة" },
   ],
   contact: [
-    "info@freshdiamond-export.com",
+    "info@nailvlora-export.com",
     "+20 100 000 0000",
     "القاهرة، مصر — نخدم العالم",
   ],

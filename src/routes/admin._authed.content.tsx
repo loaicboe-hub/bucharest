@@ -31,7 +31,7 @@ type Section = {
 };
 
 const initial: Record<string, Section> = {
-  home: { title: "Fresh Diamond for Export", paragraph: "Premium fresh fruits & vegetables since 2011.", button: "Explore Products", image: "/placeholder.svg" },
+  home: { title: "Nailvlora Import and Export", paragraph: "Premium fresh fruits & vegetables since 2011.", button: "Explore Products", image: "/placeholder.svg" },
   about: { title: "About Us", paragraph: "ISO 9001 Certified exporter serving global markets.", button: "Learn More", image: "/placeholder.svg" },
   whyUs: { title: "Why Choose Us", paragraph: "Quality, reliability, and worldwide reach.", button: "See Reasons", image: "/placeholder.svg" },
   process: { title: "Our Export Process", paragraph: "From farm to global markets, seamlessly.", button: "View Process", image: "/placeholder.svg" },

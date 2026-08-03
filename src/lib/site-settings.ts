@@ -19,19 +19,19 @@ export type SiteSettings = {
 };
 
 export const defaultSiteSettings: SiteSettings = {
-  companyName: "Fresh Diamond for Export",
+  companyName: "Nailvlora Import and Export",
   phone: "+20 100 000 0000",
-  email: "info@freshdiamond.com",
+  email: "info@nailvlora.com",
   whatsapp: "+20 100 000 0000",
   address: "Cairo, Egypt",
   maps: "https://maps.google.com/?q=Cairo",
-  facebook: "https://facebook.com/freshdiamond",
-  instagram: "https://instagram.com/freshdiamond",
-  linkedin: "https://linkedin.com/company/freshdiamond",
+  facebook: "https://facebook.com/nailvlora",
+  instagram: "https://instagram.com/nailvlora",
+  linkedin: "https://linkedin.com/company/nailvlora",
   twitter: "",
-  seoTitle: "Fresh Diamond for Export | Premium Fresh Fruits & Vegetables Exporter",
+  seoTitle: "Nailvlora Import and Export | Premium Fresh Fruits & Vegetables Exporter",
   seoDescription:
-    "Fresh Diamond for Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified.",
+    "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified.",
   seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, ISO 9001",
   seoOgImage: "",
 };

@@ -93,15 +93,15 @@ export const CURRENCIES = ["USD", "EUR", "GBP", "AED", "SAR", "EGP"];
 export const INCOTERMS: Incoterm[] = ["EXW", "FCA", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"];
 
 export const DEFAULT_EXPORTER = {
-  company: "Fresh Diamond for Export",
+  company: "Nailvlora Import and Export",
   address: "Industrial Zone, Cairo",
   country: "Egypt",
   vat: "100-200-300",
   commercialRegistration: "CR-2011-4567",
   taxNumber: "TAX-889977",
   phone: "+20 100 000 0000",
-  email: "export@freshdiamond.com",
-  website: "www.freshdiamond.com",
+  email: "export@nailvlora.com",
+  website: "www.nailvlora.com",
 };
 
 export function loadInvoices(): Invoice[] {
@@ -228,7 +228,7 @@ export function blankInvoice(): Invoice {
     },
     bank: {
       name: "",
-      accountName: "Fresh Diamond for Export",
+      accountName: "Nailvlora Import and Export",
       accountNumber: "",
       iban: "",
       swift: "",
@@ -309,7 +309,7 @@ function seed(): Invoice[] {
     },
     bank: {
       name: "Commercial Bank of Egypt",
-      accountName: "Fresh Diamond for Export",
+      accountName: "Nailvlora Import and Export",
       accountNumber: "0011223344",
       iban: "EG380019000500000000123456789",
       swift: "CIEGEGCXXXX",

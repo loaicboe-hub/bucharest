@@ -144,21 +144,8 @@ function Index() {
     <div className="min-h-screen bg-background text-foreground">
       <SplashScreen />
 
-      {/* Loading */}
-      {loading && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-primary">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              <Leaf className="h-12 w-12 text-gold animate-float" />
-              <div className="absolute inset-0 rounded-full blur-2xl bg-gold/40" />
-            </div>
-            <div className="text-primary-foreground font-display text-xl tracking-wide">
-              {site.companyName || c.brand}
-            </div>
 
-          </div>
-        </div>
-      )}
+
 
       {/* Navbar */}
       <header

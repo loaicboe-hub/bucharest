@@ -111,7 +111,7 @@ function BrandingPage() {
                   )}
                 </div>
                 <div className="text-white">
-                  <div className="font-semibold">Fresh Diamond</div>
+                  <div className="font-semibold">Nailvlora</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-white/60">
                     for Export
                   </div>

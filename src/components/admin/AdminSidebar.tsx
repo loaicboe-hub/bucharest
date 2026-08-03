@@ -62,7 +62,7 @@ export function AdminSidebar() {
             <Diamond className="h-5 w-5" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold text-sidebar-foreground">Fresh Diamond</span>
+            <span className="text-sm font-semibold text-sidebar-foreground">Nailvlora</span>
             <span className="text-xs text-muted-foreground">{t("adminPanel")}</span>
           </div>
         </div>
