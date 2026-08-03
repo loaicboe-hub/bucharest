@@ -246,6 +246,8 @@ function ProductDetail() {
           </div>
         </div>
       </section>
+      )}
+
 
       {/* Description */}
       <section className="py-16 lg:py-20">
