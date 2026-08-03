@@ -15,7 +15,7 @@ import {
   Handshake,
   Home,
   Video,
-  Newspaper, Tags,
+  Newspaper, Tags, ShieldCheck,
 } from "lucide-react";
 import {
   Sidebar,
