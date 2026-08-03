@@ -107,7 +107,10 @@ function ProductDetail() {
     );
   }
 
+  const hiddenSpecs = (product as ProductContent).hiddenSpecs ?? [];
+  const visibleSpecs = SPEC_ORDER.filter((key) => !hiddenSpecs.includes(key));
   const related = CATALOG.filter((p) => p.slug !== slug).slice(0, 4);
+
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
   return (
