@@ -131,42 +131,46 @@ export function SplashScreen() {
               {logo ? (
                 <motion.div
                   className="relative h-full w-full"
-                  style={{ perspective: 1400, transformStyle: "preserve-3d" }}
                   initial={{ scale: 1.2 }}
-                  animate={{ scale: [1.2, 1.42, 1.35], rotateY: [0, 0, 360, 360] }}
-                  transition={{
-                    scale: { duration: 5, ease: "easeInOut", times: [0, 0.6, 1] },
-                    // Halves lock together first (~1.8s), then the logo turns a full
-                    // revolution so the globe reads as spinning.
-                    rotateY: { duration: 5, ease: "easeInOut", times: [0, 0.36, 0.86, 1] },
-                  }}
+                  animate={{ scale: [1.2, 1.42, 1.35] }}
+                  transition={{ scale: { duration: 5, ease: "easeInOut", times: [0, 0.6, 1] } }}
                 >
-
-                  {/* Left half slides in from the left */}
-                  <motion.img
-                    src={logo}
-                    alt={`${brand} logo`}
-                    crossOrigin="anonymous"
-                    onLoad={(e) => syncBackground(e.currentTarget)}
-                    className="absolute inset-0 h-full w-full object-contain"
-                    style={{ clipPath: "inset(0 50% 0 0)" }}
-                    initial={{ x: "-55%", opacity: 0, rotate: -4 }}
-                    animate={{ x: 0, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease }}
-                  />
-                  {/* Right half slides in from the right */}
-                  <motion.img
-                    src={logo}
-                    alt=""
-                    aria-hidden
-                    crossOrigin="anonymous"
-                    className="absolute inset-0 h-full w-full object-contain"
-                    style={{ clipPath: "inset(0 0 0 50%)" }}
-                    initial={{ x: "55%", opacity: 0, rotate: 4 }}
-                    animate={{ x: 0, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease }}
-                  />
+                  {/* After the halves lock together, the assembled logo turns a
+                      full revolution so the globe reads as spinning. */}
+                  <motion.div
+                    className="relative h-full w-full"
+                    style={{ transformPerspective: 1400 }}
+                    initial={{ rotateY: 0 }}
+                    animate={{ rotateY: 360 }}
+                    transition={{ duration: 2.4, delay: 2, ease: "easeInOut" }}
+                  >
+                    {/* Left half slides in from the left */}
+                    <motion.img
+                      src={logo}
+                      alt={`${brand} logo`}
+                      crossOrigin="anonymous"
+                      onLoad={(e) => syncBackground(e.currentTarget)}
+                      className="absolute inset-0 h-full w-full object-contain"
+                      style={{ clipPath: "inset(0 50% 0 0)" }}
+                      initial={{ x: "-55%", opacity: 0, rotate: -4 }}
+                      animate={{ x: 0, opacity: 1, rotate: 0 }}
+                      transition={{ duration: 1.8, ease }}
+                    />
+                    {/* Right half slides in from the right */}
+                    <motion.img
+                      src={logo}
+                      alt=""
+                      aria-hidden
+                      crossOrigin="anonymous"
+                      className="absolute inset-0 h-full w-full object-contain"
+                      style={{ clipPath: "inset(0 0 0 50%)" }}
+                      initial={{ x: "55%", opacity: 0, rotate: 4 }}
+                      animate={{ x: 0, opacity: 1, rotate: 0 }}
+                      transition={{ duration: 1.8, ease }}
+                    />
+                  </motion.div>
                 </motion.div>
+
 
 
               ) : (
