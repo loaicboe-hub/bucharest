@@ -165,8 +165,8 @@ export function SplashScreen() {
                   />
 
                   {/* Globe-only spin: a circular crop of the logo's earth sits
-                      exactly on top of it and turns on its own axis once the
-                      two halves have locked together. */}
+                      exactly on top of it and turns on its own axis. Only this
+                      disc rotates in 3D — the rest of the logo stays still. */}
                   <motion.div
                     className="absolute overflow-hidden rounded-full"
                     style={{
@@ -174,30 +174,22 @@ export function SplashScreen() {
                       top: `${(GLOBE.cy - GLOBE.r) * 100}%`,
                       width: `${GLOBE.r * 200}%`,
                       height: `${GLOBE.r * 200}%`,
+                      backgroundImage: logo ? `url(${logo})` : undefined,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: `${100 / (GLOBE.r * 2)}% ${100 / (GLOBE.r * 2)}%`,
+                      backgroundPosition: `${((GLOBE.r - GLOBE.cx) / (2 * GLOBE.r - 1)) * 100}% ${((GLOBE.r - GLOBE.cy) / (2 * GLOBE.r - 1)) * 100}%`,
+                      transformOrigin: "50% 50%",
+                      transformPerspective: 800,
+                      backfaceVisibility: "hidden",
                     }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4, delay: 1.8 }}
-                  >
-                    <motion.img
-                      src={logo}
-                      alt=""
-                      aria-hidden
-                      crossOrigin="anonymous"
-                      className="absolute h-full w-full max-w-none object-contain"
-                      style={{
-                        width: `${100 / (GLOBE.r * 2)}%`,
-                        height: `${100 / (GLOBE.r * 2)}%`,
-                        left: `${(-(GLOBE.cx - GLOBE.r) / (GLOBE.r * 2)) * 100}%`,
-                        top: `${(-(GLOBE.cy - GLOBE.r) / (GLOBE.r * 2)) * 100}%`,
-                        transformOrigin: `${GLOBE.cx * 100}% ${GLOBE.cy * 100}%`,
-                        transformPerspective: 900,
-                      }}
-                      initial={{ rotateY: 0 }}
-                      animate={{ rotateY: [0, 26, 0, -26, 0] }}
-                      transition={{ duration: 6, delay: 1.8, ease: "easeInOut", repeat: Infinity }}
-                    />
-                  </motion.div>
+                    initial={{ opacity: 0, rotateY: 0 }}
+                    animate={{ opacity: 1, rotateY: 360 }}
+                    transition={{
+                      opacity: { duration: 0.4, delay: 1.8 },
+                      rotateY: { duration: 5, delay: 1.8, ease: "linear", repeat: Infinity },
+                    }}
+                  />
+
                 </motion.div>
 
 
