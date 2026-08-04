@@ -108,7 +108,8 @@ export function SplashScreen() {
         <motion.div
           key="splash"
           role="presentation"
-          className="fixed inset-0 z-[400] flex items-center justify-center bg-white"
+          className="fixed inset-0 z-[400] flex items-center justify-center"
+          style={{ backgroundColor: bg }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
         >
@@ -128,8 +129,11 @@ export function SplashScreen() {
                 <img
                   src={logo}
                   alt={`${brand} logo`}
+                  crossOrigin="anonymous"
+                  onLoad={(e) => syncBackground(e.currentTarget)}
                   className="h-full w-full object-contain"
                 />
+
               ) : (
                 <Leaf className="h-14 w-14 text-primary" />
               )}
