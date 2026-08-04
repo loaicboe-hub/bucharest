@@ -130,46 +130,72 @@ export function SplashScreen() {
             >
               {logo ? (
                 <motion.div
-                  className="relative h-full w-full"
+                  className="relative aspect-square h-full max-h-full max-w-full"
                   initial={{ scale: 1.2 }}
                   animate={{ scale: [1.2, 1.42, 1.35] }}
                   transition={{ scale: { duration: 5, ease: "easeInOut", times: [0, 0.6, 1] } }}
                 >
-                  {/* After the halves lock together, the assembled logo turns a
-                      full revolution so the globe reads as spinning. */}
+                  {/* Left half slides in from the left */}
+                  <motion.img
+                    src={logo}
+                    alt={`${brand} logo`}
+                    crossOrigin="anonymous"
+                    onLoad={(e) => syncBackground(e.currentTarget)}
+                    className="absolute inset-0 h-full w-full object-contain"
+                    style={{ clipPath: "inset(0 50% 0 0)" }}
+                    initial={{ x: "-55%", opacity: 0, rotate: -4 }}
+                    animate={{ x: 0, opacity: 1, rotate: 0 }}
+                    transition={{ duration: 1.8, ease }}
+                  />
+                  {/* Right half slides in from the right */}
+                  <motion.img
+                    src={logo}
+                    alt=""
+                    aria-hidden
+                    crossOrigin="anonymous"
+                    className="absolute inset-0 h-full w-full object-contain"
+                    style={{ clipPath: "inset(0 0 0 50%)" }}
+                    initial={{ x: "55%", opacity: 0, rotate: 4 }}
+                    animate={{ x: 0, opacity: 1, rotate: 0 }}
+                    transition={{ duration: 1.8, ease }}
+                  />
+
+                  {/* Globe-only spin: a circular crop of the logo's earth sits
+                      exactly on top of it and turns on its own axis once the
+                      two halves have locked together. */}
                   <motion.div
-                    className="relative h-full w-full"
-                    style={{ transformPerspective: 1400 }}
-                    initial={{ rotateY: 0 }}
-                    animate={{ rotateY: 360 }}
-                    transition={{ duration: 2.4, delay: 2, ease: "easeInOut" }}
+                    className="absolute overflow-hidden rounded-full"
+                    style={{
+                      left: `${(GLOBE.cx - GLOBE.r) * 100}%`,
+                      top: `${(GLOBE.cy - GLOBE.r) * 100}%`,
+                      width: `${GLOBE.r * 200}%`,
+                      height: `${GLOBE.r * 200}%`,
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 1.8 }}
                   >
-                    {/* Left half slides in from the left */}
-                    <motion.img
-                      src={logo}
-                      alt={`${brand} logo`}
-                      crossOrigin="anonymous"
-                      onLoad={(e) => syncBackground(e.currentTarget)}
-                      className="absolute inset-0 h-full w-full object-contain"
-                      style={{ clipPath: "inset(0 50% 0 0)" }}
-                      initial={{ x: "-55%", opacity: 0, rotate: -4 }}
-                      animate={{ x: 0, opacity: 1, rotate: 0 }}
-                      transition={{ duration: 1.8, ease }}
-                    />
-                    {/* Right half slides in from the right */}
                     <motion.img
                       src={logo}
                       alt=""
                       aria-hidden
                       crossOrigin="anonymous"
-                      className="absolute inset-0 h-full w-full object-contain"
-                      style={{ clipPath: "inset(0 0 0 50%)" }}
-                      initial={{ x: "55%", opacity: 0, rotate: 4 }}
-                      animate={{ x: 0, opacity: 1, rotate: 0 }}
-                      transition={{ duration: 1.8, ease }}
+                      className="absolute h-full w-full max-w-none object-contain"
+                      style={{
+                        width: `${100 / (GLOBE.r * 2)}%`,
+                        height: `${100 / (GLOBE.r * 2)}%`,
+                        left: `${(-(GLOBE.cx - GLOBE.r) / (GLOBE.r * 2)) * 100}%`,
+                        top: `${(-(GLOBE.cy - GLOBE.r) / (GLOBE.r * 2)) * 100}%`,
+                        transformOrigin: `${GLOBE.cx * 100}% ${GLOBE.cy * 100}%`,
+                        transformPerspective: 900,
+                      }}
+                      initial={{ rotateY: 0 }}
+                      animate={{ rotateY: 360 }}
+                      transition={{ duration: 5, delay: 1.8, ease: "linear", repeat: Infinity }}
                     />
                   </motion.div>
                 </motion.div>
+
 
 
 
