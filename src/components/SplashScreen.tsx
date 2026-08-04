@@ -101,7 +101,7 @@ export function SplashScreen() {
             transition={{ duration: 1.2, ease }}
           >
             <motion.div
-              className="grid h-32 w-32 shrink-0 place-items-center overflow-hidden rounded-[2rem] gradient-primary shadow-[var(--shadow-glow)] sm:h-40 sm:w-40"
+              className="flex h-40 w-40 shrink-0 items-center justify-center sm:h-56 sm:w-56"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, delay: 0.2, ease }}
@@ -110,12 +110,13 @@ export function SplashScreen() {
                 <img
                   src={logo}
                   alt={`${brand} logo`}
-                  className="h-full w-full scale-[1.5] object-contain p-0"
+                  className="h-full w-full object-contain"
                 />
               ) : (
-                <Leaf className="h-14 w-14 text-white" />
+                <Leaf className="h-14 w-14 text-primary" />
               )}
             </motion.div>
+
 
             <motion.div
               initial={{ opacity: 0, y: 12 }}
