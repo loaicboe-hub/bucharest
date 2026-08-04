@@ -101,7 +101,7 @@ export function SplashScreen() {
             transition={{ duration: 1.2, ease }}
           >
             <motion.div
-              className="flex h-40 w-40 shrink-0 items-center justify-center sm:h-56 sm:w-56"
+              className="flex h-64 w-64 shrink-0 items-center justify-center sm:h-96 sm:w-96"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, delay: 0.2, ease }}
@@ -115,20 +115,6 @@ export function SplashScreen() {
               ) : (
                 <Leaf className="h-14 w-14 text-primary" />
               )}
-            </motion.div>
-
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.0, delay: 1.0, ease }}
-            >
-              <div className="font-display text-3xl font-bold leading-none text-primary sm:text-4xl">
-                {brand}
-              </div>
-              <div className="mt-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
-                Import and Export
-              </div>
             </motion.div>
           </motion.div>
 
