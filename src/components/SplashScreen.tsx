@@ -122,22 +122,34 @@ export function SplashScreen() {
             <motion.div
               className="flex h-full w-full shrink-0 items-center justify-center"
               initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.1, delay: 0.2, ease }}
+              animate={{ opacity: 1, y: [16, 0, -6, 0] }}
+              transition={{
+                opacity: { duration: 1.1, delay: 0.2, ease },
+                y: { duration: 4.5, delay: 0.2, ease: "easeInOut", times: [0, 0.25, 0.6, 1] },
+              }}
             >
               {logo ? (
-                <img
+                <motion.img
                   src={logo}
                   alt={`${brand} logo`}
                   crossOrigin="anonymous"
                   onLoad={(e) => syncBackground(e.currentTarget)}
-                  className="h-full w-full scale-[1.35] object-contain"
+                  className="h-full w-full object-contain"
+                  initial={{ scale: 1.2, rotate: -1.5 }}
+                  animate={{ scale: [1.2, 1.42, 1.35], rotate: [-1.5, 0.8, 0] }}
+                  transition={{ duration: 5, ease: "easeInOut", times: [0, 0.6, 1] }}
                 />
 
               ) : (
-                <Leaf className="h-14 w-14 text-primary" />
+                <motion.div
+                  animate={{ scale: [1, 1.12, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Leaf className="h-14 w-14 text-primary" />
+                </motion.div>
               )}
             </motion.div>
+
           </motion.div>
 
 
