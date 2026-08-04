@@ -36,27 +36,41 @@ export async function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = 
     }
   }
 
+  // Right block first so we know how much room the left block has
+  const rightW = 200;
+  const rightX = pageW - M;
+  const leftMaxW = rightX - rightW - tx - 16;
+
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.text(inv.exporter.company, tx, 40);
+  doc.setFontSize(16);
+  const nameLines = doc.splitTextToSize(inv.exporter.company, leftMaxW) as string[];
+  let ly = 34;
+  nameLines.slice(0, 2).forEach((line) => {
+    doc.text(line, tx, ly);
+    ly += 17;
+  });
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.text(inv.exporter.address, tx, 56);
-  doc.text(
-    `${inv.exporter.country}  •  ${inv.exporter.phone}  •  ${inv.exporter.email}`,
-    tx,
-    68,
-  );
-  doc.text(inv.exporter.website, tx, 80);
+  doc.setFontSize(8);
+  const info = [
+    `${inv.exporter.address}, ${inv.exporter.country}`,
+    `${inv.exporter.phone}  •  ${inv.exporter.email}`,
+    inv.exporter.website,
+  ];
+  info.forEach((line) => {
+    if (ly > 86) return;
+    doc.text(doc.splitTextToSize(line, leftMaxW)[0], tx, ly);
+    ly += 11;
+  });
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.text("COMMERCIAL INVOICE", pageW - M, 45, { align: "right" });
+  doc.setFontSize(15);
+  doc.text("COMMERCIAL", rightX, 34, { align: "right" });
+  doc.text("INVOICE", rightX, 51, { align: "right" });
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.text(`No: ${inv.number}`, pageW - M, 64, { align: "right" });
-  doc.text(`Date: ${inv.info.date}`, pageW - M, 78, { align: "right" });
+  doc.setFontSize(9);
+  doc.text(`No: ${inv.number}`, rightX, 67, { align: "right" });
+  doc.text(`Date: ${inv.info.date}`, rightX, 79, { align: "right" });
 
   let y = 120;
   doc.setTextColor(...DARK);
