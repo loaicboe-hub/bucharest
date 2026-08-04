@@ -82,7 +82,7 @@ export function SplashScreen() {
     document.body.style.overflow = "hidden";
 
     const skipTimer = window.setTimeout(() => setShowSkip(true), 1000);
-    const endTimer = window.setTimeout(() => dismiss(), 5400);
+    const endTimer = window.setTimeout(() => dismiss(), 7400);
 
     return () => {
       window.clearTimeout(skipTimer);
