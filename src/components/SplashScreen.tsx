@@ -114,13 +114,13 @@ export function SplashScreen() {
           exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
         >
           <motion.div
-            className="flex flex-col items-center gap-6 px-8 text-center"
+            className="flex h-full w-full items-center justify-center"
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease }}
           >
             <motion.div
-              className="flex h-[100vw] w-[100vw] max-h-[95vh] max-w-[900px] shrink-0 items-center justify-center sm:h-[92vh] sm:w-[92vw]"
+              className="flex h-full w-full shrink-0 items-center justify-center"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, delay: 0.2, ease }}
