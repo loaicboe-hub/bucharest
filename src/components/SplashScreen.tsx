@@ -177,7 +177,7 @@ export function SplashScreen() {
                       backgroundImage: logo ? `url(${logo})` : undefined,
                       backgroundRepeat: "no-repeat",
                       backgroundSize: `${100 / (GLOBE.r * 2)}% ${100 / (GLOBE.r * 2)}%`,
-                      backgroundPosition: `${(GLOBE.cx - GLOBE.r) * 100}% ${(GLOBE.cy - GLOBE.r) * 100}%`,
+                      backgroundPosition: `${((GLOBE.r - GLOBE.cx) / (2 * GLOBE.r - 1)) * 100}% ${((GLOBE.r - GLOBE.cy) / (2 * GLOBE.r - 1)) * 100}%`,
                       transformOrigin: "50% 50%",
                       transformPerspective: 800,
                       backfaceVisibility: "hidden",
