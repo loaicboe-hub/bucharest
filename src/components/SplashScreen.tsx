@@ -131,7 +131,7 @@ export function SplashScreen() {
                   alt={`${brand} logo`}
                   crossOrigin="anonymous"
                   onLoad={(e) => syncBackground(e.currentTarget)}
-                  className="h-full w-full object-contain"
+                  className="h-full w-full scale-[1.35] object-contain"
                 />
 
               ) : (
