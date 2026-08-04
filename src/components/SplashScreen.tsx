@@ -180,7 +180,8 @@ export function SplashScreen() {
                       backgroundPosition: `${((GLOBE.r - GLOBE.cx) / (2 * GLOBE.r - 1)) * 100}% ${((GLOBE.r - GLOBE.cy) / (2 * GLOBE.r - 1)) * 100}%`,
                       transformOrigin: "50% 50%",
                       transformPerspective: 800,
-                      backfaceVisibility: "hidden",
+                      backfaceVisibility: "visible",
+                      willChange: "transform",
                     }}
                     initial={{ opacity: 0, rotateY: 0 }}
                     animate={{ opacity: 1, rotateY: 360 }}
