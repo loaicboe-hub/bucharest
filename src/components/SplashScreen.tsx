@@ -22,7 +22,25 @@ export function SplashScreen() {
   const [visible, setVisible] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
+  const [bg, setBg] = useState("#ffffff");
   const [brand, setBrand] = useState("Nailvlora Import and Export");
+
+  // Sample the logo's own corner pixel so the splash background matches it exactly.
+  function syncBackground(img: HTMLImageElement) {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0);
+      const [r, g, b, a] = ctx.getImageData(1, 1, 1, 1).data;
+      if (a < 10) return; // transparent logo: keep white
+      setBg(`rgb(${r}, ${g}, ${b})`);
+    } catch {
+      /* cross-origin or unsupported: keep white */
+    }
+  }
 
   useEffect(() => {
     getLogoUrl().then(setLogo).catch(() => setLogo(null));
@@ -90,7 +108,8 @@ export function SplashScreen() {
         <motion.div
           key="splash"
           role="presentation"
-          className="fixed inset-0 z-[400] flex items-center justify-center bg-white"
+          className="fixed inset-0 z-[400] flex items-center justify-center"
+          style={{ backgroundColor: bg }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
         >
@@ -110,8 +129,11 @@ export function SplashScreen() {
                 <img
                   src={logo}
                   alt={`${brand} logo`}
+                  crossOrigin="anonymous"
+                  onLoad={(e) => syncBackground(e.currentTarget)}
                   className="h-full w-full object-contain"
                 />
+
               ) : (
                 <Leaf className="h-14 w-14 text-primary" />
               )}
