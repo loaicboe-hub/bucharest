@@ -21,6 +21,16 @@ function removeCover() {
 export function SplashScreen() {
   const [visible, setVisible] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
+  const [logo, setLogo] = useState<string | null>(null);
+  const [brand, setBrand] = useState("Nailvlora Import and Export");
+
+  useEffect(() => {
+    getLogoUrl().then(setLogo).catch(() => setLogo(null));
+    loadSiteSettings()
+      .then((s) => s.companyName && setBrand(s.companyName))
+      .catch(() => undefined);
+  }, []);
+
 
   // Runs synchronously before the browser paints the hydrated page.
   useLayoutEffect(() => {
