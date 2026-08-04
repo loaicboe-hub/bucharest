@@ -194,8 +194,8 @@ export function SplashScreen() {
                         transformPerspective: 900,
                       }}
                       initial={{ rotateY: 0 }}
-                      animate={{ rotateY: 360 }}
-                      transition={{ duration: 5, delay: 1.8, ease: "linear", repeat: Infinity }}
+                      animate={{ rotateY: [0, 26, 0, -26, 0] }}
+                      transition={{ duration: 6, delay: 1.8, ease: "easeInOut", repeat: Infinity }}
                     />
                   </motion.div>
                 </motion.div>
