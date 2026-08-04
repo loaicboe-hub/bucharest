@@ -131,14 +131,17 @@ export function SplashScreen() {
               {logo ? (
                 <motion.div
                   className="relative h-full w-full"
-                  style={{ perspective: 1200, transformStyle: "preserve-3d" }}
+                  style={{ perspective: 1400, transformStyle: "preserve-3d" }}
                   initial={{ scale: 1.2 }}
-                  animate={{ scale: [1.2, 1.42, 1.35], rotateY: [0, 0, 14, -14, 0] }}
+                  animate={{ scale: [1.2, 1.42, 1.35], rotateY: [0, 0, 360, 360] }}
                   transition={{
                     scale: { duration: 5, ease: "easeInOut", times: [0, 0.6, 1] },
-                    rotateY: { duration: 5, ease: "easeInOut", times: [0, 0.35, 0.55, 0.8, 1] },
+                    // Halves lock together first (~1.8s), then the logo turns a full
+                    // revolution so the globe reads as spinning.
+                    rotateY: { duration: 5, ease: "easeInOut", times: [0, 0.36, 0.86, 1] },
                   }}
                 >
+
                   {/* Left half slides in from the left */}
                   <motion.img
                     src={logo}
