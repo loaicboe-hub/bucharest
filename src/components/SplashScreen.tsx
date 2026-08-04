@@ -22,7 +22,25 @@ export function SplashScreen() {
   const [visible, setVisible] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
+  const [bg, setBg] = useState("#ffffff");
   const [brand, setBrand] = useState("Nailvlora Import and Export");
+
+  // Sample the logo's own corner pixel so the splash background matches it exactly.
+  function syncBackground(img: HTMLImageElement) {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0);
+      const [r, g, b, a] = ctx.getImageData(1, 1, 1, 1).data;
+      if (a < 10) return; // transparent logo: keep white
+      setBg(`rgb(${r}, ${g}, ${b})`);
+    } catch {
+      /* cross-origin or unsupported: keep white */
+    }
+  }
 
   useEffect(() => {
     getLogoUrl().then(setLogo).catch(() => setLogo(null));
