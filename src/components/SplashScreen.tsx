@@ -6,6 +6,10 @@ import { loadSiteSettings } from "@/lib/site-settings";
 
 const SESSION_KEY = "nv_splash_seen";
 
+/** Globe position inside the square brand logo, as fractions of the image. */
+const GLOBE = { cx: 0.528, cy: 0.375, r: 0.098 };
+
+
 
 function removeCover() {
   const cover = document.getElementById("splash-cover");
