@@ -404,7 +404,9 @@ function Index() {
       </section>
 
       {/* About */}
-      <section id="about" className="relative py-24 lg:py-32">
+      <section id="about" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-5">
