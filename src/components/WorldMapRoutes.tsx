@@ -95,12 +95,12 @@ export default function WorldMapRoutes({ labels = [] as string[] }) {
           const p = arcPath(HUB, d);
           return (
             <g key={i}>
-              <path d={p} fill="none" stroke="oklch(0.8 0.16 155)" strokeWidth="1" opacity="0.16" />
+              <path d={p} fill="none" stroke="oklch(0.8 0.16 155)" strokeWidth="1" opacity="0.3" />
               <path
                 d={p}
                 fill="none"
                 stroke="url(#wm-arc)"
-                strokeWidth="1.8"
+                strokeWidth="2.4"
                 strokeLinecap="round"
                 strokeDasharray="10 190"
               >
