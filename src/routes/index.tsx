@@ -299,13 +299,7 @@ function Index() {
               {c.ui.heroSub}
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-gold px-8 py-4 font-semibold text-gold-foreground shadow-xl transition-all hover:scale-[1.03] hover:shadow-2xl"
-              >
-                {c.ui.requestAQuote}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </a>
+
               <a
                 href="#products"
                 className="inline-flex items-center gap-2 rounded-full glass-dark px-8 py-4 font-semibold text-white transition-all hover:bg-white/20"
