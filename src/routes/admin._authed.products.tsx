@@ -45,11 +45,10 @@ function ProductsPage() {
   useEffect(() => { refresh(); }, []);
 
   const visible = rows.filter((r) => r.trade === tab);
-  const tabCats = cats.filter((c) => c.trade === tab);
   const catName = (id: string | null) => cats.find((c) => c.id === id)?.name_en ?? "—";
 
   const openNew = () => {
-    setDraft(blankProduct(tab, tabCats[0]?.id ?? null));
+    setDraft(blankProduct(tab, cats[0]?.id ?? null));
     setOpen(true);
   };
   const openEdit = (p: ProductRow) => { setDraft({ ...p }); setOpen(true); };
@@ -86,14 +85,14 @@ function ProductsPage() {
             <Button asChild variant="outline" className="gap-2">
               <Link to="/admin/categories"><Tags className="h-4 w-4" /> {t("nav.categories")}</Link>
             </Button>
-            <Button onClick={openNew} className="gap-2" disabled={tabCats.length === 0}>
+            <Button onClick={openNew} className="gap-2" disabled={cats.length === 0}>
               <Plus className="h-4 w-4" /> {t("products.add")}
             </Button>
           </div>
         }
       />
 
-      {tabCats.length === 0 && (
+      {cats.length === 0 && (
         <Card className="mb-4 rounded-2xl border-border/60 p-4 text-sm text-muted-foreground">
           Create a category first, then add products to it.
         </Card>
@@ -172,7 +171,7 @@ function ProductsPage() {
         open={open}
         onOpenChange={setOpen}
         product={draft}
-        categories={tabCats}
+        categories={cats}
         onSaved={refresh}
       />
     </div>

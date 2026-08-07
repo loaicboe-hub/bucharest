@@ -6,8 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -30,7 +28,6 @@ const blank = (order: number): ProductCategory => ({
   slug: "",
   name_en: "",
   name_ar: "",
-  trade: "export",
   sort_order: order,
   active: true,
 });
@@ -94,7 +91,6 @@ function CategoriesPage() {
                 <TableHead className="w-16">Order</TableHead>
                 <TableHead>English name</TableHead>
                 <TableHead>Arabic name</TableHead>
-                <TableHead>Type</TableHead>
                 <TableHead>Slug</TableHead>
                 <TableHead>Visible</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -103,7 +99,7 @@ function CategoriesPage() {
             <TableBody>
               {rows.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
                     No categories yet.
                   </TableCell>
                 </TableRow>
@@ -118,9 +114,6 @@ function CategoriesPage() {
                   </TableCell>
                   <TableCell className="font-medium">{c.name_en}</TableCell>
                   <TableCell dir="rtl">{c.name_ar}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{c.trade === "import" ? "Import" : "Export"}</Badge>
-                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{c.slug}</TableCell>
                   <TableCell><Switch checked={c.active} onCheckedChange={() => toggleActive(c)} /></TableCell>
                   <TableCell className="text-right">
@@ -148,19 +141,6 @@ function CategoriesPage() {
               <div className="space-y-2">
                 <Label>Arabic name</Label>
                 <Input dir="rtl" value={draft.name_ar} onChange={(e) => setDraft({ ...draft, name_ar: e.target.value })} />
-              </div>
-              <div className="space-y-2">
-                <Label>Export / Import type</Label>
-                <Select
-                  value={draft.trade}
-                  onValueChange={(v) => setDraft({ ...draft, trade: v as ProductCategory["trade"] })}
-                >
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="export">Export Products</SelectItem>
-                    <SelectItem value="import">Import Products</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
               <div className="space-y-2">
                 <Label>Slug</Label>

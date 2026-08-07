@@ -16,7 +16,6 @@ export type ProductCategory = {
   slug: string;
   name_en: string;
   name_ar: string;
-  trade: Trade;
   sort_order: number;
   active: boolean;
 };
@@ -142,7 +141,6 @@ export async function saveCategory(c: Partial<ProductCategory>): Promise<string 
     slug: c.slug || slugify(c.name_en || ""),
     name_en: c.name_en ?? "",
     name_ar: c.name_ar ?? "",
-    trade: c.trade ?? "export",
     sort_order: c.sort_order ?? 1,
     active: c.active ?? true,
   };

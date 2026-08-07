@@ -453,16 +453,14 @@ function Index() {
               );
             }
 
-            const tradeCats = categories.filter((cat) => cat.trade === trade);
             const tabs: { id: string; label: string; items: ProductRow[] }[] = [];
-            for (const cat of tradeCats) {
+            for (const cat of categories) {
               const items = list.filter((p) => p.category_id === cat.id);
               if (items.length) tabs.push({ id: cat.id, label: categoryName(cat, lang), items });
             }
-            const ungrouped = list.filter((p) => !tradeCats.some((cat) => cat.id === p.category_id));
+            const ungrouped = list.filter((p) => !categories.some((cat) => cat.id === p.category_id));
             if (ungrouped.length)
               tabs.push({ id: "other", label: lang === "ar" ? "أخرى" : "Other", items: ungrouped });
-
 
             const allTabs =
               tabs.length > 1
