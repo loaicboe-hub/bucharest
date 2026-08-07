@@ -18,6 +18,7 @@ export type ProductCategory = {
   name_ar: string;
   sort_order: number;
   active: boolean;
+  trade: Trade;
 };
 
 export type ProductRow = {
