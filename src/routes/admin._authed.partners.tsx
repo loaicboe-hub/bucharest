@@ -10,7 +10,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { useAdminLang } from "@/lib/admin-i18n";
-import { loadPartners, savePartners, type Partner } from "@/lib/admin-partners";
+import {
+  blankPartner,
+  deletePartner,
+  listPartners,
+  savePartner,
+  savePartnerOrder,
+  setPartnerEnabled,
+  uploadPartnerLogo,
+  type Partner,
+} from "@/lib/admin-partners";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/_authed/partners")({
@@ -22,18 +31,18 @@ function PartnersPage() {
   const [rows, setRows] = useState<Partner[]>([]);
   const [editing, setEditing] = useState<Partner | null>(null);
   const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const ar = lang === "ar";
 
-  useEffect(() => setRows(loadPartners()), []);
+  const refresh = () => listPartners().then(setRows).catch(() => undefined);
 
-  const commit = (list: Partner[]) => {
-    setRows(list);
-    savePartners(list);
-  };
+  useEffect(() => {
+    refresh();
+  }, []);
 
   const openNew = () => {
-    setEditing({ id: `p_${Date.now()}`, name: "", logo: "", url: "", enabled: true });
+    setEditing(blankPartner(rows.length + 1));
     setOpen(true);
   };
   const openEdit = (p: Partner) => {
@@ -41,41 +50,61 @@ function PartnersPage() {
     setOpen(true);
   };
 
-  const save = () => {
+  const save = async () => {
     if (!editing) return;
     if (!editing.logo) {
       toast.error(ar ? "الرجاء رفع شعار" : "Please upload a logo");
       return;
     }
-    const exists = rows.some((r) => r.id === editing.id);
-    commit(exists ? rows.map((r) => (r.id === editing.id ? editing : r)) : [...rows, editing]);
+    setBusy(true);
+    const err = await savePartner(editing);
+    setBusy(false);
+    if (err) {
+      toast.error(err);
+      return;
+    }
     setOpen(false);
+    await refresh();
     toast.success(ar ? "تم حفظ الشريك" : "Partner saved");
   };
 
-  const remove = (id: string) => {
-    commit(rows.filter((r) => r.id !== id));
+  const remove = async (id: string) => {
+    const err = await deletePartner(id);
+    if (err) return toast.error(err);
+    await refresh();
     toast.success(ar ? "تم الحذف" : "Deleted");
   };
 
-  const toggle = (id: string, enabled: boolean) => {
-    commit(rows.map((r) => (r.id === id ? { ...r, enabled } : r)));
+  const toggle = async (id: string, enabled: boolean) => {
+    setRows((list) => list.map((r) => (r.id === id ? { ...r, enabled } : r)));
+    const err = await setPartnerEnabled(id, enabled);
+    if (err) {
+      toast.error(err);
+      refresh();
+    }
   };
 
-  const move = (index: number, dir: -1 | 1) => {
+  const move = async (index: number, dir: -1 | 1) => {
     const next = index + dir;
     if (next < 0 || next >= rows.length) return;
     const list = [...rows];
     const [item] = list.splice(index, 1);
     list.splice(next, 0, item);
-    commit(list);
+    const ordered = list.map((r, i) => ({ ...r, sortOrder: i + 1 }));
+    setRows(ordered);
+    await savePartnerOrder(ordered.map((r) => ({ id: r.id, sortOrder: r.sortOrder })));
   };
 
-  const onFile = (file?: File) => {
+  const onFile = async (file?: File) => {
     if (!file || !editing) return;
-    const reader = new FileReader();
-    reader.onload = () => setEditing({ ...editing, logo: String(reader.result) });
-    reader.readAsDataURL(file);
+    setBusy(true);
+    const res = await uploadPartnerLogo(file);
+    setBusy(false);
+    if (res.error || !res.url) {
+      toast.error(res.error ?? "Upload failed");
+      return;
+    }
+    setEditing((e) => (e ? { ...e, logo: res.url!, logoPath: res.path ?? "" } : e));
   };
 
   return (
@@ -144,9 +173,7 @@ function PartnersPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editing && rows.some((r) => r.id === editing.id)
-                ? ar ? "تعديل شريك" : "Edit Partner"
-                : ar ? "إضافة شريك" : "Add Partner"}
+              {editing?.id ? (ar ? "تعديل شريك" : "Edit Partner") : ar ? "إضافة شريك" : "Add Partner"}
             </DialogTitle>
           </DialogHeader>
           {editing && (
@@ -173,7 +200,7 @@ function PartnersPage() {
                       <span className="text-xs text-muted-foreground">{ar ? "لا يوجد" : "No logo"}</span>
                     )}
                   </div>
-                  <Button variant="outline" className="gap-2" onClick={() => fileRef.current?.click()}>
+                  <Button variant="outline" className="gap-2" disabled={busy} onClick={() => fileRef.current?.click()}>
                     <Upload className="h-4 w-4" /> {ar ? "رفع" : "Upload"}
                   </Button>
                   <input
@@ -195,7 +222,9 @@ function PartnersPage() {
             <Button variant="outline" onClick={() => setOpen(false)}>
               {ar ? "إلغاء" : "Cancel"}
             </Button>
-            <Button onClick={save}>{ar ? "حفظ" : "Save"}</Button>
+            <Button onClick={save} disabled={busy}>
+              {ar ? "حفظ" : "Save"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

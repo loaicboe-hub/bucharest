@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { loadPartners, PARTNERS_EVENT, type Partner } from "@/lib/admin-partners";
+import { listPartners, PARTNERS_EVENT, type Partner } from "@/lib/admin-partners";
 
 export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?: string }) {
   const [partners, setPartners] = useState<Partner[]>([]);
 
   useEffect(() => {
-    const sync = () => setPartners(loadPartners().filter((p) => p.enabled && p.logo));
+    let alive = true;
+    const sync = () => {
+      listPartners(true)
+        .then((list) => {
+          if (alive) setPartners(list.filter((p) => p.logo));
+        })
+        .catch(() => undefined);
+    };
     sync();
     window.addEventListener(PARTNERS_EVENT, sync);
-    window.addEventListener("storage", sync);
     return () => {
+      alive = false;
       window.removeEventListener(PARTNERS_EVENT, sync);
-      window.removeEventListener("storage", sync);
     };
   }, []);
 
