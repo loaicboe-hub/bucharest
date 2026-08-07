@@ -116,6 +116,9 @@ function CategoriesPage() {
                   </TableCell>
                   <TableCell className="font-medium">{c.name_en}</TableCell>
                   <TableCell dir="rtl">{c.name_ar}</TableCell>
+                  <TableCell className="text-sm">
+                    {c.trade === "import" ? "Import Products" : "Export Products"}
+                  </TableCell>
                   <TableCell className="text-sm text-muted-foreground">{c.slug}</TableCell>
                   <TableCell><Switch checked={c.active} onCheckedChange={() => toggleActive(c)} /></TableCell>
                   <TableCell className="text-right">
