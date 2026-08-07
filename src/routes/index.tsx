@@ -717,7 +717,6 @@ function Index() {
 
       {/* Global Markets */}
       <section
-      <section
         id="markets"
         className="relative overflow-hidden bg-cream py-24 lg:py-32"
       >
