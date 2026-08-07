@@ -106,6 +106,7 @@ function Index() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [trade, setTrade] = useState<"export" | "import">("export");
+  const [activeCat, setActiveCat] = useState<string>("all");
 
   const [showTop, setShowTop] = useState(false);
   const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
