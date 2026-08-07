@@ -377,17 +377,18 @@ function Index() {
                   opacity="0.9"
                 />
               </svg>
-              <div className="absolute inset-[14%] grid place-items-center rounded-full glass-dark shadow-[0_30px_80px_-20px_rgba(0,0,0,0.55)]">
+              <div className="absolute inset-[14%] grid place-items-center bg-transparent">
                 {logo ? (
                   <img
                     src={logo}
                     alt="Nailvlora Import and Export logo"
-                    className="h-full w-full scale-[1.35] object-contain p-4"
+                    className="h-full w-full scale-[1.35] object-contain mix-blend-screen drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
                   />
                 ) : (
                   <Leaf className="h-24 w-24 text-gold" />
                 )}
               </div>
+
             </div>
           </div>
         </div>
