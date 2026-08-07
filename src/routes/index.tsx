@@ -8,6 +8,8 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
+import { SectionWave } from "@/components/SectionWave";
+
 import { getLogoUrl } from "@/lib/admin-branding";
 import {
   categoryName,
@@ -402,7 +404,9 @@ function Index() {
       </section>
 
       {/* About */}
-      <section id="about" className="relative py-24 lg:py-32">
+      <section id="about" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-5">
@@ -469,7 +473,9 @@ function Index() {
       </section>
 
       {/* Products */}
-      <section id="products" className="relative bg-cream py-24 lg:py-32">
+      <section id="products" className="relative overflow-hidden bg-cream py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
@@ -589,7 +595,9 @@ function Index() {
       </section>
 
       {/* Why Us */}
-      <section id="why" className="relative py-24 lg:py-32">
+      <section id="why" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
@@ -629,6 +637,8 @@ function Index() {
 
       {/* Process */}
       <section id="process" className="relative overflow-hidden bg-white py-24 lg:py-32">
+        <SectionWave />
+
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
@@ -670,7 +680,9 @@ function Index() {
 
 
       {/* Certifications */}
-      <section className="relative py-24 lg:py-32">
+      <section className="relative overflow-hidden py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
@@ -708,6 +720,8 @@ function Index() {
         id="markets"
         className="relative overflow-hidden bg-cream py-24 lg:py-32"
       >
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
@@ -744,7 +758,9 @@ function Index() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="relative py-24 lg:py-32">
+      <section id="contact" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-5 lg:items-start">
             <div className="lg:col-span-2">
@@ -853,8 +869,15 @@ function Index() {
         }
       />
 
+      {/* Soft mint wave leading into the footer */}
+      <div className="relative overflow-hidden bg-mint">
+        <SectionWave gradient />
+        <div className="h-24 md:h-32" />
+      </div>
+
       {/* Footer */}
       <footer className="relative bg-primary text-primary-foreground">
+
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
