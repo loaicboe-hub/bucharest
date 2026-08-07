@@ -148,6 +148,19 @@ function CategoriesPage() {
                 <Input dir="rtl" value={draft.name_ar} onChange={(e) => setDraft({ ...draft, name_ar: e.target.value })} />
               </div>
               <div className="space-y-2">
+                <Label>Type</Label>
+                <Select
+                  value={draft.trade}
+                  onValueChange={(v) => setDraft({ ...draft, trade: v as ProductCategory["trade"] })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="export">Export Products</SelectItem>
+                    <SelectItem value="import">Import Products</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label>Slug</Label>
                 <Input
                   value={draft.slug}
