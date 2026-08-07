@@ -784,27 +784,33 @@ function Index() {
       {/* Footer */}
       <footer className="relative bg-primary text-primary-foreground">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
-            <div className="lg:col-span-2">
-              <div className="flex items-center gap-3">
-                <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
+          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-12">
+            <div className="sm:col-span-2 lg:col-span-2">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground sm:h-16 sm:w-16">
                   {logo ? (
-                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
+                    <img
+                      src={logo}
+                      alt="Nailvlora Import and Export logo"
+                      className="h-full w-full scale-[1.5] object-contain"
+                    />
                   ) : (
                     <Leaf className="h-7 w-7" />
                   )}
                 </div>
 
-
-                <div>
-                  <div className="font-display text-xl font-bold">{site.companyName || c.brand}</div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
+                <div className="min-w-0">
+                  <div className="truncate font-display text-xl font-bold">
+                    {site.companyName || c.brand}
+                  </div>
+                  <div className="truncate text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
                     {c.brandSub}
                   </div>
                 </div>
               </div>
               <p className="mt-5 max-w-md text-primary-foreground/70">{footer.tagline}</p>
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex flex-wrap gap-3">
+
                 {(
                   [
                     [Facebook, site.facebook || footer.social.facebook],
