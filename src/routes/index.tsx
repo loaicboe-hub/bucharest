@@ -21,6 +21,7 @@ import {
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { getAboutVideoUrl } from "@/lib/about-video";
+import { useTransparentLogo } from "@/lib/transparent-image";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
@@ -116,6 +117,7 @@ function Index() {
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const heroLogo = useTransparentLogo(logo);
   const { lang, c } = useLang();
   const footer = localizeFooterConfig(footerRaw, lang);
 
@@ -296,7 +298,7 @@ function Index() {
         {/* Faint brand watermark in the upper background */}
         {logo && (
           <img
-            src={logo}
+            src={heroLogo ?? logo}
             alt=""
             aria-hidden
             className="pointer-events-none absolute -top-16 left-1/2 w-[52rem] max-w-none -translate-x-1/2 select-none object-contain opacity-[0.06] blur-[1px] mix-blend-screen"
@@ -380,9 +382,9 @@ function Index() {
               <div className="absolute inset-[14%] grid place-items-center bg-transparent">
                 {logo ? (
                   <img
-                    src={logo}
+                    src={heroLogo ?? logo}
                     alt="Nailvlora Import and Export logo"
-                    className="h-full w-full scale-[1.35] object-contain mix-blend-screen drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+                    className="h-full w-full scale-[1.35] object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
                   />
                 ) : (
                   <Leaf className="h-24 w-24 text-gold" />
