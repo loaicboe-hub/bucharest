@@ -144,6 +144,7 @@ export async function saveCategory(c: Partial<ProductCategory>): Promise<string 
     name_ar: c.name_ar ?? "",
     sort_order: c.sort_order ?? 1,
     active: c.active ?? true,
+    trade: c.trade ?? "export",
   };
   const { error } = c.id
     ? await supabase.from("product_categories").update(payload).eq("id", c.id)
