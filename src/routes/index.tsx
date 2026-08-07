@@ -165,7 +165,7 @@ function Index() {
           scrolled ? "glass shadow-[0_4px_30px_-10px_oklch(0.3_0.08_150/0.15)]" : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4 lg:px-10">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:gap-6 lg:px-10">
           <a href="#top" className="flex shrink-0 items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
               {logo ? (
@@ -177,7 +177,7 @@ function Index() {
 
             <div className="min-w-0">
               <div
-                className={`whitespace-nowrap font-display text-xl font-bold leading-none sm:text-2xl lg:text-3xl ${
+                className={`whitespace-nowrap font-display text-xl font-bold leading-none lg:text-2xl xl:text-3xl ${
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
@@ -193,12 +193,12 @@ function Index() {
             </div>
           </a>
 
-          <nav className="hidden flex-1 items-center justify-center gap-7 md:flex lg:gap-9">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-3 md:flex lg:gap-6 xl:gap-8">
             {nav.map((n) => (
               <a
                 key={n.href}
                 href={n.href}
-                className={`whitespace-nowrap text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap text-[13px] font-bold transition-colors lg:text-sm ${
                   scrolled
                     ? "text-foreground hover:text-fresh"
                     : "text-white/90 hover:text-gold"
@@ -209,7 +209,7 @@ function Index() {
             ))}
             <Link
               to="/news"
-              className={`whitespace-nowrap text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap text-[13px] font-bold transition-colors lg:text-sm ${
                 scrolled ? "text-foreground hover:text-fresh" : "text-white/90 hover:text-gold"
               }`}
             >
@@ -217,10 +217,10 @@ function Index() {
             </Link>
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-4 md:flex">
+          <div className="hidden shrink-0 items-center gap-2 md:flex lg:gap-4">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-3 py-2 text-[13px] font-semibold lg:py-2.5 lg:text-sm lg:px-5 text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
               {c.ui.requestQuote} <ArrowRight className="h-4 w-4" />
             </a>
