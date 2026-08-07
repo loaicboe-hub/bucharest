@@ -421,7 +421,7 @@ function Index() {
                 <button
                   key={t}
                   type="button"
-                  onClick={() => setTrade(t)}
+                  onClick={() => { setTrade(t); setActiveCat("all"); }}
                   className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
                     trade === t
                       ? "bg-fresh text-white shadow"
