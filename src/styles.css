@@ -33,6 +33,8 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-cream: var(--cream);
+  --color-mint: var(--mint);
+
 
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
