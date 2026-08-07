@@ -77,6 +77,39 @@ export type Database = {
         }
         Relationships: []
       }
+      partners: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          id: string
+          logo_path: string
+          logo_url: string
+          name: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          logo_path?: string
+          logo_url?: string
+          name?: string
+          sort_order?: number
+          url?: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          logo_path?: string
+          logo_url?: string
+          name?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: []
+      }
       product_categories: {
         Row: {
           active: boolean
