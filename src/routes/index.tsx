@@ -869,8 +869,15 @@ function Index() {
         }
       />
 
+      {/* Soft mint wave leading into the footer */}
+      <div className="relative overflow-hidden bg-mint">
+        <SectionWave gradient />
+        <div className="h-24 md:h-32" />
+      </div>
+
       {/* Footer */}
       <footer className="relative bg-primary text-primary-foreground">
+
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
