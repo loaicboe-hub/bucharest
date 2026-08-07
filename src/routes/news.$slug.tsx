@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { SectionWave } from "@/components/SectionWave";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -145,6 +146,9 @@ function NewsDetail() {
           </Link>
         </div>
       </header>
+      <div className="relative h-[60px] overflow-hidden md:h-[90px]">
+        <SectionWave />
+      </div>
 
       <article className="mx-auto max-w-4xl px-6 py-12 lg:px-10 lg:py-16">
         {article.category && (

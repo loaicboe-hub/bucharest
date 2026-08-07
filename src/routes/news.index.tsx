@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { SectionWave } from "@/components/SectionWave";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowLeft, CalendarDays, User, Newspaper } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
@@ -86,6 +87,9 @@ function NewsList() {
           </Link>
         </div>
       </header>
+      <div className="relative h-[60px] overflow-hidden md:h-[90px]">
+        <SectionWave />
+      </div>
 
       <section className="mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">

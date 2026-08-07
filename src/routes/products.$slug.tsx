@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { SectionWave } from "@/components/SectionWave";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
@@ -161,6 +162,9 @@ function ProductDetail() {
           </Link>
         </div>
       </header>
+      <div className="relative h-[60px] overflow-hidden md:h-[90px]">
+        <SectionWave />
+      </div>
 
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="border-b border-border/50 bg-cream">
