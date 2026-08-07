@@ -155,21 +155,21 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-
-
-
-
       {/* Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? "glass shadow-[0_4px_30px_-10px_oklch(0.3_0.08_150/0.15)]" : "bg-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-          <a href="#top" className="flex items-center gap-3.5">
-            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 sm:py-4 lg:px-10">
+          <a href="#top" className="flex min-w-0 items-center gap-3">
+            <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-14 sm:w-14 lg:h-16 lg:w-16">
               {logo ? (
-                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
+                <img
+                  src={logo}
+                  alt="Nailvlora Import and Export logo"
+                  className="h-full w-full scale-[1.5] object-contain"
+                />
               ) : (
                 <Leaf className="h-6 w-6 text-white" />
               )}
@@ -177,15 +177,14 @@ function Index() {
 
             <div className="min-w-0">
               <div
-                className={`font-display text-xl font-bold leading-none sm:text-2xl lg:text-3xl ${
+                className={`truncate font-display text-lg font-bold leading-tight sm:text-xl lg:text-2xl xl:text-3xl ${
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
                 {site.companyName || c.brand}
-
               </div>
               <div
-                className={`text-[10px] uppercase tracking-[0.2em] ${
+                className={`truncate text-[10px] uppercase tracking-[0.2em] ${
                   scrolled ? "text-muted-foreground" : "text-white/70"
                 }`}
               >
@@ -194,12 +193,12 @@ function Index() {
             </div>
           </a>
 
-          <nav className="hidden items-center gap-8 lg:flex">
+          <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
             {nav.map((n) => (
               <a
                 key={n.href}
                 href={n.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`whitespace-nowrap text-sm font-medium transition-colors ${
                   scrolled
                     ? "text-foreground hover:text-fresh"
                     : "text-white/90 hover:text-gold"
@@ -210,7 +209,7 @@ function Index() {
             ))}
             <Link
               to="/news"
-              className={`text-sm font-medium transition-colors ${
+              className={`whitespace-nowrap text-sm font-medium transition-colors ${
                 scrolled ? "text-foreground hover:text-fresh" : "text-white/90 hover:text-gold"
               }`}
             >
@@ -218,24 +217,27 @@ function Index() {
             </Link>
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
             >
               {c.ui.requestQuote} <ArrowRight className="h-4 w-4" />
             </a>
             <LanguageSwitcher compact={scrolled} />
           </nav>
 
-          <div className="flex items-center gap-3 lg:hidden">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:hidden">
             <LanguageSwitcher compact={scrolled} />
-          <button
-            aria-label={c.ui.toggleMenu}
-            onClick={() => setMenuOpen(!menuOpen)}
-            className={`lg:hidden ${scrolled ? "text-foreground" : "text-white"}`}
-          >
-            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+            <button
+              aria-label={c.ui.toggleMenu}
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors ${
+                scrolled ? "text-foreground hover:bg-foreground/5" : "text-white hover:bg-white/10"
+              }`}
+            >
+              {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
+
 
         {menuOpen && (
           <div className="glass border-t border-white/20 lg:hidden">
