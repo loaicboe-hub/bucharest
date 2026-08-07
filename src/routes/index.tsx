@@ -362,7 +362,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative lg:col-span-7 lg:-mr-6 xl:-mr-16">
               <div className="absolute -inset-4 rounded-3xl gradient-primary opacity-20 blur-2xl" />
               <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
                 {aboutVideo ? (
@@ -378,8 +378,9 @@ function Index() {
                     preload="metadata"
                     poster={farm}
                     aria-label="About Nailvlora"
-                    className="aspect-[4/3] h-full w-full bg-black object-cover"
+                    className="aspect-video h-full w-full bg-black object-cover"
                   />
+
                 ) : (
                   <img
                     src={farm}
