@@ -31,7 +31,7 @@ function arcPath(a: { x: number; y: number }, b: { x: number; y: number }) {
 export default function WorldMapRoutes({ labels = [] as string[] }) {
   return (
     <div className="relative h-full w-full overflow-hidden bg-[oklch(0.24_0.035_170)]">
-      <svg viewBox="0 0 900 450" className="h-full w-full">
+      <svg viewBox="0 0 900 450" preserveAspectRatio="xMidYMid slice" className="h-full w-full">
         <defs>
           <linearGradient id="wm-bg" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="oklch(0.27 0.04 175)" />
@@ -155,10 +155,10 @@ export default function WorldMapRoutes({ labels = [] as string[] }) {
         {/* region labels */}
         {labels.slice(0, 4).map((l, i) => {
           const pos = [
-            { x: 470, y: 96 },
-            { x: 620, y: 190 },
-            { x: 500, y: 380 },
-            { x: 740, y: 152 },
+            { x: 462, y: 92 },
+            { x: 626, y: 178 },
+            { x: 500, y: 392 },
+            { x: 706, y: 128 },
           ][i];
           if (!pos) return null;
           return (
