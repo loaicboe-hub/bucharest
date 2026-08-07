@@ -30,6 +30,7 @@ const blank = (order: number): ProductCategory => ({
   name_ar: "",
   sort_order: order,
   active: true,
+  trade: "export",
 });
 
 function CategoriesPage() {
