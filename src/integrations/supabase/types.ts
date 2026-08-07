@@ -119,6 +119,7 @@ export type Database = {
           name_en: string
           slug: string
           sort_order: number
+          trade: string
           updated_at: string
         }
         Insert: {
@@ -129,6 +130,7 @@ export type Database = {
           name_en?: string
           slug: string
           sort_order?: number
+          trade?: string
           updated_at?: string
         }
         Update: {
@@ -139,6 +141,7 @@ export type Database = {
           name_en?: string
           slug?: string
           sort_order?: number
+          trade?: string
           updated_at?: string
         }
         Relationships: []
