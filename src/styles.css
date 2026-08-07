@@ -71,7 +71,7 @@
   --gold: oklch(0.75 0.13 85);             /* #D4AF37 gold */
   --gold-foreground: oklch(0.2 0.02 150);
   --cream: oklch(0.98 0.015 90);
-  --mint: oklch(0.968 0.014 160);          /* #F0F7F4 soft pastel mint */
+  --mint: oklch(0.955 0.03 158);            /* soft pastel mint wave tint */
   --wave-slate: oklch(0.93 0.012 190);     /* faint slate for wave gradient */
 }
 
