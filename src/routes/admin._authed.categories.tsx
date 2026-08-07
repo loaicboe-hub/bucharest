@@ -92,6 +92,7 @@ function CategoriesPage() {
                 <TableHead className="w-16">Order</TableHead>
                 <TableHead>English name</TableHead>
                 <TableHead>Arabic name</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Slug</TableHead>
                 <TableHead>Visible</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
