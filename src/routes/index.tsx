@@ -333,8 +333,9 @@ function Index() {
       {/* About */}
       <section id="about" className="relative py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-            <div>
+          <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-5">
+
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}
               </div>
@@ -361,7 +362,7 @@ function Index() {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative lg:col-span-7 lg:-mr-6 xl:-mr-16">
               <div className="absolute -inset-4 rounded-3xl gradient-primary opacity-20 blur-2xl" />
               <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
                 {aboutVideo ? (
@@ -377,8 +378,9 @@ function Index() {
                     preload="metadata"
                     poster={farm}
                     aria-label="About Nailvlora"
-                    className="aspect-[4/3] h-full w-full bg-black object-cover"
+                    className="aspect-video h-full w-full bg-black object-cover"
                   />
+
                 ) : (
                   <img
                     src={farm}
