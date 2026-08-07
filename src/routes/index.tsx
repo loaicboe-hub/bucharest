@@ -717,9 +717,12 @@ function Index() {
 
       {/* Global Markets */}
       <section
+      <section
         id="markets"
         className="relative overflow-hidden bg-cream py-24 lg:py-32"
       >
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
