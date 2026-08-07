@@ -748,9 +748,9 @@ function Index() {
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 rounded-3xl gradient-primary opacity-10 blur-3xl" />
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-white shadow-[var(--shadow-soft)]">
-                <WorldMap labels={c.regions} />
+              <div className="absolute inset-0 rounded-3xl gradient-primary opacity-20 blur-3xl" />
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-fresh/20 shadow-[var(--shadow-soft)]">
+                <WorldMapRoutes labels={c.regions} />
               </div>
             </div>
           </div>
