@@ -193,7 +193,7 @@ function Index() {
             </div>
           </a>
 
-          <nav className="hidden flex-1 items-center justify-center gap-7 lg:flex xl:gap-9">
+          <nav className="hidden flex-1 items-center justify-center gap-7 md:flex lg:gap-9">
             {nav.map((n) => (
               <a
                 key={n.href}
@@ -217,7 +217,7 @@ function Index() {
             </Link>
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-4 lg:flex">
+          <div className="hidden shrink-0 items-center gap-4 md:flex">
             <a
               href="#contact"
               className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
@@ -227,7 +227,7 @@ function Index() {
             <LanguageSwitcher compact={scrolled} />
           </div>
 
-          <div className="ml-auto flex items-center gap-3 lg:hidden">
+          <div className="ml-auto flex items-center gap-3 md:hidden">
             <LanguageSwitcher compact={scrolled} />
             <button
               aria-label={c.ui.toggleMenu}
