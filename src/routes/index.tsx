@@ -505,7 +505,9 @@ function Index() {
 
           {(() => {
             const list = dbProducts.filter((p) => p.trade === trade);
-            if (!list.length) {
+            const tradeCats = categories.filter((cat) => cat.trade === trade);
+
+            if (!list.length && !tradeCats.length) {
               return (
                 <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
                   <h3 className="font-display text-2xl font-semibold text-primary">
@@ -523,11 +525,14 @@ function Index() {
             }
 
             const tabs: { id: string; label: string; items: ProductRow[] }[] = [];
-            for (const cat of categories) {
-              const items = list.filter((p) => p.category_id === cat.id);
-              if (items.length) tabs.push({ id: cat.id, label: categoryName(cat, lang), items });
+            for (const cat of tradeCats) {
+              tabs.push({
+                id: cat.id,
+                label: categoryName(cat, lang),
+                items: list.filter((p) => p.category_id === cat.id),
+              });
             }
-            const ungrouped = list.filter((p) => !categories.some((cat) => cat.id === p.category_id));
+            const ungrouped = list.filter((p) => !tradeCats.some((cat) => cat.id === p.category_id));
             if (ungrouped.length)
               tabs.push({ id: "other", label: lang === "ar" ? "أخرى" : "Other", items: ungrouped });
 
