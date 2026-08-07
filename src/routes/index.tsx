@@ -293,13 +293,27 @@ function Index() {
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
 
-        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-6 pt-32 pb-20 lg:px-10">
-          <div className="max-w-3xl animate-fade-up">
+        {/* Faint brand watermark in the upper background */}
+        {logo && (
+          <img
+            src={logo}
+            alt=""
+            aria-hidden
+            className="pointer-events-none absolute -top-16 left-1/2 w-[52rem] max-w-none -translate-x-1/2 select-none object-contain opacity-[0.06] blur-[1px] mix-blend-screen"
+          />
+        )}
+        <Leaf
+          aria-hidden
+          className="pointer-events-none absolute right-[6%] top-24 h-64 w-64 rotate-12 text-white/[0.07]"
+        />
+
+        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pt-32 pb-20 lg:grid-cols-12 lg:px-10">
+          <div className="max-w-3xl animate-fade-up lg:col-span-7">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full glass-dark px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
               {c.ui.heroBadge}
             </div>
-            <h1 className="font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl xl:text-8xl">
+            <h1 className="font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl">
               {c.ui.heroTitle1}{" "}
               <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
@@ -333,7 +347,51 @@ function Index() {
               })}
             </div>
           </div>
+
+          {/* Hero brand graphic with dotted trajectory arc */}
+          <div className="relative hidden items-center justify-center lg:col-span-5 lg:flex">
+            <div className="relative aspect-square w-full max-w-md">
+              <svg
+                viewBox="0 0 400 400"
+                aria-hidden
+                className="absolute inset-0 h-full w-full animate-[spin_60s_linear_infinite] text-gold"
+              >
+                <circle
+                  cx="200"
+                  cy="200"
+                  r="188"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeDasharray="2 12"
+                  strokeLinecap="round"
+                  opacity="0.75"
+                />
+                <path
+                  d="M 24 232 A 180 180 0 0 0 376 232"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeDasharray="4 14"
+                  strokeLinecap="round"
+                  opacity="0.9"
+                />
+              </svg>
+              <div className="absolute inset-[14%] grid place-items-center rounded-full glass-dark shadow-[0_30px_80px_-20px_rgba(0,0,0,0.55)]">
+                {logo ? (
+                  <img
+                    src={logo}
+                    alt="Nailvlora Import and Export logo"
+                    className="h-full w-full scale-[1.35] object-contain p-4"
+                  />
+                ) : (
+                  <Leaf className="h-24 w-24 text-gold" />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
+
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] animate-float">
           {c.ui.scroll}
