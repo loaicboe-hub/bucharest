@@ -125,6 +125,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {/* Pre-hydration cover: paints white before any page content is visible. */}
         <div
           id="splash-cover"
+          suppressHydrationWarning
           style={{
             position: "fixed",
             inset: 0,
@@ -132,6 +133,7 @@ function RootShell({ children }: { children: ReactNode }) {
             zIndex: 300,
           }}
         />
+
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{if(sessionStorage.getItem('nv_splash_seen')==='1'){var c=document.getElementById('splash-cover');if(c)c.style.display='none';}}catch(e){}setTimeout(function(){var c=document.getElementById('splash-cover');if(c)c.style.display='none';},8000);})();`,

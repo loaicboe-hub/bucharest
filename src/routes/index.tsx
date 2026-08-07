@@ -140,15 +140,25 @@ function Index() {
   }, [lang, site]);
 
   useEffect(() => {
+    let raf = 0;
     const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      setShowTop(window.scrollY > 600);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const y = window.scrollY;
+        // hysteresis avoids rapid toggling (flicker) right at the threshold
+        setScrolled((prev) => (prev ? y > 20 : y > 60));
+        setShowTop((prev) => (prev ? y > 500 : y > 600));
+      });
     };
-    window.addEventListener("scroll", onScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
+
 
   const nav = c.nav;
 
