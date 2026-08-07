@@ -452,20 +452,47 @@ function Index() {
                 </div>
               );
             }
-            const groups = categories
-              .map((cat) => ({ cat, items: list.filter((p) => p.category_id === cat.id) }))
-              .filter((g) => g.items.length);
+
+            const tabs: { id: string; label: string; items: ProductRow[] }[] = [];
+            for (const cat of categories) {
+              const items = list.filter((p) => p.category_id === cat.id);
+              if (items.length) tabs.push({ id: cat.id, label: categoryName(cat, lang), items });
+            }
             const ungrouped = list.filter((p) => !categories.some((cat) => cat.id === p.category_id));
-            if (ungrouped.length) groups.push({ cat: null as never, items: ungrouped });
-            return groups.map((g, gi) => (
-              <div key={g.cat?.id ?? `other-${gi}`} className={gi === 0 ? "mt-12" : "mt-20"}>
-                {g.cat && (
-                  <h3 className="mb-8 font-display text-2xl font-semibold text-primary">
-                    {categoryName(g.cat, lang)}
-                  </h3>
+            if (ungrouped.length)
+              tabs.push({ id: "other", label: lang === "ar" ? "أخرى" : "Other", items: ungrouped });
+
+            const allTabs =
+              tabs.length > 1
+                ? [{ id: "all", label: lang === "ar" ? "الكل" : "All", items: list }, ...tabs]
+                : tabs;
+            const current = allTabs.find((t) => t.id === activeCat) ?? allTabs[0];
+
+            return (
+              <>
+                {allTabs.length > 1 && (
+                  <div className="mt-8 flex flex-wrap justify-center gap-2">
+                    {allTabs.map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setActiveCat(tab.id)}
+                        className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all ${
+                          current?.id === tab.id
+                            ? "border-fresh bg-fresh text-white shadow"
+                            : "border-border bg-card text-muted-foreground hover:border-fresh/60 hover:text-primary"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
                 )}
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {g.items.map((p) => {
+                <div
+                  key={`${trade}-${current?.id}`}
+                  className="animate-fade-up mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                >
+                  {(current?.items ?? []).map((p) => {
                     const l = localized(p, lang);
                     return (
                       <ProductCard
@@ -480,8 +507,8 @@ function Index() {
                     );
                   })}
                 </div>
-              </div>
-            ));
+              </>
+            );
           })()}
 
         </div>
