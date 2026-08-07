@@ -473,7 +473,9 @@ function Index() {
       </section>
 
       {/* Products */}
-      <section id="products" className="relative bg-cream py-24 lg:py-32">
+      <section id="products" className="relative overflow-hidden bg-cream py-24 lg:py-32">
+        <SectionWave />
+
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
