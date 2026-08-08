@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
+import { BrandMark } from "@/components/BrandMark";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowLeft, CalendarDays, User, Newspaper } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";

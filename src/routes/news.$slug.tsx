@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
+import { BrandMark } from "@/components/BrandMark";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
