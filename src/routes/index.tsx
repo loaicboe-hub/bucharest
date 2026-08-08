@@ -25,6 +25,7 @@ import {
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { getAboutVideoUrl } from "@/lib/about-video";
 import { useTransparentLogo } from "@/lib/transparent-image";
+import { BrandWatermark } from "@/components/BrandMark";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
@@ -476,8 +477,9 @@ function Index() {
       {/* Products */}
       <section id="products" className="relative overflow-hidden bg-cream py-24 lg:py-32">
         <SectionWave />
+        <BrandWatermark position="right" />
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.productsEyebrow}{" "}
@@ -598,8 +600,9 @@ function Index() {
       {/* Why Us */}
       <section id="why" className="relative overflow-hidden py-24 lg:py-32">
         <SectionWave />
+        <BrandWatermark position="left" />
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
@@ -639,8 +642,9 @@ function Index() {
       {/* Process */}
       <section id="process" className="relative overflow-hidden bg-white py-24 lg:py-32">
         <SectionWave />
+        <BrandWatermark position="center" />
 
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.processEyebrow}{" "}
@@ -722,8 +726,9 @@ function Index() {
         className="relative overflow-hidden bg-cream py-24 lg:py-32"
       >
         <SectionWave />
+        <BrandWatermark position="right" />
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
