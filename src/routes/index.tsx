@@ -600,7 +600,7 @@ function Index() {
       {/* Why Us */}
       <section id="why" className="relative overflow-hidden py-24 lg:py-32">
         <SectionWave />
-        <BrandWatermark position="left" />
+        <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">

@@ -61,18 +61,21 @@ export function BrandWatermark({
 }) {
   const logo = useBrandLogo();
   const clean = useTransparentLogo(logo);
-  if (!logo) return null;
+  // Only render once the white background has been stripped, so the watermark
+  // never flashes as a white box over the section.
+  if (!clean || clean === logo) return null;
 
   const place =
     position === "left"
       ? "-left-24 top-8"
       : position === "center"
-        ? "left-1/2 top-10 -translate-x-1/2"
+        ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         : "-right-24 top-8";
 
   return (
     <img
-      src={clean ?? logo}
+      src={clean}
+
       alt=""
       aria-hidden
       className={cn(
