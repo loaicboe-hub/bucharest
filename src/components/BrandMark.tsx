@@ -22,10 +22,13 @@ export function useBrandLogo() {
 /** Circular logo mark used in page headers, matching the landing page treatment. */
 export function BrandMark({
   className,
+  markClassName,
   showName = true,
   name = "Nailvlora",
 }: {
   className?: string;
+  /** Size / style overrides for the circular logo frame (e.g. "h-24 w-24"). */
+  markClassName?: string;
   showName?: boolean;
   name?: string;
 }) {
@@ -33,7 +36,12 @@ export function BrandMark({
 
   return (
     <span className={cn("flex items-center gap-3", className)}>
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-border/60">
+      <span
+        className={cn(
+          "flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-border/60",
+          markClassName,
+        )}
+      >
         {logo ? (
           <img
             src={logo}
