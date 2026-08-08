@@ -80,8 +80,8 @@ function NewsList() {
     <div className="min-h-screen bg-background" dir={dir}>
       <header className="border-b border-border bg-cream">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" className="font-display text-xl font-bold text-primary">
-            Nailvlora
+          <Link to="/" aria-label="Nailvlora home">
+            <BrandMark />
           </Link>
           <Link to="/" className="text-sm font-semibold text-fresh hover:underline">
             {t.back}
