@@ -734,9 +734,12 @@ function Index() {
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
-              <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
-              </h2>
+              <div className="flex items-center gap-4">
+                <BrandMark showName={false} className="shrink-0" />
+                <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+                  {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
+                </h2>
+              </div>
               <p className="mt-6 text-lg text-muted-foreground">
                 {c.ui.marketsSub}
               </p>
