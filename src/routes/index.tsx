@@ -735,7 +735,7 @@ function Index() {
                 <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
               <div className="flex items-center gap-4">
-                <BrandMark showName={false} className="shrink-0" />
+                <BrandMark showName={false} className="shrink-0" markClassName="h-24 w-24 sm:h-28 sm:w-28" />
                 <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
                   {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
                 </h2>
