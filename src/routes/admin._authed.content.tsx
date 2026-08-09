@@ -18,6 +18,8 @@ import {
   type FooterColumn,
   type FooterLink,
 } from "@/lib/admin-footer";
+import { getHeroImageUrl, uploadHeroImage } from "@/lib/hero-image";
+
 
 export const Route = createFileRoute("/admin/_authed/content")({
   component: ContentPage,
@@ -45,20 +47,38 @@ function ContentPage() {
 
   useEffect(() => {
     setFooter(loadFooterConfig());
+    getHeroImageUrl()
+      .then((url) => {
+        if (url) setData((d) => ({ ...d, home: { ...d.home, image: url } }));
+      })
+      .catch(() => undefined);
   }, []);
 
   const update = (key: string, field: keyof Section, value: string) => {
     setData((d) => ({ ...d, [key]: { ...d[key], [field]: value } }));
   };
-  const uploadImage = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
+    e.target.value = "";
     if (!f) return;
+    if (key === "home") {
+      const err = await uploadHeroImage(f);
+      if (err) {
+        toast.error(err);
+        return;
+      }
+      const url = await getHeroImageUrl();
+      if (url) update("home", "image", url);
+      toast.success("Hero image updated — it now shows on the homepage");
+      return;
+    }
     update(key, "image", URL.createObjectURL(f));
   };
   const save = () => {
     saveFooterConfig(footer);
     toast.success("Content saved");
   };
+
 
   const setColumn = (ci: number, patch: Partial<FooterColumn>) =>
     setFooter((f) => ({

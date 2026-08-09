@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 
 const heroBgUrl = "/__l5e/assets-v1/6215add3-5f28-4dd0-b283-aaaa565cbe14/hero-bg-3.png";
+import { getHeroImageUrl } from "@/lib/hero-image";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
 import mangoes from "@/assets/mangoes.jpg";
@@ -119,6 +120,7 @@ function Index() {
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
+  const [heroBg, setHeroBg] = useState<string>(heroBgUrl);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const heroLogo = useTransparentLogo(logo);
@@ -131,6 +133,7 @@ function Index() {
     getLogoUrl().then(setLogo).catch(() => setLogo(null));
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
+    getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
     listCategories(true).then(setCategories).catch(() => setCategories([]));
   }, []);
@@ -290,7 +293,7 @@ function Index() {
       {/* Hero */}
       <section id="top" className="relative min-h-screen overflow-hidden bg-primary">
         <img
-          src={heroBgUrl}
+          src={heroBg}
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}

@@ -1,0 +1,2 @@
+DROP POLICY "Public can read published site media" ON storage.objects;
+CREATE POLICY "Public can read published site media" ON storage.objects FOR SELECT USING ((bucket_id = 'site-media') AND ((storage.foldername(name))[1] = ANY (ARRAY['branding','partners','news','about','products','hero'])));
