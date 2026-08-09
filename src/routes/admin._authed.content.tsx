@@ -18,6 +18,8 @@ import {
   type FooterColumn,
   type FooterLink,
 } from "@/lib/admin-footer";
+import { getHeroImageUrl, uploadHeroImage } from "@/lib/hero-image";
+
 
 export const Route = createFileRoute("/admin/_authed/content")({
   component: ContentPage,
