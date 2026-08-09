@@ -98,6 +98,7 @@ export async function deleteLogo(): Promise<string | null> {
   const name = await currentFileName();
   if (!name) return null;
   const { error } = await supabase.storage.from(BUCKET).remove([`${FOLDER}/${name}`]);
+  if (!error) setCachedLogoUrl(null);
   return error ? error.message : null;
 }
 
