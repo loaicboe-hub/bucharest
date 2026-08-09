@@ -294,16 +294,9 @@ function Index() {
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}
-          className="absolute inset-0 h-full w-full scale-105 object-cover blur-2xl"
-          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <img
-          src={heroBgUrl}
-          alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
-          width={1920}
-          height={1920}
-          className="absolute inset-0 h-full w-full object-contain"
-        />
+
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
 
