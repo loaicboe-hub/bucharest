@@ -36,11 +36,16 @@ async function currentFileName(): Promise<string | null> {
 /** Signed URL of the brand logo, or null when none uploaded. */
 export async function getLogoUrl(): Promise<string | null> {
   const name = await currentFileName();
-  if (!name) return null;
+  if (!name) {
+    setCachedLogoUrl(null);
+    return null;
+  }
   const { data } = await supabase.storage
     .from(BUCKET)
     .createSignedUrl(`${FOLDER}/${name}`, SIGNED_TTL);
-  return data?.signedUrl ?? null;
+  const url = data?.signedUrl ?? null;
+  setCachedLogoUrl(url);
+  return url;
 }
 
 /** Upload (or replace) the brand logo. Returns an error message or null. */
