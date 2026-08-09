@@ -51,7 +51,7 @@ import {
   Leaf,
 } from "lucide-react";
 
-import heroBg from "@/assets/hero-bg.png.asset.json";
+const heroBgUrl = "/__l5e/assets-v1/38c4a430-32da-47d9-8c0d-ab4355efff45/hero-bg.png";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
 import mangoes from "@/assets/mangoes.jpg";
