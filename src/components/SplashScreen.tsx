@@ -47,8 +47,8 @@ export function SplashScreen() {
   }
 
   useEffect(() => {
-    setLogo(getCachedLogoUrl());
-    getLogoUrl().then((u) => u && setLogo(u)).catch(() => undefined);
+    getLogoUrl().then((u) => setLogo((prev) => (u && u !== prev ? u : prev))).catch(() => undefined);
+
     loadSiteSettings()
       .then((s) => s.companyName && setBrand(s.companyName))
       .catch(() => undefined);
