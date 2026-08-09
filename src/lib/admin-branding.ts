@@ -4,25 +4,33 @@ import { supabase } from "@/integrations/supabase/client";
 const BUCKET = "site-media";
 const FOLDER = "branding";
 const SIGNED_TTL = 60 * 60 * 24 * 365; // 1 year
-const CACHE_KEY = "nv_logo_url";
+const CACHE_KEY = "nv_logo_cache_v2";
+const CACHE_TTL = 1000 * 60 * 60 * 24 * 14; // re-check at most every 14 days
+const MAX_INLINE_BYTES = 900_000; // keep localStorage well under quota
 
-/** Last known logo URL, readable synchronously so the first paint has no gap. */
-export function getCachedLogoUrl(): string | null {
+type LogoCache = { src: string | null; ts: number };
+
+function readCache(): LogoCache | null {
   if (typeof window === "undefined") return null;
   try {
-    return window.localStorage.getItem(CACHE_KEY);
+    const raw = window.localStorage.getItem(CACHE_KEY);
+    return raw ? (JSON.parse(raw) as LogoCache) : null;
   } catch {
     return null;
   }
 }
 
-function setCachedLogoUrl(url: string | null) {
+/** Last known logo (inlined data URL when possible) for an instant first paint. */
+export function getCachedLogoUrl(): string | null {
+  return readCache()?.src ?? null;
+}
+
+function setCachedLogoUrl(src: string | null) {
   if (typeof window === "undefined") return;
   try {
-    if (url) window.localStorage.setItem(CACHE_KEY, url);
-    else window.localStorage.removeItem(CACHE_KEY);
+    window.localStorage.setItem(CACHE_KEY, JSON.stringify({ src, ts: Date.now() }));
   } catch {
-    /* ignore */
+    /* ignore quota errors */
   }
 }
 
@@ -33,8 +41,27 @@ async function currentFileName(): Promise<string | null> {
   return file ? file.name : null;
 }
 
-/** Signed URL of the brand logo, or null when none uploaded. */
-export async function getLogoUrl(): Promise<string | null> {
+async function toDataUrl(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    if (blob.size > MAX_INLINE_BYTES) return null;
+    return await new Promise<string | null>((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : null);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
+
+/** Signed URL (or inlined data URL) of the brand logo, or null when none uploaded. */
+export async function getLogoUrl(force = false): Promise<string | null> {
+  const cached = readCache();
+  if (!force && cached && Date.now() - cached.ts < CACHE_TTL) return cached.src;
+
   const name = await currentFileName();
   if (!name) {
     setCachedLogoUrl(null);
@@ -44,9 +71,12 @@ export async function getLogoUrl(): Promise<string | null> {
     .from(BUCKET)
     .createSignedUrl(`${FOLDER}/${name}`, SIGNED_TTL);
   const url = data?.signedUrl ?? null;
-  setCachedLogoUrl(url);
-  return url;
+  if (!url) return cached?.src ?? null;
+  const inlined = (await toDataUrl(url)) ?? url;
+  setCachedLogoUrl(inlined);
+  return inlined;
 }
+
 
 /** Upload (or replace) the brand logo. Returns an error message or null. */
 export async function uploadLogo(file: File): Promise<string | null> {
