@@ -290,7 +290,7 @@ function Index() {
       {/* Hero */}
       <section id="top" className="relative min-h-screen overflow-hidden">
         <img
-          src={heroBg.url}
+          src={heroBgUrl}
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}
