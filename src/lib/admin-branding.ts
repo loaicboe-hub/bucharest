@@ -105,6 +105,8 @@ export async function deleteLogo(): Promise<string | null> {
 export async function getLogoDataUrl(): Promise<string | null> {
   const url = await getLogoUrl();
   if (!url) return null;
+  if (url.startsWith("data:")) return url;
+
   try {
     const res = await fetch(url);
     if (!res.ok) return null;
