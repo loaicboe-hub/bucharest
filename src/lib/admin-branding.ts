@@ -4,6 +4,27 @@ import { supabase } from "@/integrations/supabase/client";
 const BUCKET = "site-media";
 const FOLDER = "branding";
 const SIGNED_TTL = 60 * 60 * 24 * 365; // 1 year
+const CACHE_KEY = "nv_logo_url";
+
+/** Last known logo URL, readable synchronously so the first paint has no gap. */
+export function getCachedLogoUrl(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(CACHE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function setCachedLogoUrl(url: string | null) {
+  if (typeof window === "undefined") return;
+  try {
+    if (url) window.localStorage.setItem(CACHE_KEY, url);
+    else window.localStorage.removeItem(CACHE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
 
 async function currentFileName(): Promise<string | null> {
   const { data, error } = await supabase.storage.from(BUCKET).list(FOLDER, { limit: 100 });
