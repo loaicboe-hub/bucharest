@@ -51,7 +51,7 @@ import {
   Leaf,
 } from "lucide-react";
 
-import hero from "@/assets/hero.jpg";
+import heroBg from "@/assets/hero-bg.png.asset.json";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
 import mangoes from "@/assets/mangoes.jpg";
