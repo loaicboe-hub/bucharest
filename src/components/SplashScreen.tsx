@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Leaf } from "lucide-react";
-import { getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { loadSiteSettings } from "@/lib/site-settings";
 
 const SESSION_KEY = "nv_splash_seen";
