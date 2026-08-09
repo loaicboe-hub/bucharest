@@ -117,6 +117,7 @@ function Index() {
   const [showTop, setShowTop] = useState(false);
   const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
+  useEffect(() => setLogo(getCachedLogoUrl()), []);
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
