@@ -6,8 +6,8 @@ import { loadSiteSettings } from "@/lib/site-settings";
 
 const SESSION_KEY = "nv_splash_seen";
 
-/** Globe position inside the square brand logo, as fractions of the image. */
-const GLOBE = { cx: 0.527, cy: 0.371, r: 0.086 };
+
+
 
 
 
