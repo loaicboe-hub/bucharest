@@ -104,7 +104,7 @@ export function SplashScreen() {
   }
 
 
-  const ease = [0.65, 0, 0.35, 1] as const;
+  const ease = [0.16, 0.7, 0.28, 1] as const;
 
   return (
     <AnimatePresence>
@@ -112,101 +112,43 @@ export function SplashScreen() {
         <motion.div
           key="splash"
           role="presentation"
-          className="fixed inset-0 z-[400] flex items-center justify-center"
-          style={{ backgroundColor: bg }}
+          className="fixed inset-0 z-[400] flex items-center justify-center overflow-hidden"
+          style={{ backgroundColor: bg, perspective: 1400, perspectiveOrigin: "50% 50%" }}
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+          exit={{ opacity: 0, transition: { duration: 0.9, ease: "easeInOut" } }}
         >
+          {/* Camera dolly: the logo travels along Z from very far away toward the viewer. */}
           <motion.div
             className="flex h-full w-full items-center justify-center"
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease }}
+            style={{ transformStyle: "preserve-3d", willChange: "transform, filter, opacity" }}
+            initial={{ z: -2600, opacity: 0, filter: "blur(14px)" }}
+            animate={{
+              z: [-2600, -900, -40, 0],
+              opacity: [0, 0.45, 1, 1],
+              filter: ["blur(14px)", "blur(6px)", "blur(0.5px)", "blur(0px)"],
+            }}
+            transition={{
+              duration: 6,
+              times: [0, 0.45, 0.86, 1],
+              ease: [ease, ease, "easeOut"],
+            }}
           >
-            <motion.div
-              className="flex h-full w-full shrink-0 items-center justify-center"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: [16, 0, -6, 0] }}
-              transition={{
-                opacity: { duration: 1.1, delay: 0.2, ease },
-                y: { duration: 4.5, delay: 0.2, ease: "easeInOut", times: [0, 0.25, 0.6, 1] },
-              }}
-            >
-              {logo ? (
-                <motion.div
-                  className="relative aspect-square h-full max-h-full max-w-full"
-                  initial={{ scale: 1.2 }}
-                  animate={{ scale: [1.2, 1.42, 1.35] }}
-                  transition={{ scale: { duration: 5, ease: "easeInOut", times: [0, 0.6, 1] } }}
-                >
-                  {/* Left half slides in from the left */}
-                  <motion.img
-                    src={logo}
-                    alt={`${brand} logo`}
-                    crossOrigin="anonymous"
-                    onLoad={(e) => syncBackground(e.currentTarget)}
-                    className="absolute inset-0 h-full w-full object-contain"
-                    style={{ clipPath: "inset(0 50% 0 0)" }}
-                    initial={{ x: "-55%", opacity: 0, rotate: -4 }}
-                    animate={{ x: 0, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease }}
-                  />
-                  {/* Right half slides in from the right */}
-                  <motion.img
-                    src={logo}
-                    alt=""
-                    aria-hidden
-                    crossOrigin="anonymous"
-                    className="absolute inset-0 h-full w-full object-contain"
-                    style={{ clipPath: "inset(0 0 0 50%)" }}
-                    initial={{ x: "55%", opacity: 0, rotate: 4 }}
-                    animate={{ x: 0, opacity: 1, rotate: 0 }}
-                    transition={{ duration: 1.8, ease }}
-                  />
-
-                  {/* Globe-only spin: a circular crop of the logo's earth sits
-                      exactly on top of it and turns on its own axis. Only this
-                      disc rotates in 3D — the rest of the logo stays still. */}
-                  <motion.div
-                    className="absolute overflow-hidden rounded-full"
-                    style={{
-                      left: `${(GLOBE.cx - GLOBE.r) * 100}%`,
-                      top: `${(GLOBE.cy - GLOBE.r) * 100}%`,
-                      width: `${GLOBE.r * 200}%`,
-                      height: `${GLOBE.r * 200}%`,
-                      backgroundImage: logo ? `url(${logo})` : undefined,
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: `${100 / (GLOBE.r * 2)}% ${100 / (GLOBE.r * 2)}%`,
-                      backgroundPosition: `${((GLOBE.r - GLOBE.cx) / (2 * GLOBE.r - 1)) * 100}% ${((GLOBE.r - GLOBE.cy) / (2 * GLOBE.r - 1)) * 100}%`,
-                      transformOrigin: "50% 50%",
-                      transformPerspective: 800,
-                      backfaceVisibility: "visible",
-                      willChange: "transform",
-                    }}
-                    initial={{ opacity: 0, rotateY: 0 }}
-                    animate={{ opacity: 1, rotateY: 360 }}
-                    transition={{
-                      opacity: { duration: 0.4, delay: 1.8 },
-                      rotateY: { duration: 5, delay: 1.8, ease: "linear", repeat: Infinity },
-                    }}
-                  />
-
-                </motion.div>
-
-
-
-
-              ) : (
-                <motion.div
-                  animate={{ scale: [1, 1.12, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Leaf className="h-14 w-14 text-primary" />
-                </motion.div>
-              )}
-            </motion.div>
-
+            {logo ? (
+              <motion.img
+                src={logo}
+                alt={`${brand} logo`}
+                crossOrigin="anonymous"
+                onLoad={(e) => syncBackground(e.currentTarget)}
+                className="h-full w-full object-contain"
+                initial={{ scale: 1.3 }}
+                animate={{ scale: [1.3, 1.35, 1.35] }}
+                transition={{ duration: 6, times: [0, 0.86, 1], ease: "easeOut" }}
+              />
+            ) : (
+              <Leaf className="h-14 w-14 text-primary" />
+            )}
           </motion.div>
+
 
 
           {showSkip && (
