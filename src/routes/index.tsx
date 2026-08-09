@@ -131,7 +131,7 @@ function Index() {
   useEffect(() => {
     initLang();
     setFooter(loadFooterConfig());
-    getLogoUrl().then(setLogo).catch(() => setLogo(null));
+    getLogoUrl().then(setLogo).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
