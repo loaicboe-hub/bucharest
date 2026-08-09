@@ -43,14 +43,12 @@ export function BrandMark({
           markClassName,
         )}
       >
-        {logo ? (
+        {logo && (
           <img
             src={logo}
             alt={`${name} logo`}
             className="h-full w-full scale-[1.5] object-contain"
           />
-        ) : (
-          <span className="font-display text-lg font-bold text-primary">N</span>
         )}
       </span>
       {showName && (
