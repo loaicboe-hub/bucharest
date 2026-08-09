@@ -289,13 +289,21 @@ function Index() {
 
       {/* Hero */}
       <section id="top" className="relative min-h-screen overflow-hidden bg-primary">
+        {/* Blurred fill so the edges never look empty */}
+        <img
+          src={heroBgUrl}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full scale-110 object-cover object-center blur-2xl"
+        />
         <img
           src={heroBgUrl}
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-contain object-center lg:object-cover lg:object-top"
         />
+
 
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
