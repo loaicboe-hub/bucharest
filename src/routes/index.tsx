@@ -308,19 +308,8 @@ function Index() {
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
 
-        {/* Faint brand watermark in the upper background */}
-        {logo && (
-          <img
-            src={heroLogo ?? logo}
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute -top-16 left-1/2 w-[52rem] max-w-none -translate-x-1/2 select-none object-contain opacity-[0.06] blur-[1px] mix-blend-screen"
-          />
-        )}
-        <Leaf
-          aria-hidden
-          className="pointer-events-none absolute right-[6%] top-24 h-64 w-64 rotate-12 text-white/[0.07]"
-        />
+
+
 
         <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pt-32 pb-20 lg:grid-cols-12 lg:px-10">
           <div className="max-w-3xl animate-fade-up lg:col-span-7">
