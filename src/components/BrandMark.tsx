@@ -1,17 +1,18 @@
 // Shared brand logo pieces so every page shows the company logo consistently.
 import { useEffect, useState } from "react";
-import { getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
-/** Fetches the brand logo once per mount (signed URL from cloud storage). */
+/** Fetches the brand logo once per mount (cached URL first, so there's no flash). */
 export function useBrandLogo() {
   const [logo, setLogo] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
+    setLogo(getCachedLogoUrl());
     getLogoUrl()
       .then((url) => alive && setLogo(url))
-      .catch(() => alive && setLogo(null));
+      .catch(() => undefined);
     return () => {
       alive = false;
     };
@@ -42,14 +43,12 @@ export function BrandMark({
           markClassName,
         )}
       >
-        {logo ? (
+        {logo && (
           <img
             src={logo}
             alt={`${name} logo`}
             className="h-full w-full scale-[1.5] object-contain"
           />
-        ) : (
-          <span className="font-display text-lg font-bold text-primary">N</span>
         )}
       </span>
       {showName && (

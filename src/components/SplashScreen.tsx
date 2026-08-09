@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Leaf } from "lucide-react";
-import { getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { loadSiteSettings } from "@/lib/site-settings";
 
 const SESSION_KEY = "nv_splash_seen";
@@ -47,7 +47,8 @@ export function SplashScreen() {
   }
 
   useEffect(() => {
-    getLogoUrl().then(setLogo).catch(() => setLogo(null));
+    setLogo(getCachedLogoUrl());
+    getLogoUrl().then((u) => u && setLogo(u)).catch(() => undefined);
     loadSiteSettings()
       .then((s) => s.companyName && setBrand(s.companyName))
       .catch(() => undefined);
