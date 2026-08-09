@@ -88,7 +88,7 @@ export type SiteContent = {
 
 const en: SiteContent = {
   brand: "Nailvlora",
-  brandSub: "for Export",
+  brandSub: "(Import & Export)",
   nav: [
     { href: "#about", label: "About" },
     { href: "#products", label: "Products" },
@@ -228,7 +228,7 @@ const en: SiteContent = {
 
 const ar: SiteContent = {
   brand: "فريش دايموند",
-  brandSub: "للتصدير",
+  brandSub: "(استيراد وتصدير)",
   nav: [
     { href: "#about", label: "من نحن" },
     { href: "#products", label: "منتجاتنا" },
