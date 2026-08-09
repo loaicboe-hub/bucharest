@@ -29,7 +29,7 @@ export const Route = createFileRoute("/admin/_authed")({
       if (moduleKey && moduleKey !== "" && !permissions[moduleKey]?.can_view) {
         const first = allowed[0];
         if (!first) throw redirect({ to: "/admin/login", search: { denied: true } });
-        throw redirect({ to: `/admin/${first.module_key}` });
+        throw redirect({ href: `/admin/${first.module_key}` });
       }
     }
 
