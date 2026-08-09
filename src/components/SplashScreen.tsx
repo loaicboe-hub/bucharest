@@ -25,7 +25,7 @@ function removeCover() {
 export function SplashScreen() {
   const [visible, setVisible] = useState(false);
   const [showSkip, setShowSkip] = useState(false);
-  const [logo, setLogo] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
   const [bg, setBg] = useState("#ffffff");
   const [brand, setBrand] = useState("Nailvlora Import and Export");
 
