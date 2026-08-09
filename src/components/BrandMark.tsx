@@ -1,6 +1,6 @@
 // Shared brand logo pieces so every page shows the company logo consistently.
 import { useEffect, useState } from "react";
-import { getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
