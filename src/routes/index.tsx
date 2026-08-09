@@ -51,7 +51,7 @@ import {
   Leaf,
 } from "lucide-react";
 
-import hero from "@/assets/hero.jpg";
+import heroBg from "@/assets/hero-bg.png.asset.json";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
 import mangoes from "@/assets/mangoes.jpg";
@@ -290,10 +290,10 @@ function Index() {
       {/* Hero */}
       <section id="top" className="relative min-h-screen overflow-hidden">
         <img
-          src={hero}
-          alt="Lush citrus fields at sunrise"
+          src={heroBg.url}
+          alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
-          height={1200}
+          height={1920}
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 gradient-hero" />
