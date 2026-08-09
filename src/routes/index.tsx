@@ -301,8 +301,9 @@ function Index() {
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}
-          className="absolute inset-0 h-full w-full object-contain object-center lg:object-cover lg:object-top"
+          className="absolute inset-0 h-full w-full scale-90 object-contain object-center"
         />
+
 
 
         <div className="absolute inset-0 gradient-hero" />
