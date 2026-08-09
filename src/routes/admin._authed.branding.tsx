@@ -19,7 +19,7 @@ function BrandingPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    getLogoUrl().then(setLogo).catch(() => setLogo(null));
+    getLogoUrl(true).then(setLogo).catch(() => setLogo(null));
   }, []);
 
   const onPick = async (file?: File | null) => {
@@ -29,7 +29,8 @@ function BrandingPage() {
     if (err) {
       toast.error(err);
     } else {
-      setLogo(await getLogoUrl());
+      setLogo(await getLogoUrl(true));
+
       toast.success("Logo saved — it now shows on the website and invoice PDFs");
     }
     setBusy(false);
