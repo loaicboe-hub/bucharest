@@ -117,37 +117,37 @@ export function SplashScreen() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.9, ease: "easeInOut" } }}
         >
-          {/* Camera dolly: the logo travels along Z from very far away toward the viewer. */}
+          {/* Camera dolly: the logo starts as a distant speck and flies toward the viewer.
+              Keyed on the logo URL so the flight always starts once the image exists. */}
           <motion.div
+            key={logo ?? "fallback"}
             className="flex h-full w-full items-center justify-center"
-            style={{ transformStyle: "preserve-3d", willChange: "transform, filter, opacity" }}
-            initial={{ z: -2600, opacity: 0, filter: "blur(14px)" }}
+            style={{ willChange: "transform, filter, opacity" }}
+            initial={{ scale: 0.02, opacity: 0, filter: "blur(10px)" }}
             animate={{
-              z: [-2600, -900, -40, 0],
-              opacity: [0, 0.45, 1, 1],
-              filter: ["blur(14px)", "blur(6px)", "blur(0.5px)", "blur(0px)"],
+              scale: [0.02, 0.12, 0.6, 1.42, 1.35],
+              opacity: [0, 0.6, 1, 1, 1],
+              filter: ["blur(10px)", "blur(6px)", "blur(2px)", "blur(0px)", "blur(0px)"],
             }}
             transition={{
               duration: 6,
-              times: [0, 0.45, 0.86, 1],
-              ease: [ease, ease, "easeOut"],
+              times: [0, 0.3, 0.62, 0.88, 1],
+              ease: [ease, ease, ease, "easeOut"],
             }}
           >
             {logo ? (
-              <motion.img
+              <img
                 src={logo}
                 alt={`${brand} logo`}
                 crossOrigin="anonymous"
                 onLoad={(e) => syncBackground(e.currentTarget)}
                 className="h-full w-full object-contain"
-                initial={{ scale: 1.3 }}
-                animate={{ scale: [1.3, 1.35, 1.35] }}
-                transition={{ duration: 6, times: [0, 0.86, 1], ease: "easeOut" }}
               />
             ) : (
               <Leaf className="h-14 w-14 text-primary" />
             )}
           </motion.div>
+
 
 
 
