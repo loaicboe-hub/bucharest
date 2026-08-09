@@ -81,7 +81,8 @@ function ProductDetail() {
 
   useEffect(() => {
     initLang();
-    getLogoUrl().then(setLogo).catch(() => setLogo(null));
+    setLogo(getCachedLogoUrl());
+    getLogoUrl().then(setLogo).catch(() => undefined);
   }, []);
   useEffect(() => {
     let alive = true;
