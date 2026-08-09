@@ -355,49 +355,6 @@ function Index() {
             </div>
           </div>
 
-          {/* Hero brand graphic with dotted trajectory arc */}
-          <div className="relative hidden items-center justify-center lg:col-span-5 lg:flex">
-            <div className="relative aspect-square w-full max-w-md">
-              <svg
-                viewBox="0 0 400 400"
-                aria-hidden
-                className="absolute inset-0 h-full w-full animate-[spin_60s_linear_infinite] text-gold"
-              >
-                <circle
-                  cx="200"
-                  cy="200"
-                  r="188"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeDasharray="2 12"
-                  strokeLinecap="round"
-                  opacity="0.75"
-                />
-                <path
-                  d="M 24 232 A 180 180 0 0 0 376 232"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeDasharray="4 14"
-                  strokeLinecap="round"
-                  opacity="0.9"
-                />
-              </svg>
-              <div className="absolute inset-[14%] grid place-items-center bg-transparent">
-                {logo ? (
-                  <img
-                    src={heroLogo ?? logo}
-                    alt="Nailvlora Import and Export logo"
-                    className="h-full w-full scale-[1.35] object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
-                  />
-                ) : (
-                  <Leaf className="h-24 w-24 text-gold" />
-                )}
-              </div>
-
-            </div>
-          </div>
         </div>
 
 
