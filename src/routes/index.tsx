@@ -11,7 +11,7 @@ import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { SectionWave } from "@/components/SectionWave";
 import WorldMapRoutes from "@/components/WorldMapRoutes";
 
-import { getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import {
   categoryName,
   listCategories,
