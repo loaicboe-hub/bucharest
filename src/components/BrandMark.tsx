@@ -4,14 +4,15 @@ import { getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
-/** Fetches the brand logo once per mount (signed URL from cloud storage). */
+/** Fetches the brand logo once per mount (cached URL first, so there's no flash). */
 export function useBrandLogo() {
   const [logo, setLogo] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
+    setLogo(getCachedLogoUrl());
     getLogoUrl()
       .then((url) => alive && setLogo(url))
-      .catch(() => alive && setLogo(null));
+      .catch(() => undefined);
     return () => {
       alive = false;
     };
