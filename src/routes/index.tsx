@@ -188,12 +188,14 @@ function Index() {
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:gap-6 lg:px-10">
           <a href="#top" className="flex shrink-0 items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
-              {logo ? (
-                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
-              ) : (
-                <Leaf className="h-6 w-6 text-white" />
-              )}
+              <img
+                suppressHydrationWarning
+                src={logo ?? BLANK_PIXEL}
+                alt="Nailvlora Import and Export logo"
+                className="h-full w-full scale-[1.5] object-contain p-0"
+              />
             </div>
+
 
             <div className="min-w-0">
               <div
