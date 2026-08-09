@@ -108,7 +108,11 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   );
 }
 
+const BLANK_PIXEL =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 function Index() {
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [trade, setTrade] = useState<"export" | "import">("export");
@@ -188,12 +192,14 @@ function Index() {
         <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:gap-6 lg:px-10">
           <a href="#top" className="flex shrink-0 items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
-              {logo ? (
-                <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
-              ) : (
-                <Leaf className="h-6 w-6 text-white" />
-              )}
+              <img
+                suppressHydrationWarning
+                src={logo ?? BLANK_PIXEL}
+                alt="Nailvlora Import and Export logo"
+                className="h-full w-full scale-[1.5] object-contain p-0"
+              />
             </div>
+
 
             <div className="min-w-0">
               <div
@@ -308,19 +314,8 @@ function Index() {
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
 
-        {/* Faint brand watermark in the upper background */}
-        {logo && (
-          <img
-            src={heroLogo ?? logo}
-            alt=""
-            aria-hidden
-            className="pointer-events-none absolute -top-16 left-1/2 w-[52rem] max-w-none -translate-x-1/2 select-none object-contain opacity-[0.06] blur-[1px] mix-blend-screen"
-          />
-        )}
-        <Leaf
-          aria-hidden
-          className="pointer-events-none absolute right-[6%] top-24 h-64 w-64 rotate-12 text-white/[0.07]"
-        />
+
+
 
         <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pt-32 pb-20 lg:grid-cols-12 lg:px-10">
           <div className="max-w-3xl animate-fade-up lg:col-span-7">
