@@ -108,7 +108,11 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   );
 }
 
+const BLANK_PIXEL =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 function Index() {
+
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [trade, setTrade] = useState<"export" | "import">("export");
