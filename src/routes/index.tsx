@@ -201,7 +201,7 @@ function Index() {
                   scrolled ? "text-primary" : "text-white"
                 }`}
               >
-                {site.companyName || c.brand}
+                Nailvlora
               </div>
               <div
                 className={`whitespace-nowrap text-[10px] uppercase tracking-[0.2em] ${
