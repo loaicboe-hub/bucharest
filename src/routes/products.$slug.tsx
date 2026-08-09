@@ -77,13 +77,13 @@ function ProductDetail() {
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
-  const [logo, setLogo] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
 
   useEffect(() => {
     initLang();
-    setLogo(getCachedLogoUrl());
-    getLogoUrl().then(setLogo).catch(() => undefined);
+    getLogoUrl().then((u) => setLogo((prev) => (u && u !== prev ? u : prev))).catch(() => undefined);
   }, []);
+
   useEffect(() => {
     let alive = true;
     setLoading(true);

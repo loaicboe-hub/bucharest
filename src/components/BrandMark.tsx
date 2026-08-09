@@ -4,21 +4,26 @@ import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
-/** Fetches the brand logo once per mount (cached URL first, so there's no flash). */
+/** Brand logo, read synchronously from cache so the first paint already has it. */
 export function useBrandLogo() {
-  const [logo, setLogo] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
   useEffect(() => {
     let alive = true;
-    setLogo(getCachedLogoUrl());
+    const cached = getCachedLogoUrl();
+    if (cached && cached !== logo) setLogo(cached);
     getLogoUrl()
-      .then((url) => alive && setLogo(url))
+      .then((url) => {
+        if (alive && url && url !== logo) setLogo(url);
+      })
       .catch(() => undefined);
     return () => {
       alive = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return logo;
 }
+
 
 /** Circular logo mark used in page headers, matching the landing page treatment. */
 export function BrandMark({

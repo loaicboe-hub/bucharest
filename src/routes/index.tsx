@@ -116,8 +116,8 @@ function Index() {
 
   const [showTop, setShowTop] = useState(false);
   const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
-  const [logo, setLogo] = useState<string | null>(null);
-  useEffect(() => setLogo(getCachedLogoUrl()), []);
+  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
+
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
@@ -131,7 +131,7 @@ function Index() {
   useEffect(() => {
     initLang();
     setFooter(loadFooterConfig());
-    getLogoUrl().then(setLogo).catch(() => undefined);
+    getLogoUrl().then((u) => setLogo((prev) => (u && u !== prev ? u : prev))).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
