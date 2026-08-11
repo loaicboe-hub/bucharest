@@ -262,9 +262,9 @@ CREATE POLICY "Super admins can view all profiles" ON public.profiles
 DROP POLICY IF EXISTS "Users can view their own roles" ON public.user_roles;
 CREATE POLICY "Users can view their own roles" ON public.user_roles
   FOR SELECT TO authenticated USING (auth.uid() = user_id);
+-- Role rows are self-readable only; the admin user list is served server-side
+-- with the service role after verifying super-admin access.
 DROP POLICY IF EXISTS "Admins can view all roles" ON public.user_roles;
-CREATE POLICY "Admins can view all roles" ON public.user_roles
-  FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 DROP POLICY IF EXISTS "Super admins can insert roles" ON public.user_roles;
 CREATE POLICY "Super admins can insert roles" ON public.user_roles
   FOR INSERT TO authenticated WITH CHECK (public.is_super_admin(auth.uid()));
