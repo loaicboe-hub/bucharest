@@ -54,6 +54,7 @@ export function BrandMark({
         )}
       >
         <img
+          data-brand-logo
           src={logo ?? BLANK_PIXEL}
           alt={`${name} logo`}
           suppressHydrationWarning
