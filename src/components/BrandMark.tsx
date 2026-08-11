@@ -4,6 +4,9 @@ import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
+const BLANK_PIXEL =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 /** Brand logo, read synchronously from cache so the first paint already has it. */
 export function useBrandLogo() {
   const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
