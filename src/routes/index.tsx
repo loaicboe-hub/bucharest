@@ -564,8 +564,9 @@ function Index() {
         <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="flex flex-col items-center gap-8 text-center md:flex-row md:items-center md:justify-between md:text-left">
-            <div className="max-w-2xl">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
+            <BrandMark showName={false} markClassName="h-28 w-28 shadow-lg md:h-32 md:w-32" />
+            <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
                 <span className="h-px w-8 bg-fresh" />
@@ -574,7 +575,6 @@ function Index() {
                 {c.ui.whyTitle}
               </h2>
             </div>
-            <BrandMark showName={false} markClassName="h-28 w-28 shadow-lg md:h-32 md:w-32" />
           </div>
           <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {c.whyUs.map((w, wi) => {
