@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
 import { getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
@@ -77,11 +77,16 @@ function ProductDetail() {
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState(false);
-  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
+  const [logo, setLogo] = useState<string | null>(null);
+
+  useLayoutEffect(() => {
+    const cachedLogo = getCachedLogoUrl();
+    if (cachedLogo) setLogo(cachedLogo);
+  }, []);
 
   useEffect(() => {
     initLang();
-    getLogoUrl().then((u) => setLogo((prev) => (u && u !== prev ? u : prev))).catch(() => undefined);
+    getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -144,7 +149,7 @@ function ProductDetail() {
           <Link to="/" className="flex items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
               {logo ? (
-                <img src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
+                <img data-brand-logo src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
               ) : (
                 <ShieldCheck className="h-6 w-6 text-white" />
               )}

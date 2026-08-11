@@ -36,7 +36,8 @@ function setCachedLogoUrl(src: string | null) {
 
 async function currentFileName(): Promise<string | null> {
   const { data, error } = await supabase.storage.from(BUCKET).list(FOLDER, { limit: 100 });
-  if (error || !data) return null;
+  if (error) throw error;
+  if (!data) return null;
   const file = data.find((f) => f.name.startsWith("logo."));
   return file ? file.name : null;
 }

@@ -1,5 +1,5 @@
 // Shared brand logo pieces so every page shows the company logo consistently.
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
@@ -9,20 +9,22 @@ const BLANK_PIXEL =
 
 /** Brand logo, read synchronously from cache so the first paint already has it. */
 export function useBrandLogo() {
-  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
+  // Keep the server and hydration render identical, then restore the local cache before paint.
+  const [logo, setLogo] = useState<string | null>(null);
+  useLayoutEffect(() => {
+    const cached = getCachedLogoUrl();
+    if (cached) setLogo(cached);
+  }, []);
   useEffect(() => {
     let alive = true;
-    const cached = getCachedLogoUrl();
-    if (cached && cached !== logo) setLogo(cached);
     getLogoUrl()
       .then((url) => {
-        if (alive && url && url !== logo) setLogo(url);
+        if (alive && url) setLogo(url);
       })
       .catch(() => undefined);
     return () => {
       alive = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return logo;
 }
@@ -52,6 +54,7 @@ export function BrandMark({
         )}
       >
         <img
+          data-brand-logo
           src={logo ?? BLANK_PIXEL}
           alt={`${name} logo`}
           suppressHydrationWarning

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   defaultFooterConfig,
   loadFooterConfig,
@@ -120,7 +120,7 @@ function Index() {
 
   const [showTop, setShowTop] = useState(false);
   const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
-  const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
+  const [logo, setLogo] = useState<string | null>(null);
 
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
@@ -132,10 +132,15 @@ function Index() {
   const { lang, c } = useLang();
   const footer = localizeFooterConfig(footerRaw, lang);
 
+  useLayoutEffect(() => {
+    const cachedLogo = getCachedLogoUrl();
+    if (cachedLogo) setLogo(cachedLogo);
+  }, []);
+
   useEffect(() => {
     initLang();
     setFooter(loadFooterConfig());
-    getLogoUrl().then((u) => setLogo((prev) => (u && u !== prev ? u : prev))).catch(() => undefined);
+    getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
@@ -193,6 +198,7 @@ function Index() {
           <a href="#top" className="flex shrink-0 items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
               <img
+                data-brand-logo
                 suppressHydrationWarning
                 src={logo ?? BLANK_PIXEL}
                 alt="Nailvlora Import and Export logo"
