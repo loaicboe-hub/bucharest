@@ -49,17 +49,8 @@ export async function savePermissions(userId: string, perms: ModulePermission[])
 }
 
 export async function listAdminUsers(): Promise<AdminUserRow[]> {
-  const [{ data: profiles }, { data: roles }] = await Promise.all([
-    supabase.from("profiles").select("id, email, full_name").order("created_at"),
-    supabase.from("user_roles").select("user_id, role"),
-  ]);
-  return (profiles ?? []).map((p) => ({
-    id: p.id,
-    email: p.email ?? "",
-    full_name: p.full_name ?? "",
-    isSuperAdmin: (roles ?? []).some((r) => r.user_id === p.id && r.role === "super_admin"),
-    isAdmin: (roles ?? []).some((r) => r.user_id === p.id && r.role === "admin"),
-  }));
+  const { listAdminUsersFn } = await import("./admin-users.functions");
+  return (await listAdminUsersFn()) as AdminUserRow[];
 }
 
 // ---- React context -------------------------------------------------------

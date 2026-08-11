@@ -55,16 +55,16 @@ GRANT ALL ON public.user_roles TO service_role;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
 -- ---------------------------------------------------- role check functions --
--- SECURITY DEFINER so RLS policies can call them without recursion.
--- Hardened: a signed-in caller may only ask about their own user id.
+-- SECURITY INVOKER: they only ever answer about the caller's own user id and
+-- read user_roles under the caller's own RLS (self-select policy below).
 CREATE OR REPLACE FUNCTION public.has_role(_user_id uuid, _role public.app_role)
 RETURNS boolean
 LANGUAGE sql
-STABLE SECURITY DEFINER
+STABLE SECURITY INVOKER
 SET search_path TO 'public'
 AS $$
   SELECT CASE
-    WHEN auth.uid() IS NOT NULL AND _user_id IS DISTINCT FROM auth.uid() THEN false
+    WHEN auth.uid() IS NULL OR _user_id IS DISTINCT FROM auth.uid() THEN false
     ELSE EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = _role)
   END
 $$;
@@ -72,11 +72,11 @@ $$;
 CREATE OR REPLACE FUNCTION public.is_super_admin(_user_id uuid)
 RETURNS boolean
 LANGUAGE sql
-STABLE SECURITY DEFINER
+STABLE SECURITY INVOKER
 SET search_path TO 'public'
 AS $$
   SELECT CASE
-    WHEN auth.uid() IS NOT NULL AND _user_id IS DISTINCT FROM auth.uid() THEN false
+    WHEN auth.uid() IS NULL OR _user_id IS DISTINCT FROM auth.uid() THEN false
     ELSE EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = 'super_admin')
   END
 $$;
@@ -262,9 +262,9 @@ CREATE POLICY "Super admins can view all profiles" ON public.profiles
 DROP POLICY IF EXISTS "Users can view their own roles" ON public.user_roles;
 CREATE POLICY "Users can view their own roles" ON public.user_roles
   FOR SELECT TO authenticated USING (auth.uid() = user_id);
+-- Role rows are self-readable only; the admin user list is served server-side
+-- with the service role after verifying super-admin access.
 DROP POLICY IF EXISTS "Admins can view all roles" ON public.user_roles;
-CREATE POLICY "Admins can view all roles" ON public.user_roles
-  FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 DROP POLICY IF EXISTS "Super admins can insert roles" ON public.user_roles;
 CREATE POLICY "Super admins can insert roles" ON public.user_roles
   FOR INSERT TO authenticated WITH CHECK (public.is_super_admin(auth.uid()));
