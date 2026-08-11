@@ -856,11 +856,12 @@ function Index() {
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
                 <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
-                  {logo ? (
-                    <img src={logo} alt="Nailvlora Import and Export logo" className="h-full w-full scale-[1.5] object-contain p-0" />
-                  ) : (
-                    <Leaf className="h-7 w-7" />
-                  )}
+                  <img
+                    src={logo ?? BLANK_PIXEL}
+                    alt="Nailvlora Import and Export logo"
+                    className="h-full w-full scale-[1.5] object-contain p-0"
+                    suppressHydrationWarning
+                  />
                 </div>
 
 
