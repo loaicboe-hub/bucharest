@@ -34,6 +34,7 @@
   --color-gold-foreground: var(--gold-foreground);
   --color-cream: var(--cream);
   --color-mint: var(--mint);
+  --color-leaf-mist: var(--leaf-mist);
 
 
   --radius-lg: 1rem;
@@ -73,6 +74,7 @@
   --cream: oklch(0.98 0.015 90);
   --mint: oklch(0.955 0.03 158);            /* soft pastel mint wave tint */
   --wave-slate: oklch(0.93 0.012 190);     /* faint slate for wave gradient */
+  --leaf-mist: oklch(0.968 0.012 145);     /* #F2F8F2 soft natural green */
 }
 
 
