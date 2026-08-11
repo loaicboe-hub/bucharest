@@ -7,6 +7,24 @@ async function assertSuperAdmin(context: { supabase: any; userId: string }) {
   if (!data) throw new Error("Forbidden: super admin only");
 }
 
+export const listAdminUsersFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const [{ data: profiles }, { data: roles }] = await Promise.all([
+      supabaseAdmin.from("profiles").select("id, email, full_name").order("created_at"),
+      supabaseAdmin.from("user_roles").select("user_id, role"),
+    ]);
+    return (profiles ?? []).map((p) => ({
+      id: p.id,
+      email: p.email ?? "",
+      full_name: p.full_name ?? "",
+      isSuperAdmin: (roles ?? []).some((r) => r.user_id === p.id && r.role === "super_admin"),
+      isAdmin: (roles ?? []).some((r) => r.user_id === p.id && r.role === "admin"),
+    }));
+  });
+
 export const createAdminUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { email: string; password: string; fullName: string; superAdmin?: boolean }) => {
