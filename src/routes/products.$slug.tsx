@@ -149,7 +149,7 @@ function ProductDetail() {
           <Link to="/" className="flex items-center gap-3.5">
             <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
               {logo ? (
-                <img src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
+                <img data-brand-logo src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
               ) : (
                 <ShieldCheck className="h-6 w-6 text-white" />
               )}
