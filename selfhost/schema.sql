@@ -101,10 +101,10 @@ $$;
 -- Only signed-in users may execute these (matches the hardened production setup).
 REVOKE EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) FROM PUBLIC, anon;
 REVOKE EXECUTE ON FUNCTION public.is_super_admin(uuid) FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public.claim_first_admin() FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.claim_first_admin() FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.is_super_admin(uuid) TO authenticated, service_role;
-GRANT EXECUTE ON FUNCTION public.claim_first_admin() TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.claim_first_admin() TO service_role;
 
 -- ------------------------------------------------------- user_permissions --
 CREATE TABLE IF NOT EXISTS public.user_permissions (
@@ -345,8 +345,15 @@ DROP POLICY IF EXISTS "Partners are publicly viewable" ON public.partners;
 CREATE POLICY "Partners are publicly viewable" ON public.partners
   FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Authenticated users manage partners" ON public.partners;
-CREATE POLICY "Authenticated users manage partners" ON public.partners
-  FOR ALL TO authenticated USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "Admins can insert partners" ON public.partners;
+CREATE POLICY "Admins can insert partners" ON public.partners
+  FOR INSERT TO authenticated WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can update partners" ON public.partners;
+CREATE POLICY "Admins can update partners" ON public.partners
+  FOR UPDATE TO authenticated USING (public.has_role(auth.uid(), 'admin')) WITH CHECK (public.has_role(auth.uid(), 'admin'));
+DROP POLICY IF EXISTS "Admins can delete partners" ON public.partners;
+CREATE POLICY "Admins can delete partners" ON public.partners
+  FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
 
 -- site_settings
 DROP POLICY IF EXISTS "Site settings are publicly readable" ON public.site_settings;
@@ -390,7 +397,7 @@ CREATE POLICY "Public can read published site media" ON storage.objects
   FOR SELECT TO anon, authenticated
   USING (
     bucket_id = 'site-media'
-    AND (storage.foldername(name))[1] = ANY (ARRAY['branding','partners','news','about','products'])
+    AND (storage.foldername(name))[1] = ANY (ARRAY['branding','partners','about','hero'])
   );
 
 DROP POLICY IF EXISTS "Admins can read all site media" ON storage.objects;
