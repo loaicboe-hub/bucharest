@@ -37,8 +37,13 @@ export async function signUp(email: string, password: string, fullName: string) 
     await supabase
       .from("profiles")
       .upsert({ id: data.user.id, email, full_name: fullName });
-    // Grants admin only when no admin exists yet (one-time bootstrap).
-    await supabase.rpc("claim_first_admin");
+    // Grants admin only when no admin exists yet (one-time bootstrap, server-side).
+    try {
+      const { claimFirstAdmin } = await import("@/lib/admin-bootstrap.functions");
+      await claimFirstAdmin();
+    } catch {
+      // Non-fatal: an admin already exists or setup is not needed.
+    }
   }
   return null;
 }
