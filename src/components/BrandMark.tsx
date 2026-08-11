@@ -73,7 +73,6 @@ export function BrandWatermark({
 }) {
   const logo = useBrandLogo();
   const clean = useTransparentLogo(logo);
-  if (!logo) return null;
 
   const place =
     position === "left"
@@ -84,9 +83,10 @@ export function BrandWatermark({
 
   return (
     <img
-      src={clean ?? logo}
+      src={clean ?? logo ?? BLANK_PIXEL}
       alt=""
       aria-hidden
+      suppressHydrationWarning
       className={cn(
         "pointer-events-none absolute z-0 w-[34rem] max-w-none select-none object-contain opacity-[0.07] mix-blend-multiply",
         place,
