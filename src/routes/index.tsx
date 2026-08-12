@@ -661,6 +661,7 @@ function Index() {
 
       {/* Certifications */}
       <section className="relative overflow-hidden py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -744,6 +745,7 @@ function Index() {
 
       {/* Contact */}
       <section id="contact" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
