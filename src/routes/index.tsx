@@ -126,6 +126,7 @@ function Index() {
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
+  const [aboutImage, setAboutImage] = useState<string | null>(null);
   const [heroBg, setHeroBg] = useState<string>(heroBgUrl);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
