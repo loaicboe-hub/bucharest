@@ -19,6 +19,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { getHeroImageUrl, uploadHeroImage } from "@/lib/hero-image";
+import { getSectionImageUrl, uploadSectionImage } from "@/lib/section-image";
 
 
 export const Route = createFileRoute("/admin/_authed/content")({
