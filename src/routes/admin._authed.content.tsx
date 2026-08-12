@@ -19,6 +19,7 @@ import {
   type FooterLink,
 } from "@/lib/admin-footer";
 import { getHeroImageUrl, uploadHeroImage } from "@/lib/hero-image";
+import { getSectionImageUrl, uploadSectionImage } from "@/lib/section-image";
 
 
 export const Route = createFileRoute("/admin/_authed/content")({
@@ -52,6 +53,13 @@ function ContentPage() {
         if (url) setData((d) => ({ ...d, home: { ...d.home, image: url } }));
       })
       .catch(() => undefined);
+    (["about", "whyUs", "process", "contact"] as const).forEach((key) => {
+      getSectionImageUrl(key)
+        .then((url) => {
+          if (url) setData((d) => ({ ...d, [key]: { ...d[key], image: url } }));
+        })
+        .catch(() => undefined);
+    });
   }, []);
 
   const update = (key: string, field: keyof Section, value: string) => {
@@ -72,7 +80,14 @@ function ContentPage() {
       toast.success("Hero image updated — it now shows on the homepage");
       return;
     }
-    update(key, "image", URL.createObjectURL(f));
+    const err = await uploadSectionImage(key, f);
+    if (err) {
+      toast.error(err);
+      return;
+    }
+    const url = await getSectionImageUrl(key);
+    if (url) update(key, "image", url);
+    toast.success("Image updated — it now shows on the website");
   };
   const save = () => {
     saveFooterConfig(footer);

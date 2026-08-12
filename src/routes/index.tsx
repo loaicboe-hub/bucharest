@@ -25,6 +25,7 @@ import {
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { getAboutVideoUrl } from "@/lib/about-video";
+import { getSectionImageUrl } from "@/lib/section-image";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { BrandMark, BrandWatermark } from "@/components/BrandMark";
 import { useLang, initLang } from "@/lib/i18n";
@@ -126,6 +127,7 @@ function Index() {
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
+  const [aboutImage, setAboutImage] = useState<string | null>(null);
   const [heroBg, setHeroBg] = useState<string>(heroBgUrl);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
@@ -144,6 +146,7 @@ function Index() {
     getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
+    getSectionImageUrl("about").then(setAboutImage).catch(() => setAboutImage(null));
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
     listCategories(true).then(setCategories).catch(() => setCategories([]));
@@ -422,14 +425,14 @@ function Index() {
                     controls
                     controlsList="nodownload"
                     preload="metadata"
-                    poster={farm}
+                    poster={aboutImage ?? farm}
                     aria-label="About Nailvlora"
                     className="aspect-video h-full w-full bg-black object-cover"
                   />
 
                 ) : (
                   <img
-                    src={farm}
+                    src={aboutImage ?? farm}
                     alt="Vast farm fields"
                     loading="lazy"
                     width={1200}
