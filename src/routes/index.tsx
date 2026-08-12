@@ -600,7 +600,9 @@ function Index() {
       >
         {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
-        <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
+        {!sectionImages.whyUs && (
+          <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
+        )}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
@@ -622,7 +624,7 @@ function Index() {
               return (
               <div
                 key={w.title}
-                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/85 p-7 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
+                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
                 <div className="relative">
