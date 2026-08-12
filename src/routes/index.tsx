@@ -584,12 +584,19 @@ function Index() {
       {/* Why Us */}
       <section
         id="why"
-        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24 lg:py-32"
-        style={{
-          backgroundImage: sectionImages.whyUs
-            ? `linear-gradient(to bottom, oklch(0.96 0.02 145 / 0.82), oklch(0.94 0.03 145 / 0.78)), url(${sectionImages.whyUs})`
-            : undefined,
-        }}
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.whyUs
+            ? {
+                backgroundImage: `url("${sectionImages.whyUs}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
       >
         {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
