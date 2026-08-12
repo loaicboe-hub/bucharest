@@ -57,7 +57,7 @@ function ContentPage() {
         if (url) setData((d) => ({ ...d, home: { ...d.home, image: url } }));
       })
       .catch(() => undefined);
-    (["about", "whyUs", "process", "contact", "products", "markets", "certificate"] as const).forEach((key) => {
+    (["about", "whyUs", "process", "contact", "products", "markets", "certificate", "news"] as const).forEach((key) => {
       getSectionImageUrl(key)
         .then((url) => {
           if (url) setData((d) => ({ ...d, [key]: { ...d[key], image: url } }));
