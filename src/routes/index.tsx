@@ -582,8 +582,16 @@ function Index() {
       </section>
 
       {/* Why Us */}
-      <section id="why" className="relative overflow-hidden bg-leaf-mist py-24 lg:py-32">
-        <SectionLeafBg />
+      <section
+        id="why"
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24 lg:py-32"
+        style={{
+          backgroundImage: sectionImages.whyUs
+            ? `linear-gradient(to bottom, oklch(0.96 0.02 145 / 0.82), oklch(0.94 0.03 145 / 0.78)), url(${sectionImages.whyUs})`
+            : undefined,
+        }}
+      >
+        {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
         <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
 
@@ -601,18 +609,13 @@ function Index() {
             </div>
           </div>
 
-          {sectionImages.whyUs && (
-            <div className="mt-12 overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-              <img src={sectionImages.whyUs} alt="" loading="lazy" className="h-64 w-full object-cover md:h-80" />
-            </div>
-          )}
           <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {c.whyUs.map((w, wi) => {
               const WIcon = whyIcons[wi];
               return (
               <div
                 key={w.title}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
+                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/85 p-7 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
                 <div className="relative">
