@@ -127,7 +127,7 @@ function Index() {
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
-  const [aboutImage, setAboutImage] = useState<string | null>(null);
+  const [sectionImages, setSectionImages] = useState<Record<string, string>>({});
   const [heroBg, setHeroBg] = useState<string>(heroBgUrl);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
@@ -146,7 +146,11 @@ function Index() {
     getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
-    getSectionImageUrl("about").then(setAboutImage).catch(() => setAboutImage(null));
+    (["about", "whyUs", "process", "contact"] as const).forEach((k) => {
+      getSectionImageUrl(k)
+        .then((u) => { if (u) setSectionImages((m) => ({ ...m, [k]: u })); })
+        .catch(() => undefined);
+    });
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
     listCategories(true).then(setCategories).catch(() => setCategories([]));
@@ -414,7 +418,14 @@ function Index() {
             <div className="relative lg:col-span-7 lg:-mr-6 xl:-mr-16">
               <div className="absolute -inset-4 rounded-3xl gradient-primary opacity-20 blur-2xl" />
               <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-                {aboutVideo ? (
+                {sectionImages.about ? (
+                  <img
+                    src={sectionImages.about}
+                    alt="About Nailvlora"
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                ) : aboutVideo ? (
                   <video
                     key={aboutVideo}
                     src={aboutVideo}
@@ -425,14 +436,14 @@ function Index() {
                     controls
                     controlsList="nodownload"
                     preload="metadata"
-                    poster={aboutImage ?? farm}
+                    poster={farm}
                     aria-label="About Nailvlora"
                     className="aspect-video h-full w-full bg-black object-cover"
                   />
 
                 ) : (
                   <img
-                    src={aboutImage ?? farm}
+                    src={farm}
                     alt="Vast farm fields"
                     loading="lazy"
                     width={1200}
@@ -589,6 +600,12 @@ function Index() {
               </h2>
             </div>
           </div>
+
+          {sectionImages.whyUs && (
+            <div className="mt-12 overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
+              <img src={sectionImages.whyUs} alt="" loading="lazy" className="h-64 w-full object-cover md:h-80" />
+            </div>
+          )}
           <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {c.whyUs.map((w, wi) => {
               const WIcon = whyIcons[wi];
@@ -636,6 +653,12 @@ function Index() {
             </p>
           </div>
 
+
+          {sectionImages.process && (
+            <div className="mt-12 overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
+              <img src={sectionImages.process} alt="" loading="lazy" className="h-64 w-full object-cover md:h-80" />
+            </div>
+          )}
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {c.process.map((step, i) => (
               <div
@@ -763,6 +786,11 @@ function Index() {
               <p className="mt-4 text-muted-foreground">
                 {c.ui.contactSub}
               </p>
+              {sectionImages.contact && (
+                <div className="mt-6 overflow-hidden rounded-2xl shadow-[var(--shadow-soft)]">
+                  <img src={sectionImages.contact} alt="" loading="lazy" className="h-56 w-full object-cover" />
+                </div>
+              )}
 
               <div className="mt-8 space-y-4">
                 {[site.email, site.phone, site.address].filter(Boolean).map((label, ci) => {
