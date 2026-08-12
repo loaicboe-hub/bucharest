@@ -378,7 +378,7 @@ function Index() {
         <SectionLeafBg />
         <SectionWave />
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-5">
 
