@@ -145,6 +145,7 @@ function Index() {
     getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
+    getSectionImageUrl("about").then(setAboutImage).catch(() => setAboutImage(null));
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
     listCategories(true).then(setCategories).catch(() => setCategories([]));
