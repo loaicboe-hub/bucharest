@@ -39,6 +39,10 @@ const initial: Record<string, Section> = {
   whyUs: { title: "Why Choose Us", paragraph: "Quality, reliability, and worldwide reach.", button: "See Reasons", image: "/placeholder.svg" },
   process: { title: "Our Export Process", paragraph: "From farm to global markets, seamlessly.", button: "View Process", image: "/placeholder.svg" },
   contact: { title: "Contact Us", paragraph: "Reach out for inquiries and quotations.", button: "Get In Touch", image: "/placeholder.svg" },
+  products: { title: "Products", paragraph: "Explore our export and import products.", button: "View Products", image: "/placeholder.svg" },
+  markets: { title: "Global Markets", paragraph: "Markets we serve worldwide.", button: "Learn More", image: "/placeholder.svg" },
+  certificate: { title: "Certifications", paragraph: "Our quality standards and certifications.", button: "View Certificates", image: "/placeholder.svg" },
+  news: { title: "Our News", paragraph: "Latest company news and announcements.", button: "Read More", image: "/placeholder.svg" },
 };
 
 function ContentPage() {
@@ -53,7 +57,7 @@ function ContentPage() {
         if (url) setData((d) => ({ ...d, home: { ...d.home, image: url } }));
       })
       .catch(() => undefined);
-    (["about", "whyUs", "process", "contact"] as const).forEach((key) => {
+    (["about", "whyUs", "process", "contact", "products", "markets", "certificate"] as const).forEach((key) => {
       getSectionImageUrl(key)
         .then((url) => {
           if (url) setData((d) => ({ ...d, [key]: { ...d[key], image: url } }));
@@ -111,6 +115,7 @@ function ContentPage() {
 
   const sections: [string, string][] = [
     ["home", "Home"], ["about", "About"], ["whyUs", "Why Us"], ["process", "Process"], ["contact", "Contact Info"],
+    ["products", "Products"], ["markets", "Markets"], ["certificate", "Certificate"], ["news", "Our News"],
   ];
 
   return (
@@ -128,9 +133,13 @@ function ContentPage() {
             <Card className="rounded-2xl border-border/60 shadow-sm">
               <CardHeader><CardTitle>{l} Section</CardTitle></CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2"><Label>Title</Label><Input value={data[k].title} onChange={(e) => update(k, "title", e.target.value)} /></div>
-                <div className="space-y-2"><Label>Paragraph</Label><Textarea rows={4} value={data[k].paragraph} onChange={(e) => update(k, "paragraph", e.target.value)} /></div>
-                <div className="space-y-2"><Label>Button Text</Label><Input value={data[k].button} onChange={(e) => update(k, "button", e.target.value)} /></div>
+                {!"products,markets,certificate,news".split(",").includes(k) && (
+                  <>
+                    <div className="space-y-2"><Label>Title</Label><Input value={data[k].title} onChange={(e) => update(k, "title", e.target.value)} /></div>
+                    <div className="space-y-2"><Label>Paragraph</Label><Textarea rows={4} value={data[k].paragraph} onChange={(e) => update(k, "paragraph", e.target.value)} /></div>
+                    <div className="space-y-2"><Label>Button Text</Label><Input value={data[k].button} onChange={(e) => update(k, "button", e.target.value)} /></div>
+                  </>
+                )}
                 <div className="space-y-2">
                   <Label>Image</Label>
                   <div className="flex items-center gap-3">
