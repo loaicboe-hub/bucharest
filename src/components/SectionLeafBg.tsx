@@ -7,7 +7,7 @@ export function SectionLeafBg({ className = "" }: { className?: string }) {
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute inset-0 ${className}`}
+      className={`section-leaf-bg pointer-events-none absolute inset-0 ${className}`}
       style={{ backgroundImage: `url(${leafBg.url})` }}
     >
       <div className="absolute inset-0 bg-background/85" />
