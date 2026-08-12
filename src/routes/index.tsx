@@ -374,6 +374,7 @@ function Index() {
 
       {/* About */}
       <section id="about" className="relative overflow-hidden py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
