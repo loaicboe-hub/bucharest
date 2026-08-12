@@ -9,6 +9,7 @@ import {
 } from "@/lib/admin-footer";
 import { PartnersCarousel } from "@/components/PartnersCarousel";
 import { SectionWave } from "@/components/SectionWave";
+import { SectionLeafBg } from "@/components/SectionLeafBg";
 import WorldMapRoutes from "@/components/WorldMapRoutes";
 
 import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
@@ -444,6 +445,7 @@ function Index() {
 
       {/* Products */}
       <section id="products" className="relative overflow-hidden bg-cream py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
         <BrandWatermark position="right" />
 
@@ -567,6 +569,7 @@ function Index() {
 
       {/* Why Us */}
       <section id="why" className="relative overflow-hidden bg-leaf-mist py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
         <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
 
@@ -612,6 +615,7 @@ function Index() {
 
       {/* Process */}
       <section id="process" className="relative overflow-hidden bg-white py-24 lg:py-32">
+        <SectionLeafBg />
         <SectionWave />
         <BrandWatermark position="center" />
 
@@ -696,6 +700,7 @@ function Index() {
         id="markets"
         className="relative overflow-hidden bg-cream py-24 lg:py-32"
       >
+        <SectionLeafBg />
         <SectionWave />
         <BrandWatermark position="right" />
 
