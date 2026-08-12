@@ -25,6 +25,7 @@ import {
 
 import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/site-settings";
 import { getAboutVideoUrl } from "@/lib/about-video";
+import { getSectionImageUrl } from "@/lib/section-image";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { BrandMark, BrandWatermark } from "@/components/BrandMark";
 import { useLang, initLang } from "@/lib/i18n";
