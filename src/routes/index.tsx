@@ -425,14 +425,14 @@ function Index() {
                     controls
                     controlsList="nodownload"
                     preload="metadata"
-                    poster={farm}
+                    poster={aboutImage ?? farm}
                     aria-label="About Nailvlora"
                     className="aspect-video h-full w-full bg-black object-cover"
                   />
 
                 ) : (
                   <img
-                    src={farm}
+                    src={aboutImage ?? farm}
                     alt="Vast farm fields"
                     loading="lazy"
                     width={1200}
