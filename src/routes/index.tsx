@@ -146,7 +146,7 @@ function Index() {
     getLogoUrl().then((u) => { if (u) setLogo(u); }).catch(() => undefined);
     loadSiteSettings().then(setSite);
     getAboutVideoUrl().then(setAboutVideo).catch(() => setAboutVideo(null));
-    (["about", "whyUs", "process", "contact"] as const).forEach((k) => {
+    (["about", "whyUs", "process", "contact", "products", "markets", "certificate"] as const).forEach((k) => {
       getSectionImageUrl(k)
         .then((u) => { if (u) setSectionImages((m) => ({ ...m, [k]: u })); })
         .catch(() => undefined);
@@ -458,10 +458,25 @@ function Index() {
       </section>
 
       {/* Products */}
-      <section id="products" className="relative overflow-hidden bg-cream py-24 lg:py-32">
-        <SectionLeafBg />
+      <section
+        id="products"
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.products
+            ? {
+                backgroundImage: `url("${sectionImages.products}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
+      >
+        {!sectionImages.products && <SectionLeafBg />}
         <SectionWave />
-        <BrandWatermark position="right" />
+        {!sectionImages.products && <BrandWatermark position="right" />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
@@ -700,8 +715,23 @@ function Index() {
 
 
       {/* Certifications */}
-      <section className="relative overflow-hidden py-24 lg:py-32">
-        <SectionLeafBg />
+      <section
+        id="certificate"
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.certificate
+            ? {
+                backgroundImage: `url("${sectionImages.certificate}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
+      >
+        {!sectionImages.certificate && <SectionLeafBg />}
         <SectionWave />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -739,11 +769,23 @@ function Index() {
       {/* Global Markets */}
       <section
         id="markets"
-        className="relative overflow-hidden bg-cream py-24 lg:py-32"
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.markets
+            ? {
+                backgroundImage: `url("${sectionImages.markets}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
       >
-        <SectionLeafBg />
+        {!sectionImages.markets && <SectionLeafBg />}
         <SectionWave />
-        <BrandWatermark position="right" />
+        {!sectionImages.markets && <BrandWatermark position="right" />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -784,8 +826,23 @@ function Index() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="relative overflow-hidden py-24 lg:py-32">
-        <SectionLeafBg />
+      <section
+        id="contact"
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.contact
+            ? {
+                backgroundImage: `url("${sectionImages.contact}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
+      >
+        {!sectionImages.contact && <SectionLeafBg />}
         <SectionWave />
 
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -800,11 +857,6 @@ function Index() {
               <p className="mt-4 text-muted-foreground">
                 {c.ui.contactSub}
               </p>
-              {sectionImages.contact && (
-                <div className="mt-6 overflow-hidden rounded-2xl shadow-[var(--shadow-soft)]">
-                  <img src={sectionImages.contact} alt="" loading="lazy" className="h-56 w-full object-cover" />
-                </div>
-              )}
 
               <div className="mt-8 space-y-4">
                 {[site.email, site.phone, site.address].filter(Boolean).map((label, ci) => {
