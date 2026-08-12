@@ -199,3 +199,19 @@ html[dir="rtl"] h1 {
 html[dir="rtl"] .lucide-arrow-right {
   transform: scaleX(-1);
 }
+
+/* Fixed, subtle leaf backdrop shared across homepage sections */
+.section-leaf-bg {
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: 0.22;
+}
+
+/* Touch devices often ignore fixed backgrounds; fall back to a smooth local scroll */
+@supports (-webkit-touch-callout: none) {
+  .section-leaf-bg {
+    background-attachment: scroll;
+  }
+}
