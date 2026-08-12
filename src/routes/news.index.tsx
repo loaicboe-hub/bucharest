@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowLeft, CalendarDays, User, Newspaper } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
 import { listPublishedNews, formatDate, type NewsArticle } from "@/lib/news";
+import { getSectionImageUrl } from "@/lib/section-image";
 
 export const Route = createFileRoute("/news/")({
   head: () => {
@@ -57,6 +58,7 @@ function NewsList() {
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [category, setCategory] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [bg, setBg] = useState<string | null>(null);
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
   useEffect(() => {
@@ -65,6 +67,9 @@ function NewsList() {
       setItems(rows);
       setLoading(false);
     });
+    getSectionImageUrl("news")
+      .then((u) => { if (u) setBg(u); })
+      .catch(() => undefined);
   }, []);
 
   const categories = useMemo(
@@ -92,7 +97,22 @@ function NewsList() {
         <SectionWave />
       </div>
 
-      <section className="mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20">
+      <div
+        className="relative"
+        style={
+          bg
+            ? {
+                backgroundImage: `url("${bg}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
+      >
+        <section className="relative z-10 mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
           <span className="h-px w-8 bg-fresh" /> {t.eyebrow}
         </div>
@@ -200,6 +220,7 @@ function NewsList() {
           </>
         )}
       </section>
+      </div>
     </div>
   );
 }
