@@ -663,16 +663,23 @@ function Index() {
       {/* Process */}
       <section
         id="process"
-        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-24 lg:py-32"
-        style={{
-          backgroundImage: sectionImages.process
-            ? `linear-gradient(to bottom, oklch(1 0 0 / 0.82), oklch(0.98 0.01 145 / 0.78)), url(${sectionImages.process})`
-            : undefined,
-        }}
+        className="relative overflow-hidden py-24 lg:py-32"
+        style={
+          sectionImages.process
+            ? {
+                backgroundImage: `url("${sectionImages.process}")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center center",
+                backgroundSize: "100% 100%",
+                filter: "none",
+                opacity: 1,
+              }
+            : undefined
+        }
       >
         {!sectionImages.process && <SectionLeafBg />}
         <SectionWave />
-        <BrandWatermark position="center" />
+        {!sectionImages.process && <BrandWatermark position="center" />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
@@ -692,7 +699,7 @@ function Index() {
             {c.process.map((step, i) => (
               <div
                 key={step.title}
-                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/85 p-7 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
+                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
               >
                 <span className="absolute right-5 top-3 font-display text-6xl font-bold text-fresh/10 transition-colors group-hover:text-gold/20">
                   {String(i + 1).padStart(2, "0")}
