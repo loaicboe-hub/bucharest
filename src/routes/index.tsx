@@ -54,7 +54,7 @@ import {
 } from "lucide-react";
 
 const heroBgUrl = "/__l5e/assets-v1/6215add3-5f28-4dd0-b283-aaaa565cbe14/hero-bg-3.png";
-import { getHeroImageUrl } from "@/lib/hero-image";
+import { getCachedHeroImageUrl, getHeroImageUrl } from "@/lib/hero-image";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
 import mangoes from "@/assets/mangoes.jpg";
@@ -138,6 +138,8 @@ function Index() {
   useLayoutEffect(() => {
     const cachedLogo = getCachedLogoUrl();
     if (cachedLogo) setLogo(cachedLogo);
+    const cachedHero = getCachedHeroImageUrl();
+    if (cachedHero) setHeroBg(cachedHero);
   }, []);
 
   useEffect(() => {
@@ -314,6 +316,8 @@ function Index() {
       {/* Hero */}
       <section id="top" className="relative min-h-screen overflow-hidden bg-primary">
         <img
+          data-hero-background
+          suppressHydrationWarning
           src={heroBg}
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
