@@ -105,8 +105,6 @@ export function SplashScreen() {
   }
 
 
-  const ease = [0.16, 0.7, 0.28, 1] as const;
-
   return (
     <AnimatePresence>
       {visible && (
@@ -114,26 +112,23 @@ export function SplashScreen() {
           key="splash"
           role="presentation"
           className="fixed inset-0 z-[400] flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: bg, perspective: 1400, perspectiveOrigin: "50% 50%" }}
+          style={{ backgroundColor: bg }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.9, ease: "easeInOut" } }}
         >
-          {/* Camera dolly: the logo starts as a distant speck and flies toward the viewer.
-              Keyed on the logo URL so the flight always starts once the image exists. */}
+          {/* Cinematic camera zoom: one continuous scale from far-away to full size. */}
           <motion.div
             key={logo ?? "fallback"}
             className="flex h-full w-full items-center justify-center"
-            style={{ willChange: "transform, filter, opacity" }}
-            initial={{ scale: 0.02, opacity: 0, filter: "blur(10px)" }}
-            animate={{
-              scale: [0.02, 0.12, 0.6, 1.42, 1.35],
-              opacity: [0, 0.6, 1, 1, 1],
-              filter: ["blur(10px)", "blur(6px)", "blur(2px)", "blur(0px)", "blur(0px)"],
+            style={{
+              willChange: "transform, opacity",
+              transform: "translateZ(0)",
             }}
+            initial={{ scale: 0.02, opacity: 0, filter: "blur(10px)" }}
+            animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
             transition={{
-              duration: 6,
-              times: [0, 0.3, 0.62, 0.88, 1],
-              ease: [ease, ease, ease, "easeOut"],
+              duration: 5.5,
+              ease: [0.16, 1, 0.3, 1],
             }}
           >
             {logo ? (
@@ -143,6 +138,7 @@ export function SplashScreen() {
                 crossOrigin="anonymous"
                 onLoad={(e) => syncBackground(e.currentTarget)}
                 className="h-full w-full object-contain"
+                style={{ transform: "translateZ(0)" }}
               />
             ) : (
               <Leaf className="h-14 w-14 text-primary" />
