@@ -63,8 +63,8 @@ export type CatalogProduct = {
   ar: { name: string; intro: string; description: string; specs: ProductSpecs };
 };
 
-const CERT_EN = "ISO 9001, GLOBALG.A.P., Phytosanitary Certificate, Certificate of Origin";
-const CERT_AR = "أيزو 9001، جلوبال جاب، الشهادة الزراعية، شهادة المنشأ";
+const CERT_EN = "GLOBALG.A.P., Phytosanitary Certificate, Certificate of Origin";
+const CERT_AR = "جلوبال جاب، الشهادة الزراعية، شهادة المنشأ";
 
 function build(
   slug: string,

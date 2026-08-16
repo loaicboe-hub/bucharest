@@ -31,8 +31,8 @@ export const defaultSiteSettings: SiteSettings = {
   twitter: "",
   seoTitle: "Nailvlora Import and Export | Premium Fresh Fruits & Vegetables Exporter",
   seoDescription:
-    "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified.",
-  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, ISO 9001",
+    "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. Premium certified quality.",
+  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Premium Produce",
   seoOgImage: "",
 };
 
