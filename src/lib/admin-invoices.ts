@@ -97,7 +97,7 @@ export const DEFAULT_EXPORTER = {
   address: "Industrial Zone, Cairo",
   country: "Egypt",
   vat: "100-200-300",
-  commercialRegistration: "CR-2011-4567",
+  commercialRegistration: "CR-2026-4567",
   taxNumber: "TAX-889977",
   phone: "+20 100 000 0000",
   email: "export@nailvlora.com",
