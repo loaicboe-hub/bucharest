@@ -10,7 +10,7 @@ const KEY = "fd_footer_config";
 
 export const defaultFooterConfig: FooterConfig = {
   tagline:
-    "Premium fresh fruits & vegetables exported worldwide since 2011. ISO 9001 certified quality you can rely on.",
+    "Premium fresh fruits & vegetables exported worldwide since 2011. Premium certified quality you can rely on.",
   columns: [
     {
       title: "Company",
@@ -75,7 +75,7 @@ export function saveFooterConfig(cfg: FooterConfig) {
 const AR_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "فواكه وخضروات طازجة فاخرة تُصدَّر إلى العالم منذ 2011. جودة معتمدة بشهادة الأيزو 9001 يمكنكم الاعتماد عليها.",
+    "فواكه وخضروات طازجة فاخرة تُصدَّر إلى العالم منذ 2011. جودة معتمدة يمكنكم الاعتماد عليها.",
   // column titles
   Company: "الشركة",
   Products: "المنتجات",

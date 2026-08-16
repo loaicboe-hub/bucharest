@@ -82,18 +82,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. ISO 9001 Certified. Serving international markets with exceptional quality and reliable export services.",
+          "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. Serving international markets with exceptional quality and reliable export services.",
       },
       {
         name: "keywords",
         content:
-          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, ISO 9001, Agricultural Export, Premium Produce, Fresh Produce Export",
+          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Premium Produce, Fresh Produce Export",
       },
       { name: "author", content: "Nailvlora Import and Export" },
       { property: "og:title", content: "Nailvlora Import and Export | Premium Fresh Produce Exporter" },
       {
         property: "og:description",
-        content: "Premium fresh fruits & vegetables exported worldwide since 2011. ISO 9001 Certified.",
+        content: "Premium fresh fruits & vegetables exported worldwide since 2011. Premium certified quality.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
