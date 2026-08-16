@@ -227,7 +227,7 @@ const en: SiteContent = {
 };
 
 const ar: SiteContent = {
-  brand: "فريش دايموند",
+  brand: "Nailvlora",
   brandSub: "(استيراد وتصدير)",
   nav: [
     { href: "#about", label: "من نحن" },
