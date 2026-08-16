@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2011. Serving international markets with exceptional quality and reliable export services.",
+          "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Serving international markets with exceptional quality and reliable export services.",
       },
       {
         name: "keywords",
@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Nailvlora Import and Export | Premium Fresh Produce Exporter" },
       {
         property: "og:description",
-        content: "Premium fresh fruits & vegetables exported worldwide since 2011. Premium certified quality.",
+        content: "Premium fresh fruits & vegetables exported worldwide since 2026. Premium certified quality.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -231,7 +231,7 @@ export async function generateInvoicePDF(inv: Invoice, mode: "save" | "print" = 
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
   doc.text(
-    `${inv.exporter.company} • Established 2011`,
+    `${inv.exporter.company} • Established 2026`,
     pageW / 2,
     826,
     { align: "center" },
