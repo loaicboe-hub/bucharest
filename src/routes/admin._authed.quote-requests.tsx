@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Download, Eye, Trash2, Search } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Download, Eye, Trash2, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -9,14 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { useAdminLang } from "@/lib/admin-i18n";
-import { quoteRequests as seed, type QuoteRequest } from "@/lib/admin-mock-data";
+import { fetchQuoteRequests, deleteQuoteRequest, type QuoteStatus } from "@/lib/quote-requests";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/_authed/quote-requests")({
   component: QuoteRequestsPage,
 });
 
-const statusColors: Record<QuoteRequest["status"], string> = {
+const statusColors: Record<QuoteStatus, string> = {
   pending: "bg-amber-100 text-amber-700",
   sent: "bg-blue-100 text-blue-700",
   won: "bg-emerald-100 text-emerald-700",
@@ -25,9 +26,23 @@ const statusColors: Record<QuoteRequest["status"], string> = {
 
 function QuoteRequestsPage() {
   const { t } = useAdminLang();
-  const [rows, setRows] = useState<QuoteRequest[]>(seed);
+  const queryClient = useQueryClient();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
+
+  const { data: rows = [], isLoading } = useQuery({
+    queryKey: ["quote-requests"],
+    queryFn: fetchQuoteRequests,
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: deleteQuoteRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["quote-requests"] });
+      toast.success("Quote request deleted");
+    },
+    onError: (e: Error) => toast.error(e.message || "Could not delete quote request"),
+  });
 
   const filtered = useMemo(() => rows.filter((r) => {
     const matchQ = !q || [r.company, r.contactPerson, r.email, r.country, r.product].some((v) => v.toLowerCase().includes(q.toLowerCase()));
@@ -100,15 +115,26 @@ function QuoteRequestsPage() {
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
                       <Button size="icon" variant="ghost"><Eye className="h-4 w-4" /></Button>
-                      <Button size="icon" variant="ghost" onClick={() => { setRows((rs) => rs.filter((x) => x.id !== r.id)); toast.success("Deleted"); }}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        disabled={removeMutation.isPending && removeMutation.variables === r.id}
+                        onClick={() => removeMutation.mutate(r.id)}
+                      >
+                        {removeMutation.isPending && removeMutation.variables === r.id
+                          ? <Loader2 className="h-4 w-4 animate-spin" />
+                          : <Trash2 className="h-4 w-4 text-destructive" />}
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
               {filtered.length === 0 && (
-                <TableRow><TableCell colSpan={8} className="py-10 text-center text-muted-foreground">No quotes found</TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
+                    {isLoading ? "Loading…" : "No quotes found"}
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>
