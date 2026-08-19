@@ -244,6 +244,45 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_requests: {
+        Row: {
+          company: string
+          contact_person: string
+          country: string
+          created_at: string
+          email: string
+          id: string
+          product: string
+          quantity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          company?: string
+          contact_person?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          product?: string
+          quantity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string
+          contact_person?: string
+          country?: string
+          created_at?: string
+          email?: string
+          id?: string
+          product?: string
+          quantity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           address: string
