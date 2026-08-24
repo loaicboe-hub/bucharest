@@ -322,54 +322,46 @@ function Index() {
           alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
           width={1920}
           height={1920}
-          className="absolute inset-0 h-full w-full object-cover object-top"
+          className="absolute inset-0 h-full w-full object-cover object-center md:object-top"
         />
-
-
-
-
 
         <div className="absolute inset-0 gradient-hero" />
         <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
 
-
-
-
-        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pt-32 pb-20 lg:grid-cols-12 lg:px-10">
+        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20 lg:grid-cols-12 lg:px-10">
           <div className="max-w-3xl animate-fade-up lg:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full glass-dark px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full glass-dark px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-white sm:mb-6 sm:px-4 sm:py-2">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
               {c.ui.heroBadge}
             </div>
-            <h1 className="font-display text-5xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-6xl lg:text-7xl">
               {c.ui.heroTitle1}{" "}
               <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
               {c.ui.heroTitle2}
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-white/85 sm:text-xl">
+            <p className="mt-4 max-w-2xl text-base text-white/85 sm:mt-6 sm:text-xl">
               {c.ui.heroSub}
             </p>
-            <div className="mt-10 flex flex-wrap gap-4">
-
+            <div className="mt-8 flex flex-wrap gap-4 sm:mt-10">
               <a
                 href="#products"
-                className="inline-flex items-center gap-2 rounded-full glass-dark px-8 py-4 font-semibold text-white transition-all hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full glass-dark px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/20 sm:px-8 sm:py-4 sm:text-base"
               >
                 {c.ui.exploreProducts}
               </a>
             </div>
 
-            <div className="mt-14 grid max-w-2xl grid-cols-3 gap-4">
+            <div className="mt-10 grid max-w-2xl grid-cols-3 gap-2 sm:mt-14 sm:gap-4">
               {c.badges.map((label, bi) => {
                 const BIcon = badgeIcons[bi];
                 return (
                 <div
                   key={label}
-                  className="glass-dark flex items-center gap-3 rounded-2xl px-4 py-3 text-white"
+                  className="glass-dark flex items-center gap-2 rounded-xl p-2.5 text-white sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-3"
                 >
-                  <BIcon className="h-5 w-5 shrink-0 text-gold" />
-                  <span className="truncate text-sm font-medium">{label}</span>
+                  <BIcon className="h-4 w-4 shrink-0 text-gold sm:h-5 sm:w-5" />
+                  <span className="truncate text-xs font-medium sm:text-sm">{label}</span>
                 </div>
                 );
               })}

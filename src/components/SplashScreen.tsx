@@ -1,15 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Leaf } from "lucide-react";
 import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import { loadSiteSettings } from "@/lib/site-settings";
 
 const SESSION_KEY = "nv_splash_seen";
-
-
-
-
-
 
 function removeCover() {
   const cover = document.getElementById("splash-cover");
@@ -54,7 +48,6 @@ export function SplashScreen() {
       .catch(() => undefined);
   }, []);
 
-
   // Runs synchronously before the browser paints the hydrated page.
   useLayoutEffect(() => {
     let seen = true;
@@ -73,7 +66,23 @@ export function SplashScreen() {
       removeCover();
       return;
     }
-    setVisible(true);
+
+    const cached = getCachedLogoUrl();
+    if (cached) {
+      setLogo(cached);
+      setVisible(true);
+    } else {
+      getLogoUrl()
+        .then((u) => {
+          if (u) {
+            setLogo(u);
+            setVisible(true);
+          } else {
+            removeCover();
+          }
+        })
+        .catch(() => removeCover());
+    }
   }, []);
 
   useEffect(() => {
@@ -104,10 +113,9 @@ export function SplashScreen() {
     setVisible(false);
   }
 
-
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && logo && (
         <motion.div
           key="splash"
           role="presentation"
@@ -118,7 +126,7 @@ export function SplashScreen() {
         >
           {/* Cinematic camera zoom: one continuous scale from far-away to full size. */}
           <motion.div
-            key={logo ?? "fallback"}
+            key={logo}
             className="flex h-full w-full items-center justify-center"
             style={{
               willChange: "transform, opacity",
@@ -131,22 +139,15 @@ export function SplashScreen() {
               ease: [0.16, 1, 0.3, 1],
             }}
           >
-            {logo ? (
-              <img
-                src={logo}
-                alt={`${brand} logo`}
-                crossOrigin="anonymous"
-                onLoad={(e) => syncBackground(e.currentTarget)}
-                className="h-full w-full object-contain"
-                style={{ transform: "translateZ(0)" }}
-              />
-            ) : (
-              <Leaf className="h-14 w-14 text-primary" />
-            )}
+            <img
+              src={logo}
+              alt={`${brand} logo`}
+              crossOrigin="anonymous"
+              onLoad={(e) => syncBackground(e.currentTarget)}
+              className="h-full w-full object-contain"
+              style={{ transform: "translateZ(0)" }}
+            />
           </motion.div>
-
-
-
 
           {showSkip && (
             <motion.button
