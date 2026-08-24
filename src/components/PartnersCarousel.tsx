@@ -46,7 +46,7 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
                 src={p.logo}
                 alt={p.name ? `${p.name} logo` : "Partner logo"}
                 loading="lazy"
-                className="h-full w-full object-contain opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+                className="h-full w-full object-contain transition duration-300"
               />
             );
             return (
