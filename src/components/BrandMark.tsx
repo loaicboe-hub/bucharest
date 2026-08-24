@@ -1,6 +1,6 @@
 // Shared brand logo pieces so every page shows the company logo consistently.
 import { useEffect, useLayoutEffect, useState } from "react";
-import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
+import { getCachedLogoUrl, getLogoUrl, updateFavicon } from "@/lib/admin-branding";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { cn } from "@/lib/utils";
 
@@ -13,13 +13,19 @@ export function useBrandLogo() {
   const [logo, setLogo] = useState<string | null>(null);
   useLayoutEffect(() => {
     const cached = getCachedLogoUrl();
-    if (cached) setLogo(cached);
+    if (cached) {
+      setLogo(cached);
+      updateFavicon(cached);
+    }
   }, []);
   useEffect(() => {
     let alive = true;
     getLogoUrl()
       .then((url) => {
-        if (alive && url) setLogo(url);
+        if (alive && url) {
+          setLogo(url);
+          updateFavicon(url);
+        }
       })
       .catch(() => undefined);
     return () => {

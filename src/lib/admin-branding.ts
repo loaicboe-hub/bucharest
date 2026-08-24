@@ -25,10 +25,27 @@ export function getCachedLogoUrl(): string | null {
   return readCache()?.src ?? null;
 }
 
+/** Dynamically sync the browser tab favicon to match the brand logo */
+export function updateFavicon(url?: string | null) {
+  if (typeof document === "undefined") return;
+  const targetHref = url || "/favicon.png";
+  let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    link.type = "image/png";
+    document.head.appendChild(link);
+  }
+  if (link.href !== targetHref) {
+    link.href = targetHref;
+  }
+}
+
 function setCachedLogoUrl(src: string | null) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(CACHE_KEY, JSON.stringify({ src, ts: Date.now() }));
+    updateFavicon(src);
   } catch {
     /* ignore quota errors */
   }
