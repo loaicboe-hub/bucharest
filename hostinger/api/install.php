@@ -35,6 +35,14 @@ try {
     // Execute multiple statements
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
     $db->exec($sql);
+
+    // Ensure site_settings phone & whatsapp are set to official number
+    $officialPhone = '+20 107 003 3892';
+    $db->prepare("UPDATE site_settings SET phone = ?, whatsapp = ? WHERE id = 'default'")->execute([$officialPhone, $officialPhone]);
+
+    // Ensure admin password hash is 100% verified for admin123456
+    $adminHash = password_hash('admin123456', PASSWORD_BCRYPT);
+    $db->prepare("UPDATE users SET password_hash = ? WHERE email = 'admin@bucharestegyagro.com'")->execute([$adminHash]);
     
     echo "<div style='font-family:sans-serif;max-width:600px;margin:50px auto;padding:30px;background:#f0fdf4;border:1px solid #86efac;border-radius:12px;color:#166534;direction:rtl;text-align:right;'>";
     echo "<h2 style='margin-top:0;'>✅ تم تثبيت قاعدة البيانات بنجاح!</h2>";
