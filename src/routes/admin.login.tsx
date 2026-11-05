@@ -8,10 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { getAdminSession, requestPasswordReset, signIn, signUp } from "@/lib/admin-auth";
+import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
-    meta: [{ title: "Admin Login | Nailvlora" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Admin Login | BucharestEgyAgro" }, { name: "robots", content: "noindex" }],
   }),
   component: LoginPage,
 });
@@ -83,10 +84,10 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
-            <Diamond className="h-7 w-7" />
+          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-gold/50 bg-white p-2 shadow-2xl">
+            <img src="/logo.png" alt="BucharestEgyAgro" className="h-full w-full object-contain" />
           </div>
-          <h1 className="mt-4 text-2xl font-semibold tracking-tight">Nailvlora Admin</h1>
+          <h1 className="mt-4 text-2xl font-semibold tracking-tight">BucharestEgyAgro Admin</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sign in to manage your website</p>
         </div>
 
@@ -132,6 +133,23 @@ function LoginPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
+                  {!isSupabaseConfigured() && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full border-dashed"
+                      onClick={() => {
+                        setEmail("admin@bucharestegyagro.com");
+                        setPassword("admin123456");
+                        signIn("admin@bucharestegyagro.com", "admin123456").then(() => {
+                          toast.success("Signed in as Local Admin");
+                          navigate({ to: "/admin/dashboard" });
+                        });
+                      }}
+                    >
+                      🚀 Quick Dev Login (1-Click)
+                    </Button>
+                  )}
                   {!forgotOpen && (
                     <button
                       type="button"

@@ -38,7 +38,11 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
       <div className="group relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] sm:mt-10">
         <div
           className="flex w-max items-center gap-4 sm:gap-8 md:gap-12 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
-          style={{ animation: `partners-marquee ${Math.max(18, partners.length * 6)}s linear infinite` }}
+          style={{
+            animation: `partners-marquee ${Math.max(18, partners.length * 6)}s linear infinite`,
+            willChange: "transform",
+            transform: "translate3d(0, 0, 0)",
+          }}
         >
           {loop.map((p, i) => {
             const img = (
@@ -68,7 +72,12 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
         </div>
       </div>
 
-      <style>{`@keyframes partners-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
+      <style>{`
+        @keyframes partners-marquee {
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+      `}</style>
     </section>
   );
 }

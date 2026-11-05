@@ -1,8 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
-export type Lang = "en" | "ar";
+export type Lang = "en" | "fr";
 
-const KEY = "fd_lang";
+const KEY = "app_lang";
 
 /* ---------------------------------- store --------------------------------- */
 
@@ -16,7 +16,7 @@ function emit() {
 function applyDocument(lang: Lang) {
   if (typeof document === "undefined") return;
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.dir = "ltr";
 }
 
 export function initLang() {
@@ -27,7 +27,7 @@ export function initLang() {
   } catch {
     stored = null;
   }
-  const lang: Lang = stored === "ar" ? "ar" : "en";
+  const lang: Lang = stored === "fr" ? "fr" : "en";
   current = lang;
   applyDocument(lang);
   emit();
@@ -63,8 +63,8 @@ export function useLang() {
   return {
     lang,
     setLang: change,
-    dir: (lang === "ar" ? "rtl" : "ltr") as "rtl" | "ltr",
-    c: content[lang],
+    dir: "ltr" as const,
+    c: content[lang] || content.en,
   };
 }
 
@@ -87,7 +87,7 @@ export type SiteContent = {
 };
 
 const en: SiteContent = {
-  brand: "Nailvlora",
+  brand: "BucharestEgyAgro",
   brandSub: "(Import & Export)",
   nav: [
     { href: "#about", label: "About" },
@@ -100,6 +100,7 @@ const en: SiteContent = {
     requestQuote: "Request Quote",
     requestAQuote: "Request a Quote",
     exploreProducts: "Explore Products",
+    ourNews: "Our News",
     heroBadge: "Est. 2026 — Premium Export Quality",
     heroTitle1: "Premium Fresh Fruits &",
     heroTitleGold: "Vegetables",
@@ -109,9 +110,9 @@ const en: SiteContent = {
     scroll: "Scroll",
     aboutEyebrow: "About Us",
     aboutTitle1: "About",
-    aboutTitleGold: "Nailvlora",
+    aboutTitleGold: "BucharestEgyAgro",
     aboutP1:
-      "Nailvlora Import and Export has been supplying premium-quality fresh fruits and vegetables to international markets since 2026. We are committed to quality, food safety, reliability, and customer satisfaction.",
+      "BucharestEgyAgro Import and Export has been supplying premium-quality fresh fruits and vegetables to international markets since 2026. We are committed to quality, food safety, reliability, and customer satisfaction.",
     aboutP2:
       "With years of experience and strict quality control standards, we ensure every shipment meets international export requirements.",
     iso: "Premium Quality",
@@ -220,150 +221,151 @@ const en: SiteContent = {
     { title: "Premium Grade", sub: "Quality Assurance" },
   ],
   contact: [
-    "info@nailvlora-export.com",
+    "info@bucharestegyagro.com",
     "+20 100 000 0000",
     "Cairo, Egypt — Serving Worldwide",
   ],
 };
 
-const ar: SiteContent = {
-  brand: "Nailvlora",
-  brandSub: "(استيراد وتصدير)",
+const fr: SiteContent = {
+  brand: "BucharestEgyAgro",
+  brandSub: "(Import & Export)",
   nav: [
-    { href: "#about", label: "من نحن" },
-    { href: "#products", label: "منتجاتنا" },
-    { href: "#why", label: "لماذا نحن" },
-    { href: "#process", label: "مراحل التصدير" },
-    { href: "#markets", label: "أسواقنا" },
+    { href: "#about", label: "À Propos" },
+    { href: "#products", label: "Produits" },
+    { href: "#why", label: "Pourquoi Nous" },
+    { href: "#process", label: "Processus" },
+    { href: "#markets", label: "Marchés" },
   ],
   ui: {
-    requestQuote: "اطلب عرض سعر",
-    requestAQuote: "اطلب عرض سعر",
-    exploreProducts: "استعرض المنتجات",
-    heroBadge: "تأسست 2026 — جودة تصديرية فاخرة",
-    heroTitle1: "فواكه وخضروات طازجة",
-    heroTitleGold: "فاخرة",
-    heroTitle2: "تُصدَّر إلى العالم",
+    requestQuote: "Demander un Devis",
+    requestAQuote: "Demander un Devis",
+    exploreProducts: "Explorer les Produits",
+    ourNews: "Nos Actualités",
+    heroBadge: "Fondé en 2026 — Qualité d'Exportation Supérieure",
+    heroTitle1: "Fruits & Légumes Frais",
+    heroTitleGold: "de Première Qualité",
+    heroTitle2: "Exportés dans le Monde Entier",
     heroSub:
-      "نقدّم جودة استثنائية ونضارة دائمة والتزامًا كاملًا منذ عام 2026 — من المزارع المعتمدة إلى سوقكم دون انقطاع.",
-    scroll: "مرّر للأسفل",
-    aboutEyebrow: "من نحن",
-    aboutTitle1: "عن",
-    aboutTitleGold: "نايلفلورا",
+      "Offrant une qualité exceptionnelle, une fraîcheur constante et une fiabilité totale depuis 2026 — des fermes certifiées à votre marché, sans interruption.",
+    scroll: "Défiler",
+    aboutEyebrow: "À Propos de Nous",
+    aboutTitle1: "À Propos de",
+    aboutTitleGold: "BucharestEgyAgro",
     aboutP1:
-      "تعمل شركة Nailvlora للتصدير على توريد الفواكه والخضروات الطازجة عالية الجودة إلى الأسواق الدولية منذ عام 2026، بالتزام كامل بالجودة وسلامة الغذاء والموثوقية ورضا العملاء.",
+      "BucharestEgyAgro Import et Export fournit des fruits et légumes frais de première qualité aux marchés internationaux depuis 2026. Nous sommes engagés envers la qualité, la sécurité alimentaire, la fiabilité et la satisfaction client.",
     aboutP2:
-      "وبفضل سنوات من الخبرة ومعايير صارمة لضبط الجودة، نضمن مطابقة كل شحنة لمتطلبات التصدير الدولية.",
-    iso: "جودة فاخرة",
-    certifiedExcellence: "تميّز معتمد",
-    productsEyebrow: "منتجاتنا",
-    productsTitle: "حصاد من التميّز",
+      "Grâce à des années d'expérience et à des normes rigoureuses de contrôle qualité, nous garantissons que chaque expédition répond aux exigences d'exportation internationales.",
+    iso: "Qualité Supérieure",
+    certifiedExcellence: "Excellence Certifiée",
+    productsEyebrow: "Nos Produits",
+    productsTitle: "Une Récolte d'Excellence",
     productsSub:
-      "فواكه وخضروات بدرجة تصديرية، مختارة بعناية من حيث النضارة والمظهر ومدة الصلاحية.",
-    freshFruits: "فواكه طازجة",
-    freshVegetables: "خضروات طازجة",
-    exportProducts: "منتجات التصدير",
-    importProducts: "منتجات الاستيراد",
+      "Fruits et légumes de qualité exportation, sélectionnés pour leur fraîcheur, leur aspect et leur durée de conservation.",
+    freshFruits: "Fruits Frais",
+    freshVegetables: "Légumes Frais",
+    exportProducts: "Produits d'Exportation",
+    importProducts: "Produits d'Importation",
     importEmpty:
-      "برنامج الاستيراد قيد الإعداد. تواصل معنا لمناقشة احتياجات الاستيراد والتوريد.",
+      "Notre programme d'importation est en cours de préparation. Contactez-nous pour discuter de vos besoins d'approvisionnement.",
 
-    premium: "فاخر",
-    learnMore: "اعرف المزيد",
-    whyEyebrow: "لماذا تختارنا",
-    whyTitle: "ثقة راسخة ومعايير عالمية",
-    processEyebrow: "مراحل التصدير",
-    processTitle1: "من المزرعة إلى",
-    processTitleGold: "الأسواق العالمية",
+    premium: "Premium",
+    learnMore: "En Savoir Plus",
+    whyEyebrow: "Pourquoi Nous Choisir",
+    whyTitle: "Fondé sur la Confiance et les Normes",
+    processEyebrow: "Processus d'Exportation",
+    processTitle1: "De la Ferme aux",
+    processTitleGold: "Marchés Mondiaux",
     processSub:
-      "سبع مراحل محكمة تحافظ على نضارة كل شحنة وتتبّعها والتزامها بالمواعيد.",
-    certsEyebrow: "الشهادات",
-    certsTitle: "معايير جديرة بثقتكم",
-    marketsEyebrow: "الأسواق العالمية",
-    marketsTitle1: "نصدّر إلى",
-    marketsTitleGold: "العالم",
+      "Sept étapes contrôlées pour garantir la fraîcheur, la traçabilité et le respect des délais de chaque cargaison.",
+    certsEyebrow: "Certifications",
+    certsTitle: "Des Normes de Confiance",
+    marketsEyebrow: "Marchés Mondiaux",
+    marketsTitle1: "Nous Exportons vers",
+    marketsTitleGold: "le Monde",
     marketsSub:
-      "نفخر بالتصدير إلى العديد من الأسواق الدولية، وننقل النضارة عبر القارات بسلسلة تبريد موثوقة.",
-    contactEyebrow: "تواصل معنا",
-    contactTitle1: "لنصدّر",
-    contactTitleGold: "النضارة",
-    contactTitle2: "معًا",
+      "Nous exportons avec fierté vers de multiples marchés internationaux, assurant la fraîcheur à travers les continents grâce à une chaîne du froid maîtrisée.",
+    contactEyebrow: "Contact",
+    contactTitle1: "Exportons la",
+    contactTitleGold: "Fraîcheur",
+    contactTitle2: "Ensemble",
     contactSub:
-      "تواصلوا معنا لطلب عروض الأسعار أو مواصفات المنتجات أو فرص الشراكة. يردّ فريقنا خلال يوم عمل واحد.",
-    fName: "الاسم",
-    fCompany: "الشركة",
-    fCountry: "الدولة",
-    fEmail: "البريد الإلكتروني",
-    fPhone: "رقم الهاتف",
-    fProduct: "المنتج المطلوب",
-    fMessage: "الرسالة",
-    fMessagePlaceholder: "أخبرنا عن احتياجاتكم...",
-    sendInquiry: "إرسال الطلب",
-    requestQuotation: "طلب عرض سعر",
-    errRequired: "يرجى إدخال الاسم والبريد الإلكتروني والرسالة.",
-    errEmail: "يرجى إدخال بريد إلكتروني صحيح.",
-    okSent: "شكرًا لكم! تم استلام طلبكم وسنرد خلال يوم عمل واحد.",
-    okQuote: "تم استلام طلب عرض السعر، وسيتواصل معكم فريق التصدير قريبًا.",
-    rights: "جميع الحقوق محفوظة.",
-    footerBadge: "جودة تصديرية فاخرة · منذ 2026",
-    backToTop: "العودة إلى الأعلى",
-    toggleMenu: "فتح القائمة",
-    language: "اللغة",
+      "Contactez-nous pour des demandes de devis, des fiches techniques ou des opportunités de partenariat. Notre équipe vous répond sous un jour ouvré.",
+    fName: "Nom",
+    fCompany: "Société",
+    fCountry: "Pays",
+    fEmail: "E-mail",
+    fPhone: "Téléphone",
+    fProduct: "Produit Recherché",
+    fMessage: "Message",
+    fMessagePlaceholder: "Parlez-nous de vos besoins et spécifications...",
+    sendInquiry: "Envoyer la Demande",
+    requestQuotation: "Demander une Cotation",
+    errRequired: "Veuillez renseigner votre nom, votre e-mail et votre message.",
+    errEmail: "Veuillez entrer une adresse e-mail valide.",
+    okSent: "Merci ! Votre demande a été bien reçue. Nous vous répondrons dans un délai d'un jour ouvrable.",
+    okQuote: "Demande de devis reçue. Notre équipe d'exportation vous contactera rapidement.",
+    rights: "Tous droits réservés.",
+    footerBadge: "Qualité d'Exportation Supérieure · Depuis 2026",
+    backToTop: "Retour en haut",
+    toggleMenu: "Menu",
+    language: "Langue",
   },
   stats: [
-    { n: "+14", l: "عامًا من الخبرة" },
-    { n: "+50", l: "فريق محترف" },
-    { n: "100%", l: "معايير الجودة" },
-    { n: "24/7", l: "توصيل سريع" },
+    { n: "14+", l: "Années d'Expérience" },
+    { n: "50+", l: "Équipe Professionnelle" },
+    { n: "100%", l: "Normes de Qualité" },
+    { n: "24/7", l: "Livraison Rapide" },
   ],
-  badges: ["منذ 2026", "جودة فاخرة", "تصدير عالمي"],
+  badges: ["Depuis 2026", "Qualité Supérieure", "Export Mondial"],
   fruits: [
-    { name: "برتقال", desc: "حمضيات ناضجة بطعم حلو ومنعش." },
-    { name: "عنب", desc: "عنب مائدة مقطوف يدويًا، ممتلئ وعصيري." },
-    { name: "مانجو", desc: "مانجو استوائية عطرة بحلاوة العسل." },
-    { name: "رمان", desc: "حبات ياقوتية غنية بالنكهة." },
-    { name: "فراولة", desc: "ثمار عطرة محفوظة بسلسلة تبريد كاملة." },
-    { name: "ليمون", desc: "ليمون فاخر رقيق القشرة وغني بالحموضة." },
+    { name: "Oranges", desc: "Agrumes mûris au soleil avec une douceur éclatante." },
+    { name: "Raisins", desc: "Raisins de table récoltés à la main, charnus et juteux." },
+    { name: "Mangues", desc: "Mangues tropicales parfumées et douces comme le miel." },
+    { name: "Grenades", desc: "Grains rubis éclatants de saveur." },
+    { name: "Fraises", desc: "Baies aromatiques transportées sous chaîne du froid rigoureuse." },
+    { name: "Citrons", desc: "Citrons frais à peau fine et jus intense." },
   ],
   vegetables: [
-    { name: "بطاطس", desc: "بطاطس متماسكة بدرجة تصديرية ومتعددة الاستخدام." },
-    { name: "بصل", desc: "بصل ذهبي وأحمر بعمر تخزيني طويل." },
-    { name: "ثوم", desc: "نكهة قوية ورؤوس متجانسة فاخرة." },
-    { name: "بطاطا حلوة", desc: "حلاوة طبيعية ولب برتقالي غني." },
-    { name: "فاصوليا خضراء", desc: "قرون طرية مقطوفة في أوانها." },
-    { name: "فلفل ألوان", desc: "فلفل رومي ملوّن سميك اللب." },
+    { name: "Pommes de terre", desc: "Pommes de terre fermes et polyvalentes de qualité export." },
+    { name: "Oignons", desc: "Oignons dorés et rouges avec une excellente conservation." },
+    { name: "Ail", desc: "Saveur intense et bulbes homogènes de première qualité." },
+    { name: "Patates Douces", desc: "Naturellement sucrées avec une chair orange savoureuse." },
+    { name: "Haricots Verts", desc: "Gousses croquantes et tendres récoltées jeunes." },
+    { name: "Poivrons", desc: "Poivrons colorés, croquants et à paroi épaisse." },
   ],
   whyUs: [
-    { title: "جودة فاخرة", desc: "منتجات بدرجة تصديرية فقط، منتقاة يدويًا." },
-    { title: "جودة معتمدة", desc: "معايير دولية صارمة ومعترف بها." },
-    { title: "مزارع مختارة", desc: "شراكات مع مزارعين موثوقين ومعتمدين." },
-    { title: "رقابة جودة صارمة", desc: "فحص متعدد المراحل في كل خطوة." },
-    { title: "أسعار تنافسية", desc: "التوريد المباشر يعني أفضل قيمة." },
-    { title: "خبرة عالمية", desc: "نصدّر حول العالم منذ عام 2026." },
-    { title: "التزام بالمواعيد", desc: "خدمات لوجستية يمكن الاعتماد عليها." },
-    { title: "سلسلة تبريد", desc: "تحكم كامل في درجة الحرارة من البداية للنهاية." },
-    { title: "العميل أولًا", desc: "شراكات طويلة الأمد لا مجرد صفقات." },
+    { title: "Qualité Supérieure", desc: "Produits de qualité export exclusivement, triés à la main." },
+    { title: "Qualité Certifiée", desc: "Normes internationales strictes et reconnues mondialement." },
+    { title: "Fermes Sélectionnées", desc: "Partenariats directs avec des producteurs agréés." },
+    { title: "Contrôle Rigoureux", desc: "Inspections à chaque étape de la récolte au départ." },
+    { title: "Prix Compétitifs", desc: "Approvisionnement direct pour une valeur optimale." },
+    { title: "Expérience Mondiale", desc: "Exportation internationale reconnue depuis 2026." },
+    { title: "Respect des Délais", desc: "Logistique fiable et planification garantie." },
+    { title: "Chaîne du Froid", desc: "Température contrôlée de bout en bout." },
+    { title: "Orientation Client", desc: "Des partenariats durables plutôt que de simples transactions." },
   ],
   process: [
-    { title: "اختيار المزارع", desc: "التوريد من مزارع شريكة معتمدة فقط." },
-    { title: "فحص الجودة", desc: "فحوصات حقلية ومعملية لكل دفعة." },
-    { title: "الفرز والتعبئة", desc: "تدريج وتعبئة حسب مواصفات المشتري." },
-    { title: "التخزين المبرد", desc: "تحكم دقيق في الحرارة والرطوبة." },
-    { title: "تحميل الحاويات", desc: "حاويات مبردة يتم تحميلها بعناية." },
-    { title: "الشحن الدولي", desc: "شحن بحري وجوي إلى جميع أنحاء العالم." },
-    { title: "التسليم", desc: "تسليم طازج وفي الموعد المحدد." },
+    { title: "Sélection des Fermes", desc: "Approvisionnement exclusif auprès de fermes certifiées." },
+    { title: "Contrôle Qualité", desc: "Analyses en champ et en laboratoire pour chaque lot." },
+    { title: "Tri et Emballage", desc: "Calibrage et conditionnement sur mesure pour l'acheteur." },
+    { title: "Stockage Frigorifique", desc: "Température et hygrométrie contrôlées avec précision." },
+    { title: "Chargement Conteneurs", desc: "Conteneurs frigorifiques inspectés et chargés avec soin." },
+    { title: "Transport International", desc: "Fret maritime et aérien vers toutes les destinations." },
+    { title: "Livraison", desc: "Livraison de produits ultra-frais et dans les délais convenus." },
   ],
-  regions: ["أوروبا", "الشرق الأوسط", "أفريقيا", "آسيا"],
+  regions: ["Europe", "Moyen-Orient", "Afrique", "Asie"],
   certs: [
-    { title: "إدارة الجودة", sub: "معايير ثابتة" },
-    { title: "سلامة الغذاء", sub: "معايير عالمية" },
-    { title: "جاهزية التصدير", sub: "امتثال دولي" },
-    { title: "درجة فاخرة", sub: "ضمان الجودة" },
+    { title: "Gestion de la Qualité", sub: "Normes Constantes" },
+    { title: "Sécurité Alimentaire", sub: "Standards Mondiaux" },
+    { title: "Prêt pour l'Export", sub: "Conformité Internationale" },
+    { title: "Catégorie Supérieure", sub: "Assurance Qualité" },
   ],
   contact: [
-    "info@nailvlora-export.com",
+    "info@bucharestegyagro.com",
     "+20 100 000 0000",
-    "القاهرة، مصر — نخدم العالم",
+    "Le Caire, Égypte — Service Mondial",
   ],
 };
 
-export const content: Record<Lang, SiteContent> = { en, ar };
+export const content: Record<Lang, SiteContent> = { en, fr };

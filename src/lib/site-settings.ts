@@ -1,5 +1,6 @@
-// Site-wide company settings stored in the backend (site_settings table).
-import { supabase } from "@/integrations/supabase/client";
+// Site-wide company settings stored in localStorage + Hostinger MySQL + Supabase if configured.
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { apiSettings } from "./hostinger-api";
 
 export type SiteSettings = {
   companyName: string;
@@ -19,67 +20,155 @@ export type SiteSettings = {
 };
 
 export const defaultSiteSettings: SiteSettings = {
-  companyName: "Nailvlora Import and Export",
+  companyName: "BucharestEgyAgro Import and Export",
   phone: "+20 100 000 0000",
-  email: "info@nailvlora.com",
+  email: "info@bucharestegyagro.com",
   whatsapp: "+20 100 000 0000",
   address: "Cairo, Egypt",
   maps: "https://maps.google.com/?q=Cairo",
-  facebook: "https://facebook.com/nailvlora",
-  instagram: "https://instagram.com/nailvlora",
-  linkedin: "https://linkedin.com/company/nailvlora",
+  facebook: "https://facebook.com/bucharestegyagro",
+  instagram: "https://instagram.com/bucharestegyagro",
+  linkedin: "https://linkedin.com/company/bucharestegyagro",
   twitter: "",
-  seoTitle: "Nailvlora Import and Export | Premium Fresh Fruits & Vegetables Exporter",
+  seoTitle: "BucharestEgyAgro Import and Export | Premium Fresh Fruits & Vegetables Exporter",
   seoDescription:
-    "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Premium certified quality.",
-  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Premium Produce",
+    "BucharestEgyAgro Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Premium certified quality.",
+  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Premium Produce, BucharestEgyAgro",
   seoOgImage: "",
 };
 
+const SETTINGS_KEY = "app_site_settings";
+
 export async function loadSiteSettings(): Promise<SiteSettings> {
-  const { data, error } = await supabase
-    .from("site_settings")
-    .select("*")
-    .eq("id", "default")
-    .maybeSingle();
+  let cached: SiteSettings | null = null;
+  if (typeof window !== "undefined") {
+    try {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (raw) cached = JSON.parse(raw);
+    } catch {}
+  }
 
-  if (error || !data) return defaultSiteSettings;
+  // 1. Try Hostinger MySQL API
+  try {
+    const remote = await apiSettings.get();
+    if (remote && remote.company_name) {
+      const loaded: SiteSettings = {
+        companyName: remote.company_name,
+        phone: remote.phone || defaultSiteSettings.phone,
+        email: remote.email || defaultSiteSettings.email,
+        whatsapp: remote.whatsapp || defaultSiteSettings.whatsapp,
+        address: remote.address || defaultSiteSettings.address,
+        maps: remote.maps_url || defaultSiteSettings.maps,
+        facebook: remote.facebook || defaultSiteSettings.facebook,
+        instagram: remote.instagram || defaultSiteSettings.instagram,
+        linkedin: remote.linkedin || defaultSiteSettings.linkedin,
+        twitter: remote.twitter || defaultSiteSettings.twitter,
+        seoTitle: remote.seo_title || defaultSiteSettings.seoTitle,
+        seoDescription: remote.seo_description || defaultSiteSettings.seoDescription,
+        seoKeywords: remote.seo_keywords || defaultSiteSettings.seoKeywords,
+        seoOgImage: remote.seo_og_image || "",
+      };
+      if (typeof window !== "undefined") {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(loaded));
+      }
+      return loaded;
+    }
+  } catch {
+    /* fallback to local / Supabase */
+  }
 
-  return {
-    companyName: data.company_name,
-    phone: data.phone,
-    email: data.email,
-    whatsapp: data.whatsapp,
-    address: data.address,
-    maps: data.maps_url,
-    facebook: data.facebook,
-    instagram: data.instagram,
-    linkedin: data.linkedin,
-    twitter: data.twitter,
-    seoTitle: data.seo_title || defaultSiteSettings.seoTitle,
-    seoDescription: data.seo_description || defaultSiteSettings.seoDescription,
-    seoKeywords: data.seo_keywords || defaultSiteSettings.seoKeywords,
-    seoOgImage: data.seo_og_image,
-  };
+  // 2. Try Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("*")
+        .eq("id", "default")
+        .maybeSingle();
+
+      if (!error && data) {
+        const loaded: SiteSettings = {
+          companyName: data.company_name,
+          phone: data.phone,
+          email: data.email,
+          whatsapp: data.whatsapp,
+          address: data.address,
+          maps: data.maps_url,
+          facebook: data.facebook,
+          instagram: data.instagram,
+          linkedin: data.linkedin,
+          twitter: data.twitter,
+          seoTitle: data.seo_title || defaultSiteSettings.seoTitle,
+          seoDescription: data.seo_description || defaultSiteSettings.seoDescription,
+          seoKeywords: data.seo_keywords || defaultSiteSettings.seoKeywords,
+          seoOgImage: data.seo_og_image,
+        };
+        if (typeof window !== "undefined") {
+          localStorage.setItem(SETTINGS_KEY, JSON.stringify(loaded));
+        }
+        return loaded;
+      }
+    } catch {}
+  }
+
+  return cached || defaultSiteSettings;
 }
 
 export async function saveSiteSettings(s: SiteSettings): Promise<string | null> {
-  const { error } = await supabase.from("site_settings").upsert({
-    id: "default",
-    company_name: s.companyName,
-    phone: s.phone,
-    email: s.email,
-    whatsapp: s.whatsapp,
-    address: s.address,
-    maps_url: s.maps,
-    facebook: s.facebook,
-    instagram: s.instagram,
-    linkedin: s.linkedin,
-    twitter: s.twitter,
-    seo_title: s.seoTitle,
-    seo_description: s.seoDescription,
-    seo_keywords: s.seoKeywords,
-    seo_og_image: s.seoOgImage,
-  });
-  return error?.message ?? null;
+  // Always persist locally in browser
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    } catch {}
+  }
+
+  // 1. Try Hostinger MySQL API
+  try {
+    await apiSettings.save({
+      company_name: s.companyName,
+      phone: s.phone,
+      email: s.email,
+      whatsapp: s.whatsapp,
+      address: s.address,
+      maps_url: s.maps,
+      facebook: s.facebook,
+      instagram: s.instagram,
+      linkedin: s.linkedin,
+      twitter: s.twitter,
+      seo_title: s.seoTitle,
+      seo_description: s.seoDescription,
+      seo_keywords: s.seoKeywords,
+      seo_og_image: s.seoOgImage,
+    });
+  } catch {
+    /* fallback */
+  }
+
+  // 2. If Supabase configured
+  if (isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("site_settings").upsert({
+        id: "default",
+        company_name: s.companyName,
+        phone: s.phone,
+        email: s.email,
+        whatsapp: s.whatsapp,
+        address: s.address,
+        maps_url: s.maps,
+        facebook: s.facebook,
+        instagram: s.instagram,
+        linkedin: s.linkedin,
+        twitter: s.twitter,
+        seo_title: s.seoTitle,
+        seo_description: s.seoDescription,
+        seo_keywords: s.seoKeywords,
+        seo_og_image: s.seoOgImage,
+      });
+      return error?.message ?? null;
+    } catch (err: any) {
+      return err?.message ?? null;
+    }
+  }
+
+  return null;
 }

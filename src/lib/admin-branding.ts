@@ -1,10 +1,10 @@
-// Cloud-storage backed brand logo (site-media/branding).
-import { supabase } from "@/integrations/supabase/client";
+// Brand logo backed by LocalStorage and Supabase.
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 
 const BUCKET = "site-media";
 const FOLDER = "branding";
 const SIGNED_TTL = 60 * 60 * 24 * 365; // 1 year
-const CACHE_KEY = "nv_logo_cache_v2";
+const CACHE_KEY = "nv_logo_cache_v3";
 const CACHE_TTL = 1000 * 60 * 60 * 24 * 14; // re-check at most every 14 days
 const MAX_INLINE_BYTES = 900_000; // keep localStorage well under quota
 
@@ -20,15 +20,15 @@ function readCache(): LogoCache | null {
   }
 }
 
-/** Last known logo (inlined data URL when possible) for an instant first paint. */
+/** Last known logo for instant paint, defaults to /logo.png */
 export function getCachedLogoUrl(): string | null {
-  return readCache()?.src ?? null;
+  return readCache()?.src ?? "/logo.png";
 }
 
 /** Dynamically sync the browser tab favicon to match the brand logo */
 export function updateFavicon(url?: string | null) {
   if (typeof document === "undefined") return;
-  const targetHref = url || "/favicon.png";
+  const targetHref = url || "/logo.png";
   let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
   if (!link) {
     link = document.createElement("link");
@@ -52,11 +52,15 @@ function setCachedLogoUrl(src: string | null) {
 }
 
 async function currentFileName(): Promise<string | null> {
-  const { data, error } = await supabase.storage.from(BUCKET).list(FOLDER, { limit: 100 });
-  if (error) throw error;
-  if (!data) return null;
-  const file = data.find((f) => f.name.startsWith("logo."));
-  return file ? file.name : null;
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const { data, error } = await supabase.storage.from(BUCKET).list(FOLDER, { limit: 100 });
+    if (error || !data) return null;
+    const file = data.find((f) => f.name.startsWith("logo."));
+    return file ? file.name : null;
+  } catch {
+    return null;
+  }
 }
 
 async function toDataUrl(url: string): Promise<string | null> {
@@ -75,49 +79,70 @@ async function toDataUrl(url: string): Promise<string | null> {
   }
 }
 
-/** Signed URL (or inlined data URL) of the brand logo, or null when none uploaded. */
+/** Signed URL (or inlined data URL) of the brand logo, or /logo.png */
 export async function getLogoUrl(force = false): Promise<string | null> {
   const cached = readCache();
-  if (!force && cached && Date.now() - cached.ts < CACHE_TTL) return cached.src;
+  if (!force && cached && Date.now() - cached.ts < CACHE_TTL && cached.src) return cached.src;
 
-  const name = await currentFileName();
-  if (!name) {
-    setCachedLogoUrl(null);
-    return null;
+  if (!isSupabaseConfigured()) {
+    return cached?.src ?? "/logo.png";
   }
-  const { data } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrl(`${FOLDER}/${name}`, SIGNED_TTL);
-  const url = data?.signedUrl ?? null;
-  if (!url) return cached?.src ?? null;
-  const inlined = (await toDataUrl(url)) ?? url;
-  setCachedLogoUrl(inlined);
-  return inlined;
+
+  try {
+    const name = await currentFileName();
+    if (!name) {
+      return cached?.src ?? "/logo.png";
+    }
+    const { data } = await supabase.storage
+      .from(BUCKET)
+      .createSignedUrl(`${FOLDER}/${name}`, SIGNED_TTL);
+    const url = data?.signedUrl ?? null;
+    if (!url) return cached?.src ?? "/logo.png";
+    const inlined = (await toDataUrl(url)) ?? url;
+    setCachedLogoUrl(inlined);
+    return inlined;
+  } catch {
+    return cached?.src ?? "/logo.png";
+  }
 }
 
-
-/** Upload (or replace) the brand logo. Returns an error message or null. */
+/** Upload (or replace) the brand logo. */
 export async function uploadLogo(file: File): Promise<string | null> {
   if (!file.type.startsWith("image/")) return "Please choose an image file (PNG, JPG or SVG)";
-  if (file.size > 1.5 * 1024 * 1024) return "Logo must be smaller than 1.5 MB";
+  if (file.size > 2 * 1024 * 1024) return "Logo must be smaller than 2 MB";
 
-  await deleteLogo();
+  const dataUrl = await readFileAsDataUrl(file);
+  setCachedLogoUrl(dataUrl);
 
-  const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-  const { error } = await supabase.storage
-    .from(BUCKET)
-    .upload(`${FOLDER}/logo.${ext}`, file, { upsert: true, contentType: file.type });
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
 
-  return error ? error.message : null;
+  try {
+    await deleteLogo();
+    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(`${FOLDER}/logo.${ext}`, file, { upsert: true, contentType: file.type });
+    return error ? error.message : null;
+  } catch (err: any) {
+    return null;
+  }
 }
 
-/** Remove the stored brand logo. Returns an error message or null. */
+/** Remove the stored brand logo. */
 export async function deleteLogo(): Promise<string | null> {
-  const name = await currentFileName();
-  if (!name) return null;
-  const { error } = await supabase.storage.from(BUCKET).remove([`${FOLDER}/${name}`]);
-  if (!error) setCachedLogoUrl(null);
-  return error ? error.message : null;
+  setCachedLogoUrl(null);
+  if (!isSupabaseConfigured()) return null;
+
+  try {
+    const name = await currentFileName();
+    if (!name) return null;
+    const { error } = await supabase.storage.from(BUCKET).remove([`${FOLDER}/${name}`]);
+    return error ? error.message : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Fetch the stored logo as a data URL (used for embedding in PDFs). */

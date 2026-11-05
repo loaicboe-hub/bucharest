@@ -108,7 +108,7 @@ function BrandingPage() {
           <CardContent className="space-y-4">
             <div className="rounded-xl bg-[#1E5631] p-4">
               <div className="flex items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-xl bg-white/10">
+                <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-xl bg-white p-1 border border-gold/40 shadow-sm">
                   {logo ? (
                     <img src={logo} alt="Logo preview" className="h-full w-full object-contain" />
                   ) : (
@@ -116,9 +116,9 @@ function BrandingPage() {
                   )}
                 </div>
                 <div className="text-white">
-                  <div className="font-semibold">Nailvlora</div>
+                  <div className="font-semibold">BucharestEgyAgro</div>
                   <div className="text-[10px] uppercase tracking-[0.2em] text-white/60">
-                    for Export
+                    Import & Export
                   </div>
                 </div>
               </div>

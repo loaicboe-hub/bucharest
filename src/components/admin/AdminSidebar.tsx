@@ -42,7 +42,6 @@ const items = [
   { key: "nav.markets", url: "/admin/markets", icon: Globe },
   { key: "nav.partners", url: "/admin/partners", icon: Handshake },
   { key: "nav.categories", url: "/admin/categories", icon: Tags },
-  { key: "nav.about-video", url: "/admin/about-video", icon: Video },
   { key: "nav.news", url: "/admin/news", icon: Newspaper },
   { key: "nav.content", url: "/admin/content", icon: Type },
   { key: "nav.media", url: "/admin/media", icon: Image },
@@ -69,11 +68,11 @@ export function AdminSidebar() {
     <Sidebar collapsible="icon" side={dir === "rtl" ? "right" : "left"}>
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Diamond className="h-5 w-5" />
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-0.5 shadow-sm">
+            <img src="/logo.png" alt="BucharestEgyAgro" className="h-full w-full object-contain" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold text-sidebar-foreground">Nailvlora</span>
+            <span className="text-sm font-semibold text-sidebar-foreground">BucharestEgyAgro</span>
             <span className="text-xs text-muted-foreground">{t("adminPanel")}</span>
           </div>
         </div>

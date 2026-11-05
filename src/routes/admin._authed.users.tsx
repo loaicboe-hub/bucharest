@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { KeyRound, Plus, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -32,14 +31,12 @@ import {
   fetchPermissions,
   listAdminUsers,
   savePermissions,
-  type ModulePermission,
-} from "@/lib/admin-permissions";
-import {
   createAdminUser,
   deleteAdminUser,
   setAdminUserPassword,
   setSuperAdmin,
-} from "@/lib/admin-users.functions";
+  type ModulePermission,
+} from "@/lib/admin-permissions";
 
 export const Route = createFileRoute("/admin/_authed/users")({
   beforeLoad: ({ context }) => {
@@ -47,7 +44,7 @@ export const Route = createFileRoute("/admin/_authed/users")({
   },
   component: UsersPage,
   head: () => ({
-    meta: [{ title: "Users & Permissions | Nailvlora Admin" }],
+    meta: [{ title: "Users & Permissions | BucharestEgyAgro Admin" }],
   }),
 });
 
@@ -60,7 +57,6 @@ function UsersPage() {
     const ids = Object.keys((router as unknown as { routesById: Record<string, unknown> }).routesById);
     return discoverModules(ids.map((id) => id.replace("/_authed", "")));
   }, [router]);
-
 
   const usersQuery = useQuery({ queryKey: ["admin-users"], queryFn: listAdminUsers });
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -76,19 +72,14 @@ function UsersPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", fullName: "", superAdmin: false });
 
-  const createFn = useServerFn(createAdminUser);
-  const deleteFn = useServerFn(deleteAdminUser);
-  const passwordFn = useServerFn(setAdminUserPassword);
-  const superFn = useServerFn(setSuperAdmin);
-
   const createMutation = useMutation({
     mutationFn: async () => {
       if (!form.email.includes("@")) throw new Error("A valid email is required");
-      if (form.password.length < 10) throw new Error("Password must be at least 10 characters");
-      return createFn({ data: form });
+      if (form.password.length < 8) throw new Error("Password must be at least 8 characters");
+      return createAdminUser(form);
     },
     onSuccess: () => {
-      toast.success("User created");
+      toast.success("User created successfully");
       setAddOpen(false);
       setForm({ email: "", password: "", fullName: "", superAdmin: false });
       qc.invalidateQueries({ queryKey: ["admin-users"] });
@@ -123,7 +114,7 @@ function UsersPage() {
   const handleDelete = async (userId: string) => {
     if (!window.confirm("Delete this user permanently?")) return;
     try {
-      await deleteFn({ data: { userId } });
+      await deleteAdminUser({ userId });
       setSelectedId(null);
       await qc.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success("User deleted");
@@ -133,14 +124,14 @@ function UsersPage() {
   };
 
   const handlePassword = async (userId: string) => {
-    const password = window.prompt("New password (min 10 characters)");
+    const password = window.prompt("New password (min 8 characters)");
     if (!password) return;
-    if (password.length < 10) {
-      toast.error("Password must be at least 10 characters");
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters");
       return;
     }
     try {
-      await passwordFn({ data: { userId, password } });
+      await setAdminUserPassword({ userId, password });
       toast.success("Password updated");
     } catch (e) {
       toast.error((e as Error).message);
@@ -149,7 +140,7 @@ function UsersPage() {
 
   const handleSuper = async (userId: string, value: boolean) => {
     try {
-      await superFn({ data: { userId, value } });
+      await setSuperAdmin({ userId, value });
       await qc.invalidateQueries({ queryKey: ["admin-users"] });
       toast.success(value ? "Super admin granted" : "Super admin removed");
     } catch (e) {
@@ -303,11 +294,11 @@ function UsersPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password (min 10 characters)</Label>
+              <Label htmlFor="password">Password (min 8 characters)</Label>
               <Input
                 id="password"
                 type="password"
-                minLength={10}
+                minLength={8}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />

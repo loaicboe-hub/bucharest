@@ -46,35 +46,35 @@
 }
 
 :root {
-  --background: oklch(0.99 0.005 100);
-  --foreground: oklch(0.2 0.02 150);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 150);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 150);
-  --secondary: oklch(0.96 0.01 120);
-  --secondary-foreground: oklch(0.2 0.02 150);
-  --accent: oklch(0.95 0.02 130);
-  --accent-foreground: oklch(0.2 0.02 150);
+  --background: oklch(0.965 0.025 80);    /* Egyptian papyrus light parchment */
+  --foreground: oklch(0.22 0.03 145);     /* Deep rich green-black text */
+  --card: oklch(0.985 0.018 82 / 0.90);   /* Warm papyrus card */
+  --card-foreground: oklch(0.22 0.03 145);
+  --popover: oklch(0.985 0.018 82);
+  --popover-foreground: oklch(0.22 0.03 145);
+  --secondary: oklch(0.935 0.032 80);
+  --secondary-foreground: oklch(0.22 0.03 145);
+  --accent: oklch(0.92 0.04 78);
+  --accent-foreground: oklch(0.22 0.03 145);
   --destructive: oklch(0.58 0.21 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --muted: oklch(0.96 0.01 120);
-  --muted-foreground: oklch(0.5 0.02 150);
-  --border: oklch(0.9 0.02 130);
-  --input: oklch(0.92 0.02 130);
+  --muted: oklch(0.935 0.025 80);
+  --muted-foreground: oklch(0.48 0.03 140);
+  --border: oklch(0.85 0.04 78 / 0.55);
+  --input: oklch(0.90 0.03 80);
   --ring: oklch(0.55 0.15 145);
 
   /* Brand */
-  --primary: oklch(0.35 0.09 150);         /* #1E5631 dark green */
+  --primary: oklch(0.32 0.09 150);         /* #184e2a deep Egyptian emerald */
   --primary-foreground: oklch(0.98 0.01 100);
-  --fresh: oklch(0.66 0.17 145);           /* #4CAF50 fresh green */
+  --fresh: oklch(0.62 0.17 145);           /* #3b9b46 fresh Nile valley green */
   --fresh-foreground: oklch(0.99 0 0);
-  --gold: oklch(0.75 0.13 85);             /* #D4AF37 gold */
+  --gold: oklch(0.74 0.14 85);             /* #d4af37 pure Egyptian gold */
   --gold-foreground: oklch(0.2 0.02 150);
-  --cream: oklch(0.98 0.015 90);
-  --mint: oklch(0.955 0.03 158);            /* soft pastel mint wave tint */
-  --wave-slate: oklch(0.93 0.012 190);     /* faint slate for wave gradient */
-  --leaf-mist: oklch(0.968 0.012 145);     /* #F2F8F2 soft natural green */
+  --cream: oklch(0.935 0.038 78);          /* #efe2cc authentic golden papyrus */
+  --mint: oklch(0.94 0.03 150);
+  --wave-slate: oklch(0.92 0.02 85);
+  --leaf-mist: oklch(0.945 0.03 80);       /* Papyrus mist */
 }
 
 
@@ -84,12 +84,17 @@
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
@@ -200,16 +205,15 @@ html[dir="rtl"] .lucide-arrow-right {
   transform: scaleX(-1);
 }
 
-/* Fixed, subtle leaf backdrop shared across homepage sections */
+/* Subtle leaf backdrop shared across homepage sections */
 .section-leaf-bg {
   background-position: center;
   background-size: cover;
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
   opacity: 0.22;
 }
 
-/* Touch devices often ignore fixed backgrounds; fall back to a smooth local scroll */
 @supports (-webkit-touch-callout: none) {
   .section-leaf-bg {
     background-attachment: scroll;

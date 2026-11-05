@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
+import { SectionLeafBg } from "@/components/SectionLeafBg";
 import { BrandMark } from "@/components/BrandMark";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowLeft, CalendarDays, User, Newspaper } from "lucide-react";
@@ -9,9 +10,9 @@ import { getSectionImageUrl } from "@/lib/section-image";
 
 export const Route = createFileRoute("/news/")({
   head: () => {
-    const title = "Our News | Nailvlora Import and Export";
+    const title = "Our News | BucharestEgyAgro Import and Export";
     const description =
-      "Company news, market updates and stories from Nailvlora Import and Export — fresh produce trade insights, partnerships and announcements.";
+      "Company news, market updates and stories from BucharestEgyAgro Import and Export — fresh produce trade insights, partnerships and announcements.";
     return {
       meta: [
         { title },
@@ -39,15 +40,15 @@ const UI = {
     back: "Back to Home",
     all: "All",
   },
-  ar: {
-    eyebrow: "غرفة الأخبار",
-    title: "أخبارنا",
-    sub: "إعلانات الشركة وتحديثات السوق وقصص فريقنا.",
-    readMore: "اقرأ المزيد",
-    loadMore: "عرض المزيد",
-    empty: "لا توجد أخبار منشورة حتى الآن.",
-    back: "العودة إلى الصفحة الرئيسية",
-    all: "الكل",
+  fr: {
+    eyebrow: "Actualités",
+    title: "Nos Nouvelles",
+    sub: "Annonces de l'entreprise, actualités du marché et articles de notre équipe.",
+    readMore: "Lire la suite",
+    loadMore: "Charger plus",
+    empty: "Aucun article d'actualité publié pour le moment.",
+    back: "Retour à l'Accueil",
+    all: "Tous",
   },
 } as const;
 
@@ -85,7 +86,7 @@ function NewsList() {
     <div className="min-h-screen bg-background" dir={dir}>
       <header className="border-b border-border bg-cream">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" aria-label="Nailvlora home">
+          <Link to="/" aria-label="BucharestEgyAgro home">
             <BrandMark />
           </Link>
           <Link to="/" className="text-sm font-semibold text-fresh hover:underline">
@@ -112,6 +113,7 @@ function NewsList() {
             : undefined
         }
       >
+        {!bg && <SectionLeafBg opacity="opacity-[0.07]" />}
         <section className="relative z-10 mx-auto max-w-7xl px-6 py-14 lg:px-10 lg:py-20">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
           <span className="h-px w-8 bg-fresh" /> {t.eyebrow}
@@ -155,8 +157,8 @@ function NewsList() {
           <>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.slice(0, visible).map((item) => {
-                const title = (lang === "ar" && item.title_ar) || item.title;
-                const excerpt = (lang === "ar" && item.excerpt_ar) || item.excerpt;
+                const title = (lang === "fr" && item.title_ar) || item.title;
+                const excerpt = (lang === "fr" && item.excerpt_ar) || item.excerpt;
                 return (
                   <article
                     key={item.id}

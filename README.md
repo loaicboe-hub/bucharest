@@ -381,19 +381,6 @@ FINAL REQUIREMENTS
 - Prioritize trust, quality, professionalism, and export credibility.
 
 - Make every section visually rich with smooth animations and premium imagery.
-
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://fresh-diamond-export.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/569991ad-9cd0-488b-83b2-d338758d62ab).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
 ## Development
 
 Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).

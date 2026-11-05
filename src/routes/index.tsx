@@ -28,6 +28,8 @@ import { getAboutVideoUrl } from "@/lib/about-video";
 import { getSectionImageUrl } from "@/lib/section-image";
 import { useTransparentLogo } from "@/lib/transparent-image";
 import { BrandMark, BrandWatermark } from "@/components/BrandMark";
+import { PharaonicDivider } from "@/components/PharaonicDivider";
+import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
@@ -53,7 +55,7 @@ import {
   Leaf,
 } from "lucide-react";
 
-const heroBgUrl = "/__l5e/assets-v1/6215add3-5f28-4dd0-b283-aaaa565cbe14/hero-bg-3.png";
+import kemetEdenHero from "@/assets/kemet-eden-hero.jpg";
 import { getCachedHeroImageUrl, getHeroImageUrl } from "@/lib/hero-image";
 import oranges from "@/assets/oranges.jpg";
 import grapes from "@/assets/grapes.jpg";
@@ -89,7 +91,7 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
           : "border-white/25 bg-white/10 backdrop-blur-md"
       }`}
     >
-      {(["en", "ar"] as const).map((l) => (
+      {(["en", "fr"] as const).map((l) => (
         <button
           key={l}
           type="button"
@@ -103,7 +105,7 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
                 : "text-white/80 hover:text-white"
           }`}
         >
-          {l === "en" ? "EN" : "ع"}
+          {l === "en" ? "EN" : "FR"}
         </button>
       ))}
     </div>
@@ -128,7 +130,7 @@ function Index() {
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
   const [sectionImages, setSectionImages] = useState<Record<string, string>>({});
-  const [heroBg, setHeroBg] = useState<string>(heroBgUrl);
+  const [heroBg, setHeroBg] = useState<string>(kemetEdenHero);
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const heroLogo = useTransparentLogo(logo);
@@ -193,54 +195,51 @@ function Index() {
 
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden w-full">
+      {/* Majestic Cinematic Pharaonic Intro Splash Screen */}
+      <PharaonicSplashScreen duration={8500} />
 
 
 
 
       {/* Navbar */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "glass shadow-[0_4px_30px_-10px_oklch(0.3_0.08_150/0.15)]" : "bg-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
+          scrolled ? "glass shadow-md py-2.5 sm:py-3" : "bg-transparent py-4 sm:py-5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-4 sm:px-6 lg:gap-6 lg:px-10">
-          <a href="#top" className="flex shrink-0 items-center gap-3.5">
-            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+          <a href="#top" className="flex shrink-0 items-center gap-3">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gold/50 bg-white p-1 shadow-lg sm:h-16 sm:w-16 lg:h-18 lg:w-18">
               <img
                 data-brand-logo
                 suppressHydrationWarning
-                src={logo ?? BLANK_PIXEL}
-                alt="Nailvlora Import and Export logo"
-                className="h-full w-full scale-[1.5] object-contain p-0"
+                src={logo || "/logo.png"}
+                alt={`${site.companyName || c.brand} logo`}
+                className="h-full w-full object-contain"
               />
             </div>
 
-
-            <div className="min-w-0">
-              <div
-                className={`whitespace-nowrap font-display text-xl font-bold leading-none lg:text-2xl xl:text-3xl ${
-                  scrolled ? "text-primary" : "text-white"
+            <div className="flex flex-col justify-center">
+              <span className="whitespace-nowrap font-display text-lg font-bold leading-tight sm:text-xl lg:text-2xl drop-shadow-sm">
+                <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+              </span>
+              <span
+                className={`whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.22em] sm:text-[10px] ${
+                  scrolled ? "text-muted-foreground" : "text-white/80"
                 }`}
               >
-                Nailvlora
-              </div>
-              <div
-                className={`whitespace-nowrap text-[10px] uppercase tracking-[0.2em] ${
-                  scrolled ? "text-muted-foreground" : "text-white/70"
-                }`}
-              >
-                {c.brandSub}
-              </div>
+                Import & Export
+              </span>
             </div>
           </a>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-3 md:flex lg:gap-6 xl:gap-8">
+          <nav className="hidden items-center justify-center gap-4 md:flex lg:gap-6 xl:gap-8">
             {nav.map((n) => (
               <a
                 key={n.href}
                 href={n.href}
-                className={`whitespace-nowrap text-[13px] font-bold transition-colors lg:text-sm ${
+                className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-sm ${
                   scrolled
                     ? "text-foreground hover:text-fresh"
                     : "text-white/90 hover:text-gold"
@@ -251,30 +250,30 @@ function Index() {
             ))}
             <Link
               to="/news"
-              className={`whitespace-nowrap text-[13px] font-bold transition-colors lg:text-sm ${
+              className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-sm ${
                 scrolled ? "text-foreground hover:text-fresh" : "text-white/90 hover:text-gold"
               }`}
             >
-              {lang === "ar" ? "أخبارنا" : "Our News"}
+              {c.ui.ourNews || "Our News"}
             </Link>
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-2 md:flex lg:gap-4">
+          <div className="hidden shrink-0 items-center gap-3 md:flex lg:gap-4">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-3 py-2 text-[13px] font-semibold lg:py-2.5 lg:text-sm lg:px-5 text-gold-foreground shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-semibold text-gold-foreground shadow-md transition-all hover:scale-105 hover:shadow-lg sm:px-5 sm:py-2.5 sm:text-sm"
             >
-              {c.ui.requestQuote} <ArrowRight className="h-4 w-4" />
+              {c.ui.requestQuote} <ArrowRight className="h-3.5 w-3.5" />
             </a>
             <LanguageSwitcher compact={scrolled} />
           </div>
 
-          <div className="ml-auto flex items-center gap-3 md:hidden">
+          <div className="ml-auto flex items-center gap-2.5 md:hidden">
             <LanguageSwitcher compact={scrolled} />
             <button
               aria-label={c.ui.toggleMenu}
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`${scrolled ? "text-foreground" : "text-white"}`}
+              className={`rounded-lg p-1.5 ${scrolled ? "text-foreground" : "text-white"}`}
             >
               {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -282,7 +281,7 @@ function Index() {
         </div>
 
         {menuOpen && (
-          <div className="glass border-t border-white/20 lg:hidden">
+          <div className="glass border-t border-white/20 md:hidden">
             <nav className="flex flex-col gap-1 p-6">
               {nav.map((n) => (
                 <a
@@ -299,7 +298,7 @@ function Index() {
                 onClick={() => setMenuOpen(false)}
                 className="rounded-lg px-4 py-3 text-foreground transition-colors hover:bg-fresh/10"
               >
-                {lang === "ar" ? "أخبارنا" : "Our News"}
+                {c.ui.ourNews || "Our News"}
               </Link>
               <a
                 href="#contact"
@@ -319,16 +318,16 @@ function Index() {
           data-hero-background
           suppressHydrationWarning
           src={heroBg}
-          alt="Nailvlora import and export: farm fields, cargo ship and fresh produce"
+          alt={`${site.companyName || c.brand} import and export: farm fields, cargo ship and fresh produce`}
           width={1920}
           height={1920}
           className="absolute inset-0 h-full w-full object-cover object-center md:object-top"
         />
 
-        <div className="absolute inset-0 gradient-hero" />
-        <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-black/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
-        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20 lg:grid-cols-12 lg:px-10">
+        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-36 pb-20 sm:px-6 sm:pt-40 sm:pb-24 lg:grid-cols-12 lg:px-10 lg:pt-44">
           <div className="max-w-3xl animate-fade-up lg:col-span-7">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full glass-dark px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-white sm:mb-6 sm:px-4 sm:py-2">
               <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
@@ -378,76 +377,41 @@ function Index() {
 
       {/* About */}
       <section id="about" className="relative overflow-hidden py-24 lg:py-32">
-        <SectionLeafBg />
+        <SectionLeafBg opacity="opacity-[0.32] sm:opacity-[0.38]" />
         <SectionWave />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-5">
-
-              <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-                <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}
-              </div>
-              <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
-              </h2>
-              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-                {c.ui.aboutP1}
-              </p>
-              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                {c.ui.aboutP2}
-              </p>
-
-              <div className="mt-10 grid grid-cols-2 gap-4">
-                {c.stats.map((s) => (
-                  <div
-                    key={s.l}
-                    className="rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1 hover:border-fresh/50"
-                  >
-                    <div className="font-display text-3xl font-bold text-primary">{s.n}</div>
-                    <div className="mt-1 text-sm text-muted-foreground">{s.l}</div>
-                  </div>
-                ))}
-              </div>
+        <div className="relative z-10 mx-auto max-w-5xl px-6 text-center lg:px-10">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-3">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
+              <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
+              <span className="h-px w-8 bg-fresh" />
             </div>
+            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+              {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
+            </h2>
+            <PharaonicDivider className="my-2" />
+          </div>
 
-            <div className="relative lg:col-span-7 lg:-mr-6 xl:-mr-16">
-              <div className="absolute -inset-4 rounded-3xl gradient-primary opacity-20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-3xl shadow-[var(--shadow-soft)]">
-                {sectionImages.about ? (
-                  <img
-                    src={sectionImages.about}
-                    alt="About Nailvlora"
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                ) : aboutVideo ? (
-                  <video
-                    key={aboutVideo}
-                    src={aboutVideo}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    controls
-                    controlsList="nodownload"
-                    preload="metadata"
-                    poster={farm}
-                    aria-label="About Nailvlora"
-                    className="aspect-video h-full w-full bg-black object-cover"
-                  />
+          <div className="mt-10 rounded-3xl border border-gold/40 bg-card/90 p-8 shadow-[var(--shadow-soft)] backdrop-blur-md sm:p-12">
+            <p className="text-lg leading-relaxed text-foreground sm:text-xl font-medium">
+              {c.ui.aboutP1}
+            </p>
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {c.ui.aboutP2}
+            </p>
 
-                ) : (
-                  <img
-                    src={farm}
-                    alt="Vast farm fields"
-                    loading="lazy"
-                    width={1200}
-                    height={900}
-                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                )}
-              </div>
+            <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+              {c.stats.map((s) => (
+                <div
+                  key={s.l}
+                  className="rounded-2xl border border-gold/30 bg-cream/70 p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-md"
+                >
+                  <div className="font-display text-3xl font-bold sm:text-4xl">
+                    <span className="text-gradient-gold font-extrabold">{s.n}</span>
+                  </div>
+                  <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:text-sm">{s.l}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -847,17 +811,20 @@ function Index() {
       >
         {!sectionImages.contact && <SectionLeafBg />}
         <SectionWave />
+        {sectionImages.contact && (
+          <div className="absolute inset-0 bg-stone-900/10 backdrop-blur-[1px] pointer-events-none" />
+        )}
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-5 lg:items-start">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 rounded-3xl border border-gold/30 bg-white/95 backdrop-blur-xl p-8 shadow-2xl lg:p-10">
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.contactEyebrow}
               </div>
               <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl">
                 {c.ui.contactTitle1} <span className="text-gradient-gold">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
               </h2>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-4 text-stone-700 font-normal leading-relaxed">
                 {c.ui.contactSub}
               </p>
 
@@ -866,10 +833,10 @@ function Index() {
                   const CIcon = contactIcons[ci];
                   return (
                   <div key={label} className="flex items-center gap-4" dir="ltr">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md">
                       <CIcon className="h-5 w-5" />
                     </div>
-                    <div className="min-w-0 text-foreground">{label}</div>
+                    <div className="min-w-0 font-medium text-stone-900 break-words">{label}</div>
                   </div>
                   );
                 })}
@@ -894,7 +861,7 @@ function Index() {
                 setFormMsg({ type: "success", text: c.ui.okSent });
                 e.currentTarget.reset();
               }}
-              className="lg:col-span-3 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-soft)] lg:p-10"
+              className="lg:col-span-3 rounded-3xl border border-gold/40 bg-white/95 backdrop-blur-xl p-8 shadow-2xl lg:p-10"
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label={c.ui.fName} type="text" name="name" />
@@ -905,13 +872,13 @@ function Index() {
                 <Field label={c.ui.fProduct} type="text" name="product" />
               </div>
               <div className="mt-5">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950">
                   {c.ui.fMessage}
                 </label>
                 <textarea
                   name="message"
                   rows={5}
-                  className="w-full resize-none rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-all focus:border-fresh focus:ring-2 focus:ring-fresh/20"
+                  className="w-full resize-none rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 font-medium placeholder:text-stone-400 outline-none transition-all focus:border-fresh focus:bg-white focus:ring-4 focus:ring-fresh/20 shadow-sm"
                   placeholder={c.ui.fMessagePlaceholder}
                 />
               </div>
@@ -925,7 +892,7 @@ function Index() {
                 <button
                   type="button"
                   onClick={() => setFormMsg({ type: "success", text: c.ui.okQuote })}
-                  className="inline-flex items-center gap-2 rounded-full border border-gold bg-gold/10 px-7 py-3.5 font-semibold text-primary transition-all hover:bg-gold hover:text-gold-foreground"
+                  className="inline-flex items-center gap-2 rounded-full border-2 border-gold/70 bg-white/90 px-7 py-3.5 font-bold text-primary shadow-sm transition-all hover:bg-gold hover:text-stone-900"
                 >
                   {c.ui.requestQuotation}
                 </button>
@@ -969,19 +936,21 @@ function Index() {
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <div className="flex items-center gap-3">
-                <div className="grid h-16 w-16 place-items-center overflow-hidden rounded-2xl bg-gold text-gold-foreground">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gold/50 bg-white p-1.5 shadow-xl sm:h-24 sm:w-24">
                   <img
-                    src={logo ?? BLANK_PIXEL}
-                    alt="Nailvlora Import and Export logo"
-                    className="h-full w-full scale-[1.5] object-contain p-0"
+                    src={logo || "/logo.png"}
+                    alt={`${site.companyName || c.brand} logo`}
+                    className="h-full w-full object-contain"
                     suppressHydrationWarning
                   />
                 </div>
 
 
                 <div>
-                  <div className="font-display text-xl font-bold">{site.companyName || c.brand}</div>
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/60">
+                  <div className="font-display text-2xl font-bold">
+                    <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+                  </div>
+                  <div className="text-[10px] uppercase tracking-[0.2em] text-primary-foreground/75">
                     {c.brandSub}
                   </div>
                 </div>
@@ -1094,13 +1063,13 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+      <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950">
         {label}
       </label>
       <input
         type={type}
         name={name}
-        className="w-full rounded-xl border border-input bg-background px-4 py-3 text-foreground outline-none transition-all focus:border-fresh focus:ring-2 focus:ring-fresh/20"
+        className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 font-medium placeholder:text-stone-400 outline-none transition-all focus:border-fresh focus:bg-white focus:ring-4 focus:ring-fresh/20 shadow-sm"
       />
     </div>
   );

@@ -21,7 +21,7 @@ export function SplashScreen() {
   const [showSkip, setShowSkip] = useState(false);
   const [logo, setLogo] = useState<string | null>(() => getCachedLogoUrl());
   const [bg, setBg] = useState("#ffffff");
-  const [brand, setBrand] = useState("Nailvlora Import and Export");
+  const [brand, setBrand] = useState("BucharestEgyAgro Import and Export");
 
   // Sample the logo's own corner pixel so the splash background matches it exactly.
   function syncBackground(img: HTMLImageElement) {

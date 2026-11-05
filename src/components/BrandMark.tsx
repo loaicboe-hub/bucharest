@@ -41,7 +41,7 @@ export function BrandMark({
   className,
   markClassName,
   showName = true,
-  name = "Nailvlora",
+  name = "BucharestEgyAgro",
 }: {
   className?: string;
   /** Size / style overrides for the circular logo frame (e.g. "h-24 w-24"). */
@@ -55,7 +55,7 @@ export function BrandMark({
     <span className={cn("flex items-center gap-3", className)}>
       <span
         className={cn(
-          "flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white shadow-md ring-1 ring-border/60",
+          "flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-md border border-gold/40 p-1",
           markClassName,
         )}
       >
@@ -64,11 +64,13 @@ export function BrandMark({
           src={logo ?? BLANK_PIXEL}
           alt={`${name} logo`}
           suppressHydrationWarning
-          className="h-full w-full scale-[1.5] object-contain"
+          className="h-full w-full object-contain"
         />
       </span>
       {showName && (
-        <span className="font-display text-xl font-bold leading-tight text-primary">{name}</span>
+        <span className="font-display text-xl font-bold leading-tight">
+          <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+        </span>
       )}
     </span>
   );

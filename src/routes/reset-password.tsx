@@ -15,16 +15,16 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
   head: () => ({
     meta: [
-      { title: "Reset your password | Nailvlora" },
+      { title: "Reset your password | BucharestEgyAgro" },
       {
         name: "description",
-        content: "Choose a new password for your Nailvlora admin account.",
+        content: "Choose a new password for your BucharestEgyAgro admin account.",
       },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Reset your password | Nailvlora" },
+      { property: "og:title", content: "Reset your password | BucharestEgyAgro" },
       {
         property: "og:description",
-        content: "Choose a new password for your Nailvlora admin account.",
+        content: "Choose a new password for your BucharestEgyAgro admin account.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

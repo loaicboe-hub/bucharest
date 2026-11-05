@@ -314,7 +314,7 @@ function NewsAdminPage() {
               <Tabs defaultValue="en">
                 <TabsList>
                   <TabsTrigger value="en">English</TabsTrigger>
-                  <TabsTrigger value="ar">العربية</TabsTrigger>
+                  <TabsTrigger value="ar">Français</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="en" className="space-y-4 pt-4">
@@ -342,16 +342,16 @@ function NewsAdminPage() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="ar" className="space-y-4 pt-4" dir="rtl">
+                <TabsContent value="ar" className="space-y-4 pt-4">
                   <div className="space-y-2">
-                    <Label>العنوان</Label>
+                    <Label>Titre (Français)</Label>
                     <Input
                       value={editing.title_ar}
                       onChange={(e) => setEditing({ ...editing, title_ar: e.target.value })}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>وصف مختصر</Label>
+                    <Label>Description courte</Label>
                     <Textarea
                       rows={2}
                       value={editing.excerpt_ar}
@@ -359,9 +359,8 @@ function NewsAdminPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>المقال الكامل</Label>
+                    <Label>Article complet</Label>
                     <RichTextEditor
-                      dir="rtl"
                       value={editing.content_ar}
                       onChange={(html) => setEditing({ ...editing, content_ar: html })}
                     />
@@ -371,7 +370,7 @@ function NewsAdminPage() {
 
               <div className="flex items-center justify-between rounded-md border border-input p-3">
                 <div>
-                  <Label>{ar ? "منشور" : "Published"}</Label>
+                  <Label>Published</Label>
                   <p className="text-xs text-muted-foreground">
                     {ar ? "أظهر هذا الخبر على الموقع" : "Show this article on the website"}
                   </p>

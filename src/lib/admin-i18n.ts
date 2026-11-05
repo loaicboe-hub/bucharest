@@ -1,8 +1,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
-export type AdminLang = "en" | "ar";
+export type AdminLang = "en" | "fr";
 
-const KEY = "fd_admin_lang";
+const KEY = "app_admin_lang";
 
 let current: AdminLang = "en";
 let initialized = false;
@@ -14,7 +14,7 @@ function emit() {
 
 function read(): AdminLang {
   try {
-    return window.localStorage.getItem(KEY) === "ar" ? "ar" : "en";
+    return window.localStorage.getItem(KEY) === "fr" ? "fr" : "en";
   } catch {
     return "en";
   }
@@ -48,7 +48,7 @@ export const adminDict = {
     viewSite: "Go to Home Page",
     language: "Language",
     english: "English",
-    arabic: "العربية",
+    french: "Français",
 
     "nav.dashboard": "Dashboard",
     "nav.quote-requests": "Quote Requests",
@@ -107,72 +107,72 @@ export const adminDict = {
     "seo.desc": "Search engine and social sharing metadata",
     "settings.desc": "Company details, contact info and social links",
   },
-  ar: {
-    adminPanel: "لوحة التحكم",
-    signedInAs: "تم تسجيل الدخول باسم",
-    management: "الإدارة",
-    logout: "تسجيل الخروج",
-    viewSite: "الذهاب إلى الصفحة الرئيسية",
-    language: "اللغة",
+  fr: {
+    adminPanel: "Panneau d'Administration",
+    signedInAs: "Connecté en tant que",
+    management: "Gestion",
+    logout: "Déconnexion",
+    viewSite: "Aller au Site Public",
+    language: "Langue",
     english: "English",
-    arabic: "العربية",
+    french: "Français",
 
-    "nav.dashboard": "لوحة المعلومات",
-    "nav.quote-requests": "طلبات عروض الأسعار",
-    "nav.contact-requests": "طلبات التواصل",
-    "nav.products": "المنتجات",
-    "nav.invoices": "الفواتير والمدفوعات",
-    "nav.markets": "الأسواق",
-    "nav.partners": "الشركاء",
-    "nav.categories": "التصنيفات",
-    "nav.about-video": "فيديو من نحن",
-    "aboutVideo.desc": "رفع أو استبدال أو حذف الفيديو الظاهر في قسم من نحن على الصفحة الرئيسية",
-    "aboutVideo.current": "الفيديو الحالي",
-    "aboutVideo.empty": "لا يوجد فيديو مرفوع — يظهر قسم من نحن بالصورة الافتراضية.",
-    "aboutVideo.upload": "رفع فيديو",
-    "aboutVideo.replace": "استبدال الفيديو",
-    "aboutVideo.delete": "حذف الفيديو",
-    "aboutVideo.uploaded": "تم رفع الفيديو",
-    "aboutVideo.deleted": "تم حذف الفيديو",
-    "aboutVideo.hint": "MP4 أو WebM بحد أقصى 50 ميجابايت. يعمل تلقائياً وبدون صوت وبشكل متكرر على جميع الأجهزة.",
-    "nav.news": "إدارة الأخبار",
-    "news.desc": "إنشاء وتحرير ونشر أخبار الشركة الظاهرة في صفحة أخبارنا",
-    "nav.content": "محتوى الموقع",
-    "nav.media": "مكتبة الوسائط",
-    "nav.branding": "الشعار والهوية",
-    "nav.seo": "إعدادات SEO",
-    "nav.settings": "الإعدادات العامة",
-    "nav.users": "المستخدمون والصلاحيات",
+    "nav.dashboard": "Tableau de Bord",
+    "nav.quote-requests": "Demandes de Devis",
+    "nav.contact-requests": "Demandes de Contact",
+    "nav.products": "Produits",
+    "nav.invoices": "Factures & Règlements",
+    "nav.markets": "Marchés",
+    "nav.partners": "Partenaires",
+    "nav.categories": "Catégories",
+    "nav.about-video": "Vidéo À Propos",
+    "aboutVideo.desc": "Téléchargez, remplacez ou supprimez la vidéo affichée dans la section À Propos",
+    "aboutVideo.current": "Vidéo actuelle",
+    "aboutVideo.empty": "Aucune vidéo — l'image par défaut est affichée.",
+    "aboutVideo.upload": "Télécharger une vidéo",
+    "aboutVideo.replace": "Remplacer la vidéo",
+    "aboutVideo.delete": "Supprimer la vidéo",
+    "aboutVideo.uploaded": "Vidéo téléchargée avec succès",
+    "aboutVideo.deleted": "Vidéo supprimée",
+    "aboutVideo.hint": "MP4 ou WebM, jusqu'à 50 Mo. Lecture muette en boucle sur tous les appareils.",
+    "nav.news": "Gestion des Actualités",
+    "news.desc": "Créez, modifiez et publiez les articles d'actualité de l'entreprise",
+    "nav.content": "Contenu du Site",
+    "nav.media": "Médiathèque",
+    "nav.branding": "Logo & Image de Marque",
+    "nav.seo": "Paramètres SEO",
+    "nav.settings": "Paramètres Généraux",
+    "nav.users": "Utilisateurs & Permissions",
 
-    "users.desc": "إنشاء مستخدمي لوحة التحكم والتحكم في صلاحيات العرض والإضافة والتعديل والحذف",
-    "users.add": "إضافة مستخدم",
-    "users.permissions": "الصلاحيات",
-    "users.superAdmin": "مدير عام",
-    "users.saved": "تم تحديث الصلاحيات",
+    "users.desc": "Gérer les administrateurs et configurer leurs droits d'accès",
+    "users.add": "Ajouter un Utilisateur",
+    "users.permissions": "Permissions",
+    "users.superAdmin": "Super Administrateur",
+    "users.saved": "Permissions mises à jour",
 
-    "dashboard.desc": "نظرة عامة على أداء موقعك ونشاطه",
-    "dashboard.totalProducts": "إجمالي المنتجات",
-    "dashboard.contactRequests": "طلبات التواصل",
-    "dashboard.quoteRequests": "طلبات عروض الأسعار",
-    "dashboard.activeMarkets": "الأسواق النشطة",
-    "dashboard.recentActivity": "النشاط الأخير",
-    "dashboard.latestContacts": "أحدث جهات الاتصال",
+    "dashboard.desc": "Aperçu des performances et des activités récentes de votre site",
+    "dashboard.totalProducts": "Total Produits",
+    "dashboard.contactRequests": "Demandes de Contact",
+    "dashboard.quoteRequests": "Demandes de Devis",
+    "dashboard.activeMarkets": "Marchés Actifs",
+    "dashboard.recentActivity": "Activité Récente",
+    "dashboard.latestContacts": "Derniers Contacts",
 
-    "quote-requests.desc": "طلبات الأسعار والكميات",
-    "contact-requests.desc": "الرسائل المرسلة عبر نموذج التواصل في الموقع",
-    "products.desc": "إدارة كتالوج المنتجات وترتيب العرض",
-    "products.add": "إضافة منتج",
-    "categories.title": "تصنيفات المنتجات",
-    "categories.desc": "إضافة وتعديل وترتيب وتفعيل تصنيفات المنتجات",
-    "categories.add": "إضافة تصنيف",
-    "invoices.desc": "إنشاء وإدارة الفواتير التجارية الاحترافية للمشترين الدوليين.",
-    "markets.desc": "الدول والمناطق التي تصدّر إليها شركتك",
-    "partners.desc": "إدارة شعارات الشركاء الظاهرة في قسم شركاؤنا على الصفحة الرئيسية",
-    "content.desc": "تحرير النصوص والصور وأزرار الدعوة في موقعك العام",
-    "media.desc": "رفع وإدارة الصور المستخدمة في موقعك",
-    "branding.desc": "ارفع شعار الشركة المستخدم في رأس الموقع والتذييل وملفات الفواتير",
-    "seo.desc": "بيانات محركات البحث والمشاركة على وسائل التواصل",
-    "settings.desc": "بيانات الشركة ومعلومات التواصل وروابط التواصل الاجتماعي",
+    "quote-requests.desc": "Demandes de cotations et de volumes reçues",
+    "contact-requests.desc": "Messages envoyés via le formulaire de contact",
+    "products.desc": "Gérez votre catalogue de produits et leur ordre d'affichage",
+    "products.add": "Ajouter un Produit",
+    "categories.title": "Catégories de Produits",
+    "categories.desc": "Ajouter, renommer, réordonner et activer les catégories",
+    "categories.add": "Ajouter une Catégorie",
+    "invoices.desc": "Créez et gérez des factures commerciales professionnelles pour vos clients.",
+    "markets.desc": "Pays et régions vers lesquels vous exportez",
+    "partners.desc": "Gérez les logos des partenaires affichés sur la page d'accueil",
+    "content.desc": "Modifiez les textes, images et boutons de votre site public",
+    "media.desc": "Téléchargez et organisez vos images",
+    "branding.desc": "Logo de l'entreprise utilisé sur le site et dans les factures PDF",
+    "seo.desc": "Métadonnées pour les moteurs de recherche et réseaux sociaux",
+    "settings.desc": "Coordonnées de l'entreprise et réseaux sociaux",
   },
 } as const;
 
@@ -184,6 +184,6 @@ export function useAdminLang() {
     () => current,
     () => "en" as AdminLang,
   );
-  const t = useCallback((key: AdminKey) => adminDict[lang][key] ?? adminDict.en[key], [lang]);
-  return { lang, t, setLang: setAdminLang, dir: lang === "ar" ? ("rtl" as const) : ("ltr" as const) };
+  const t = useCallback((key: AdminKey) => adminDict[lang]?.[key] ?? adminDict.en[key], [lang]);
+  return { lang, t, setLang: setAdminLang, dir: "ltr" as const };
 }

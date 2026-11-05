@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
+import { SectionLeafBg } from "@/components/SectionLeafBg";
+import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
@@ -26,12 +28,12 @@ export const Route = createFileRoute("/products/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Product Not Found | Nailvlora Import and Export" },
+          { title: "Product Not Found | BucharestEgyAgro Import and Export" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
-    const title = `${loaderData.name} Export from Egypt | Nailvlora Import and Export`;
+    const title = `${loaderData.name} Export from Egypt | BucharestEgyAgro Import and Export`;
     const description = `${loaderData.intro} Premium Egyptian ${loaderData.name.toLowerCase()} for international buyers — specifications, packaging, sizes and shipping terms.`;
     return {
       meta: [
@@ -147,15 +149,18 @@ function ProductDetail() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
           <Link to="/" className="flex items-center gap-3.5">
-            <div className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl gradient-primary shadow-[var(--shadow-glow)] sm:h-16 sm:w-16">
-              {logo ? (
-                <img data-brand-logo src={logo} alt={c.brand} className="h-full w-full scale-[1.5] object-contain p-0" />
-              ) : (
-                <ShieldCheck className="h-6 w-6 text-white" />
-              )}
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gold/50 bg-white p-1 shadow-lg sm:h-16 sm:w-16">
+              <img
+                data-brand-logo
+                src={logo || "/logo.png"}
+                alt={c.brand}
+                className="h-full w-full object-contain"
+              />
             </div>
             <div className="leading-tight">
-              <div className="font-display text-xl font-bold leading-none text-primary sm:text-2xl lg:text-3xl">{c.brand}</div>
+              <div className="font-display text-xl font-bold leading-none sm:text-2xl lg:text-3xl">
+                <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+              </div>
               <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{c.brandSub}</div>
             </div>
           </Link>
@@ -189,7 +194,8 @@ function ProductDetail() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-cream py-14 lg:py-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-2 lg:px-10">
+        <SectionLeafBg opacity="opacity-[0.08]" />
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-2 lg:px-10">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               <ShieldCheck className="h-3.5 w-3.5 text-gold" /> {t.premium}

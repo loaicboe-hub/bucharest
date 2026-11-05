@@ -1,16 +1,27 @@
-import leafBg from "@/assets/leaf-bg.jpg.asset.json";
+import pharaonicBg from "@/assets/pharaonic-bg.jpg";
 
-/** Soft dewy-leaf photo backdrop used across the main content sections.
- *  Uses a fixed background so the image stays subtle, scales cleanly and
- *  does not stretch or repeat as each section scrolls into view. */
-export function SectionLeafBg({ className = "" }: { className?: string }) {
+/** Colorful Ancient Egyptian Agricultural & Temple Mural Backdrop.
+ *  Clearly displays vivid green date palms, ripe red pomegranates, purple grapes,
+ *  turquoise-blue Nile waters, papyrus reeds, and grand painted temple columns. */
+export function SectionLeafBg({
+  className = "",
+  opacity = "opacity-[0.40] sm:opacity-[0.48]",
+}: {
+  className?: string;
+  opacity?: string;
+}) {
   return (
     <div
       aria-hidden
-      className={`section-leaf-bg pointer-events-none absolute inset-0 ${className}`}
-      style={{ backgroundImage: `url(${leafBg.url})` }}
+      className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
     >
-      <div className="absolute inset-0 bg-background/85" />
+      <div
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300 ${opacity}`}
+        style={{
+          backgroundImage: `url(${pharaonicBg})`,
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/40" />
     </div>
   );
 }

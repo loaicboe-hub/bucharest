@@ -92,7 +92,7 @@ function CategoriesPage() {
               <TableRow>
                 <TableHead className="w-16">Order</TableHead>
                 <TableHead>English name</TableHead>
-                <TableHead>Arabic name</TableHead>
+                <TableHead>French name</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Slug</TableHead>
                 <TableHead>Visible</TableHead>
@@ -116,7 +116,7 @@ function CategoriesPage() {
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">{c.name_en}</TableCell>
-                  <TableCell dir="rtl">{c.name_ar}</TableCell>
+                  <TableCell>{c.name_ar}</TableCell>
                   <TableCell className="text-sm">
                     {c.trade === "import" ? "Import Products" : "Export Products"}
                   </TableCell>
@@ -145,8 +145,8 @@ function CategoriesPage() {
                 <Input value={draft.name_en} onChange={(e) => setDraft({ ...draft, name_en: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Arabic name</Label>
-                <Input dir="rtl" value={draft.name_ar} onChange={(e) => setDraft({ ...draft, name_ar: e.target.value })} />
+                <Label>French name</Label>
+                <Input value={draft.name_ar} onChange={(e) => setDraft({ ...draft, name_ar: e.target.value })} />
               </div>
               <div className="space-y-2">
                 <Label>Type</Label>

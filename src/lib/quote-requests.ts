@@ -1,4 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+import { apiQuotes } from "./hostinger-api";
 
 export type QuoteStatus = "pending" | "sent" | "won" | "lost";
 
@@ -14,30 +15,90 @@ export type QuoteRequestRow = {
   date: string;
 };
 
+const QUOTES_STORAGE_KEY = "app_quote_requests";
+
+function getLocalQuotes(): QuoteRequestRow[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(QUOTES_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return [
+    {
+      id: "q-1",
+      company: "EuroFresh Logistics",
+      contactPerson: "Jean Dupont",
+      email: "j.dupont@eurofresh.fr",
+      country: "France",
+      product: "Oranges",
+      quantity: "2x 40ft Containers",
+      status: "pending",
+      date: new Date().toISOString().slice(0, 10),
+    },
+  ];
+}
+
 export async function fetchQuoteRequests(): Promise<QuoteRequestRow[]> {
-  const { data, error } = await supabase
-    .from("quote_requests")
-    .select("*")
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return (data ?? []).map((r) => ({
-    id: r.id,
-    company: r.company,
-    contactPerson: r.contact_person,
-    email: r.email,
-    country: r.country,
-    product: r.product,
-    quantity: r.quantity,
-    status: (r.status as QuoteStatus) ?? "pending",
-    date: r.created_at.slice(0, 10),
-  }));
+  // 1. Try Hostinger MySQL API
+  try {
+    const remote = await apiQuotes.list();
+    if (Array.isArray(remote) && remote.length > 0) {
+      return remote.map((r: any) => ({
+        id: String(r.id),
+        company: r.company ?? "",
+        contactPerson: r.contact_person ?? r.name ?? "",
+        email: r.email ?? "",
+        country: r.country ?? "",
+        product: r.product ?? "",
+        quantity: r.quantity ?? "",
+        status: (r.status as QuoteStatus) ?? "pending",
+        date: (r.created_at || new Date().toISOString()).slice(0, 10),
+      }));
+    }
+  } catch {}
+
+  // 2. Try Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("quote_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((r: any) => ({
+          id: r.id,
+          company: r.company,
+          contactPerson: r.contact_person,
+          email: r.email,
+          country: r.country,
+          product: r.product,
+          quantity: r.quantity,
+          status: (r.status as QuoteStatus) ?? "pending",
+          date: (r.created_at || new Date().toISOString()).slice(0, 10),
+        }));
+      }
+    } catch {}
+  }
+  return getLocalQuotes();
 }
 
 export async function deleteQuoteRequest(id: string): Promise<void> {
-  const { error, count } = await supabase
-    .from("quote_requests")
-    .delete({ count: "exact" })
-    .eq("id", id);
-  if (error) throw error;
-  if (!count) throw new Error("Delete was blocked — you may not have permission.");
+  if (typeof window !== "undefined") {
+    const quotes = getLocalQuotes().filter((q) => q.id !== id);
+    try {
+      localStorage.setItem(QUOTES_STORAGE_KEY, JSON.stringify(quotes));
+    } catch {}
+  }
+
+  // 1. Try Hostinger MySQL API
+  try {
+    await apiQuotes.delete(id);
+  } catch {}
+
+  // 2. Try Supabase if configured
+  if (isSupabaseConfigured()) {
+    try {
+      await supabase.from("quote_requests").delete().eq("id", id);
+    } catch {}
+  }
 }

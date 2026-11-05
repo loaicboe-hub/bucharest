@@ -177,23 +177,24 @@ export function ProductDialog({
         <Tabs defaultValue="en" className="mt-2">
           <TabsList>
             <TabsTrigger value="en">English</TabsTrigger>
-            <TabsTrigger value="ar">العربية</TabsTrigger>
+            <TabsTrigger value="fr">Français</TabsTrigger>
           </TabsList>
-          {(["en", "ar"] as const).map((lang) => {
-            const f = localeFields(lang);
+          {(["en", "fr"] as const).map((lang) => {
+            const f = localeFields(lang === "fr" ? "ar" : "en");
+            const dbKey = lang === "fr" ? "ar" : "en";
             return (
-              <TabsContent key={lang} value={lang} className="space-y-4 pt-4" dir={lang === "ar" ? "rtl" : "ltr"}>
+              <TabsContent key={lang} value={lang} className="space-y-4 pt-4" dir="ltr">
                 <div className="space-y-2">
-                  <Label>Name</Label>
-                  <Input value={f.name} onChange={(e) => setDraft({ ...draft, [`name_${lang}`]: e.target.value })} />
+                  <Label>{lang === "fr" ? "Nom (Français)" : "Name (English)"}</Label>
+                  <Input value={f.name} onChange={(e) => setDraft({ ...draft, [`name_${dbKey}`]: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Short intro</Label>
-                  <Textarea rows={2} value={f.intro} onChange={(e) => setDraft({ ...draft, [`intro_${lang}`]: e.target.value })} />
+                  <Label>{lang === "fr" ? "Brève introduction" : "Short intro"}</Label>
+                  <Textarea rows={2} value={f.intro} onChange={(e) => setDraft({ ...draft, [`intro_${dbKey}`]: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Description</Label>
-                  <Textarea rows={4} value={f.description} onChange={(e) => setDraft({ ...draft, [`description_${lang}`]: e.target.value })} />
+                  <Label>{lang === "fr" ? "Description complète" : "Description"}</Label>
+                  <Textarea rows={4} value={f.description} onChange={(e) => setDraft({ ...draft, [`description_${dbKey}`]: e.target.value })} />
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {SPEC_KEYS.map((key) => {
@@ -204,15 +205,15 @@ export function ProductDialog({
                           <Label className="text-xs">{SPEC_LABELS[lang][key]}</Label>
                           <div className="flex items-center gap-2">
                             <span className="text-[11px] text-muted-foreground">
-                              {hidden ? (lang === "ar" ? "مخفي" : "Hidden") : lang === "ar" ? "ظاهر" : "Shown"}
+                              {hidden ? (lang === "fr" ? "Masqué" : "Hidden") : lang === "fr" ? "Visible" : "Shown"}
                             </span>
                             <Switch checked={!hidden} onCheckedChange={() => toggleSpecVisible(key)} />
                           </div>
                         </div>
                         <Input
-                          value={specs(lang)[key]}
+                          value={specs(dbKey)[key]}
                           disabled={hidden}
-                          onChange={(e) => setSpec(lang, key, e.target.value)}
+                          onChange={(e) => setSpec(dbKey, key, e.target.value)}
                         />
                       </div>
                     );

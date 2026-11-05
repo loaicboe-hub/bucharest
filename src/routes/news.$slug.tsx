@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
+import { SectionLeafBg } from "@/components/SectionLeafBg";
 import { BrandMark } from "@/components/BrandMark";
 import { useEffect, useState } from "react";
 import {
@@ -27,15 +28,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/news/$slug")({
   head: () => ({
     meta: [
-      { title: "News Article | Nailvlora Import and Export" },
+      { title: "News Article | BucharestEgyAgro Import and Export" },
       {
         name: "description",
-        content: "Read the latest company news and market updates from Nailvlora Import and Export.",
+        content: "Read the latest company news and market updates from BucharestEgyAgro Import and Export.",
       },
-      { property: "og:title", content: "News Article | Nailvlora Import and Export" },
+      { property: "og:title", content: "News Article | BucharestEgyAgro Import and Export" },
       {
         property: "og:description",
-        content: "Read the latest company news and market updates from Nailvlora Import and Export.",
+        content: "Read the latest company news and market updates from BucharestEgyAgro Import and Export.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -56,16 +57,16 @@ const UI = {
     copied: "Link copied",
     readMore: "Read More",
   },
-  ar: {
-    back: "العودة إلى الأخبار",
-    published: "تاريخ النشر",
-    updated: "آخر تحديث",
-    share: "مشاركة",
-    related: "أخبار ذات صلة",
-    gallery: "معرض الصور",
-    notFound: "المقال غير موجود",
-    copied: "تم نسخ الرابط",
-    readMore: "اقرأ المزيد",
+  fr: {
+    back: "Retour aux Actualités",
+    published: "Publié le",
+    updated: "Mis à jour le",
+    share: "Partager",
+    related: "Articles Similaires",
+    gallery: "Galerie Photos",
+    notFound: "Article non trouvé",
+    copied: "Lien copié !",
+    readMore: "Lire la suite",
   },
 } as const;
 
@@ -100,11 +101,11 @@ function NewsDetail() {
     };
   }, [slug]);
 
-  const title = article ? (lang === "ar" && article.title_ar) || article.title : "";
-  const content = article ? (lang === "ar" && article.content_ar) || article.content : "";
+  const title = article ? (lang === "fr" && article.title_ar) || article.title : "";
+  const content = article ? (lang === "fr" && article.content_ar) || article.content : "";
 
   useEffect(() => {
-    if (title) document.title = `${title} | Nailvlora Import and Export`;
+    if (title) document.title = `${title} | BucharestEgyAgro Import and Export`;
   }, [title]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -139,7 +140,7 @@ function NewsDetail() {
     <div className="min-h-screen bg-background" dir={dir}>
       <header className="border-b border-border bg-cream">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" aria-label="Nailvlora home">
+          <Link to="/" aria-label="BucharestEgyAgro home">
             <BrandMark />
           </Link>
           <Link to="/news" className="text-sm font-semibold text-fresh hover:underline">
@@ -151,7 +152,9 @@ function NewsDetail() {
         <SectionWave />
       </div>
 
-      <article className="mx-auto max-w-4xl px-6 py-12 lg:px-10 lg:py-16">
+      <div className="relative overflow-hidden">
+        <SectionLeafBg opacity="opacity-[0.06]" />
+        <article className="relative z-10 mx-auto max-w-4xl px-6 py-12 lg:px-10 lg:py-16">
         {article.category && (
           <span className="rounded-full bg-fresh/10 px-3 py-1 text-xs font-semibold text-fresh">
             {article.category}
@@ -270,6 +273,7 @@ function NewsDetail() {
           </button>
         </div>
       </article>
+    </div>
 
       {related.length > 0 && (
         <section className="border-t border-border bg-cream py-14">
@@ -277,7 +281,7 @@ function NewsDetail() {
             <h2 className="font-display text-2xl font-bold text-primary">{t.related}</h2>
             <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item) => {
-                const rTitle = (lang === "ar" && item.title_ar) || item.title;
+                const rTitle = (lang === "fr" && item.title_ar) || item.title;
                 return (
                   <article
                     key={item.id}

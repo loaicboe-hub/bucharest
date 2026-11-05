@@ -37,9 +37,9 @@ export const defaultFooterConfig: FooterConfig = {
     },
   ],
   social: {
-    facebook: "https://facebook.com/nailvlora",
-    instagram: "https://instagram.com/nailvlora",
-    linkedin: "https://linkedin.com/company/nailvlora",
+    facebook: "https://facebook.com/bucharestegyagro",
+    instagram: "https://instagram.com/bucharestegyagro",
+    linkedin: "https://linkedin.com/company/bucharestegyagro",
   },
 };
 
@@ -70,34 +70,34 @@ export function saveFooterConfig(cfg: FooterConfig) {
   window.localStorage.setItem(KEY, JSON.stringify(cfg));
 }
 
-/* ------------------------------ Arabic labels ----------------------------- */
+/* ------------------------------ French labels ----------------------------- */
 
-const AR_TEXT: Record<string, string> = {
+const FR_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "فواكه وخضروات طازجة فاخرة تُصدَّر إلى العالم منذ 2026. جودة معتمدة يمكنكم الاعتماد عليها.",
+    "Fruits et légumes frais de première qualité exportés dans le monde entier depuis 2026. Une qualité certifiée sur laquelle vous pouvez compter.",
   // column titles
-  Company: "الشركة",
-  Products: "المنتجات",
-  More: "المزيد",
+  Company: "Entreprise",
+  Products: "Produits",
+  More: "Plus",
   // links
-  About: "من نحن",
-  "Why Us": "لماذا نحن",
-  "Export Process": "مراحل التصدير",
-  "Global Markets": "الأسواق العالمية",
-  "Fresh Fruits": "فواكه طازجة",
-  Vegetables: "خضروات",
-  Seasonal: "منتجات موسمية",
-  Packaging: "التعبئة والتغليف",
-  Certifications: "الشهادات",
-  Contact: "تواصل معنا",
-  "Request Quote": "اطلب عرض سعر",
-  "Back to Top": "العودة إلى الأعلى",
+  About: "À Propos",
+  "Why Us": "Pourquoi Nous",
+  "Export Process": "Processus d'Exportation",
+  "Global Markets": "Marchés Mondiaux",
+  "Fresh Fruits": "Fruits Frais",
+  Vegetables: "Légumes Frais",
+  Seasonal: "Produits de Saison",
+  Packaging: "Conditionnement",
+  Certifications: "Certifications",
+  Contact: "Contact",
+  "Request Quote": "Demander un Devis",
+  "Back to Top": "Retour en haut",
 };
 
-export function localizeFooterConfig(cfg: FooterConfig, lang: "en" | "ar"): FooterConfig {
-  if (lang !== "ar") return cfg;
-  const t = (s: string) => AR_TEXT[s] ?? s;
+export function localizeFooterConfig(cfg: FooterConfig, lang: "en" | "fr"): FooterConfig {
+  if (lang !== "fr") return cfg;
+  const t = (s: string) => FR_TEXT[s] ?? s;
   return {
     ...cfg,
     tagline: t(cfg.tagline),

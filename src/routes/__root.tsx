@@ -7,11 +7,9 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
-import { SplashScreen } from "@/components/SplashScreen";
 
 function NotFoundComponent() {
   return (
@@ -38,9 +36,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -78,19 +73,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Nailvlora Import and Export | Premium Fresh Fruits & Vegetables Exporter" },
+      { title: "BucharestEgyAgro Import and Export | Premium Fresh Fruits & Vegetables Exporter" },
       {
         name: "description",
         content:
-          "Nailvlora Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Serving international markets with exceptional quality and reliable export services.",
+          "BucharestEgyAgro Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Serving international markets with exceptional quality and reliable export services.",
       },
       {
         name: "keywords",
         content:
-          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Premium Produce, Fresh Produce Export",
+          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Premium Produce, Fresh Produce Export, BucharestEgyAgro",
       },
-      { name: "author", content: "Nailvlora Import and Export" },
-      { property: "og:title", content: "Nailvlora Import and Export | Premium Fresh Produce Exporter" },
+      { name: "author", content: "BucharestEgyAgro Import and Export" },
+      { property: "og:title", content: "BucharestEgyAgro Import and Export | Premium Fresh Produce Exporter" },
       {
         property: "og:description",
         content: "Premium fresh fruits & vegetables exported worldwide since 2026. Premium certified quality.",
@@ -122,23 +117,6 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        {/* Pre-hydration cover: paints white before any page content is visible. */}
-        <div
-          id="splash-cover"
-          suppressHydrationWarning
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "#ffffff",
-            zIndex: 300,
-          }}
-        />
-
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(sessionStorage.getItem('nv_splash_seen')==='1'){var c=document.getElementById('splash-cover');if(c)c.style.display='none';}var raw=localStorage.getItem('nv_logo_cache_v2');var cached=raw&&JSON.parse(raw);var logoSrc=cached&&cached.src;if(logoSrc){var fav=document.querySelector('link[rel~="icon"]');if(fav)fav.href=logoSrc;}var heroSrc=localStorage.getItem('nv_hero_image_cache_v1');var apply=function(root){if(root.nodeType!==1)return;var set=function(el,src){if(src&&el.src!==src)el.src=src;};if(root.matches){if(root.matches('[data-brand-logo]'))set(root,logoSrc);if(root.matches('[data-hero-background]'))set(root,heroSrc);}var logos=root.querySelectorAll?root.querySelectorAll('[data-brand-logo]'):[];for(var i=0;i<logos.length;i++)set(logos[i],logoSrc);var heroes=root.querySelectorAll?root.querySelectorAll('[data-hero-background]'):[];for(var j=0;j<heroes.length;j++)set(heroes[j],heroSrc);};if(logoSrc||heroSrc)new MutationObserver(function(records){for(var i=0;i<records.length;i++){if(records[i].type==='attributes')apply(records[i].target);for(var j=0;j<records[i].addedNodes.length;j++)apply(records[i].addedNodes[j]);}}).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});}catch(e){}setTimeout(function(){var c=document.getElementById('splash-cover');if(c)c.style.display='none';},8000);})();`,
-          }}
-        />
         {children}
         <Scripts />
       </body>
@@ -151,10 +129,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SplashScreen />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
   );
 }
-

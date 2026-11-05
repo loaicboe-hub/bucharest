@@ -1,5 +1,4 @@
 // Local-storage backed store for Commercial Invoices.
-// Replace with Lovable Cloud when backend integration begins.
 
 export type Incoterm = "EXW" | "FCA" | "FOB" | "CFR" | "CIF" | "CPT" | "CIP" | "DAP" | "DPU" | "DDP";
 export type PaymentStatus = "draft" | "unpaid" | "partial" | "paid" | "overdue";
@@ -93,15 +92,15 @@ export const CURRENCIES = ["USD", "EUR", "GBP", "AED", "SAR", "EGP"];
 export const INCOTERMS: Incoterm[] = ["EXW", "FCA", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"];
 
 export const DEFAULT_EXPORTER = {
-  company: "Nailvlora Import and Export",
+  company: "BucharestEgyAgro Import and Export",
   address: "Industrial Zone, Cairo",
   country: "Egypt",
   vat: "100-200-300",
   commercialRegistration: "CR-2026-4567",
   taxNumber: "TAX-889977",
   phone: "+20 100 000 0000",
-  email: "export@nailvlora.com",
-  website: "www.nailvlora.com",
+  email: "export@bucharestegyagro.com",
+  website: "www.bucharestegyagro.com",
 };
 
 export function loadInvoices(): Invoice[] {
@@ -228,7 +227,7 @@ export function blankInvoice(): Invoice {
     },
     bank: {
       name: "",
-      accountName: "Nailvlora Import and Export",
+      accountName: "BucharestEgyAgro Import and Export",
       accountNumber: "",
       iban: "",
       swift: "",
@@ -309,7 +308,7 @@ function seed(): Invoice[] {
     },
     bank: {
       name: "Commercial Bank of Egypt",
-      accountName: "Nailvlora Import and Export",
+      accountName: "BucharestEgyAgro Import and Export",
       accountNumber: "0011223344",
       iban: "EG380019000500000000123456789",
       swift: "CIEGEGCXXXX",
