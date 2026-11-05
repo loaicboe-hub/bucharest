@@ -13,3 +13,4 @@ sendJson([
     'phone' => $phone,
     'whatsapp' => $phone
 ]);
+
