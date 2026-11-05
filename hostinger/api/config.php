@@ -23,9 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // 3. Database Credentials (Configured with your Hostinger MySQL details)
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'u123456789_agro');
-define('DB_USER', getenv('DB_USER') ?: 'u123456789_user');
-define('DB_PASS', getenv('DB_PASS') ?: 'bucharestegyagro@2027');
+define('DB_NAME', getenv('DB_NAME') ?: 'u724931489_bucharestegy');
+define('DB_USER', getenv('DB_USER') ?: 'u724931489_bucharestegy');
+define('DB_PASS', getenv('DB_PASS') ?: 'Bucharestegyagro@2027');
 define('JWT_SECRET', 'bucharestegyagro_super_secret_jwt_key_2026_xyz');
 
 // 4. PDO Database Connection Singleton
