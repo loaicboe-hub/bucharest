@@ -30,6 +30,7 @@ import { useTransparentLogo } from "@/lib/transparent-image";
 import { BrandMark, BrandWatermark } from "@/components/BrandMark";
 import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
+import { WhatsAppButton, WhatsAppIcon } from "@/components/WhatsAppButton";
 import { useLang, initLang } from "@/lib/i18n";
 import {
   Award,
@@ -829,17 +830,68 @@ function Index() {
               </p>
 
               <div className="mt-8 space-y-4">
-                {[site.email, site.phone, site.address].filter(Boolean).map((label, ci) => {
-                  const CIcon = contactIcons[ci];
-                  return (
-                  <div key={label} className="flex items-center gap-4" dir="ltr">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md">
-                      <CIcon className="h-5 w-5" />
+                {site.email && (
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="flex items-center gap-4 group transition-colors"
+                    dir="ltr"
+                  >
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md group-hover:scale-105 transition-transform">
+                      <Mail className="h-5 w-5" />
                     </div>
-                    <div className="min-w-0 font-medium text-stone-900 break-words">{label}</div>
+                    <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words">
+                      {site.email}
+                    </div>
+                  </a>
+                )}
+
+                {site.phone && (
+                  <a
+                    href={`tel:${site.phone.replace(/\s+/g, "")}`}
+                    className="flex items-center gap-4 group transition-colors"
+                    dir="ltr"
+                  >
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md group-hover:scale-105 transition-transform">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words">
+                      {site.phone}
+                    </div>
+                  </a>
+                )}
+
+                {(site.whatsapp || site.phone) && (
+                  <a
+                    href={`https://wa.me/${(site.whatsapp || site.phone).replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                      lang === "ar"
+                        ? "مرحباً بوخارست إيجي أجرو، أرغب في الاستفسار عن برامج التصدير."
+                        : "Hello BucharestEgyAgro, I would like to inquire about your produce export programs."
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-4 group transition-colors"
+                    dir="ltr"
+                  >
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#25D366] text-white shadow-md group-hover:scale-105 transition-transform">
+                      <WhatsAppIcon className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words flex items-center gap-2">
+                      <span>{site.whatsapp || site.phone}</span>
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">WhatsApp</span>
+                    </div>
+                  </a>
+                )}
+
+                {site.address && (
+                  <div className="flex items-center gap-4" dir="ltr">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md">
+                      <MapPin className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 font-medium text-stone-900 break-words">
+                      {site.address}
+                    </div>
                   </div>
-                  );
-                })}
+                )}
               </div>
             </div>
 
@@ -962,6 +1014,9 @@ function Index() {
                     [Facebook, site.facebook || footer.social.facebook],
                     [Instagram, site.instagram || footer.social.instagram],
                     [Linkedin, site.linkedin || footer.social.linkedin],
+                    ...(site.whatsapp || site.phone
+                      ? [[WhatsAppIcon, ('https://wa.me/' + (site.whatsapp || site.phone).replace(/[^0-9]/g, ''))] as const]
+                      : []),
                   ] as const
                 ).map(([I, href], i) => (
                   <a
@@ -993,6 +1048,9 @@ function Index() {
           </div>
         </div>
       </footer>
+
+      {/* WhatsApp Floating Chat Button */}
+      <WhatsAppButton whatsapp={site.whatsapp} phone={site.phone} />
 
       {/* Back to top */}
       {showTop && (

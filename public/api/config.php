@@ -85,13 +85,17 @@ function generateToken($userId, $email, $role) {
 }
 
 function verifyToken() {
-    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? $_SERVER['HTTP_X_ADMIN_TOKEN'] ?? $_GET['token'] ?? '';
     if (!$authHeader && function_exists('apache_request_headers')) {
         $headers = apache_request_headers();
-        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? $headers['X-Admin-Token'] ?? $headers['x-admin-token'] ?? '';
     }
-    if (preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+    if (preg_match('/Bearer\s(\S+)/i', $authHeader, $matches)) {
         $token = $matches[1];
+    } else {
+        $token = trim($authHeader);
+    }
+    if ($token) {
         $parts = explode('.', $token);
         if (count($parts) === 3) {
             list($b64Header, $b64Payload, $b64Sign) = $parts;

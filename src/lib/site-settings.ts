@@ -51,22 +51,22 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
   // 1. Try Hostinger MySQL API
   try {
     const remote = await apiSettings.get();
-    if (remote && remote.company_name) {
+    if (remote && (remote.companyName || remote.company_name || remote.phone !== undefined || remote.whatsapp !== undefined)) {
       const loaded: SiteSettings = {
-        companyName: remote.company_name,
-        phone: remote.phone || defaultSiteSettings.phone,
-        email: remote.email || defaultSiteSettings.email,
-        whatsapp: remote.whatsapp || defaultSiteSettings.whatsapp,
-        address: remote.address || defaultSiteSettings.address,
-        maps: remote.maps_url || defaultSiteSettings.maps,
+        companyName: remote.companyName || remote.company_name || defaultSiteSettings.companyName,
+        phone: remote.phone !== undefined && remote.phone !== "" ? remote.phone : defaultSiteSettings.phone,
+        email: remote.email !== undefined && remote.email !== "" ? remote.email : defaultSiteSettings.email,
+        whatsapp: remote.whatsapp !== undefined && remote.whatsapp !== "" ? remote.whatsapp : defaultSiteSettings.whatsapp,
+        address: remote.address !== undefined && remote.address !== "" ? remote.address : defaultSiteSettings.address,
+        maps: remote.maps || remote.maps_url || defaultSiteSettings.maps,
         facebook: remote.facebook || defaultSiteSettings.facebook,
         instagram: remote.instagram || defaultSiteSettings.instagram,
         linkedin: remote.linkedin || defaultSiteSettings.linkedin,
         twitter: remote.twitter || defaultSiteSettings.twitter,
-        seoTitle: remote.seo_title || defaultSiteSettings.seoTitle,
-        seoDescription: remote.seo_description || defaultSiteSettings.seoDescription,
-        seoKeywords: remote.seo_keywords || defaultSiteSettings.seoKeywords,
-        seoOgImage: remote.seo_og_image || "",
+        seoTitle: remote.seoTitle || remote.seo_title || defaultSiteSettings.seoTitle,
+        seoDescription: remote.seoDescription || remote.seo_description || defaultSiteSettings.seoDescription,
+        seoKeywords: remote.seoKeywords || remote.seo_keywords || defaultSiteSettings.seoKeywords,
+        seoOgImage: remote.seoOgImage || remote.seo_og_image || "",
       };
       if (typeof window !== "undefined") {
         localStorage.setItem(SETTINGS_KEY, JSON.stringify(loaded));
@@ -125,19 +125,25 @@ export async function saveSiteSettings(s: SiteSettings): Promise<string | null> 
   // 1. Try Hostinger MySQL API
   try {
     await apiSettings.save({
+      companyName: s.companyName,
       company_name: s.companyName,
       phone: s.phone,
       email: s.email,
       whatsapp: s.whatsapp,
       address: s.address,
+      maps: s.maps,
       maps_url: s.maps,
       facebook: s.facebook,
       instagram: s.instagram,
       linkedin: s.linkedin,
       twitter: s.twitter,
+      seoTitle: s.seoTitle,
       seo_title: s.seoTitle,
+      seoDescription: s.seoDescription,
       seo_description: s.seoDescription,
+      seoKeywords: s.seoKeywords,
       seo_keywords: s.seoKeywords,
+      seoOgImage: s.seoOgImage,
       seo_og_image: s.seoOgImage,
     });
   } catch {

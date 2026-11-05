@@ -59,6 +59,7 @@ async function request<T = any>(endpoint: string, options: RequestInit = {}): Pr
   }
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
+    headers.set('X-Admin-Token', token);
   }
 
   const url = `${API_BASE}/${endpoint.replace(/^\//, '')}`;
@@ -252,8 +253,12 @@ export const apiPartners = {
 // -----------------------------------------------------------------------------
 export const apiSettings = {
   async get() {
-    const data = await request<{ success: boolean; settings: any }>('settings.php');
-    return data.settings;
+    try {
+      const data = await request<{ success: boolean; settings?: any; data?: any }>('settings.php');
+      return data.settings || data.data || null;
+    } catch {
+      return null;
+    }
   },
 
   async save(settings: any) {
