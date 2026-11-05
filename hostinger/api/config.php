@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// 3. Database Credentials (Fill these from your Hostinger hPanel > Databases > MySQL)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'u123456789_kemet');     // <-- Your Hostinger Database Name
-define('DB_USER', 'u123456789_admin');     // <-- Your Hostinger Database Username
-define('DB_PASS', 'YourStrongPassword!');  // <-- Your Hostinger Database Password
+// 3. Database Credentials (Configured with your Hostinger MySQL details)
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'u123456789_agro');
+define('DB_USER', getenv('DB_USER') ?: 'u123456789_user');
+define('DB_PASS', getenv('DB_PASS') ?: 'bucharestegyagro@2027');
 define('JWT_SECRET', 'bucharestegyagro_super_secret_jwt_key_2026_xyz');
 
 // 4. PDO Database Connection Singleton

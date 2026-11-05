@@ -51,3 +51,4 @@ try {
     echo "<p>تأكد من كتابة <code>DB_NAME</code> و <code>DB_USER</code> و <code>DB_PASS</code> الصحيحة في ملف <code>config.php</code>.</p>";
     echo "</div>";
 }
+
