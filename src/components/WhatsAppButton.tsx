@@ -21,7 +21,7 @@ interface WhatsAppButtonProps {
 
 export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
   const { lang } = useLang();
-  const rawNumber = whatsapp || phone || "+20 100 000 0000";
+  const rawNumber = whatsapp || phone || "+20 107 003 3892";
   const cleanNumber = rawNumber.replace(/[^0-9]/g, "");
 
   if (!cleanNumber) return null;
@@ -57,3 +57,4 @@ export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
     </aside>
   );
 }
+

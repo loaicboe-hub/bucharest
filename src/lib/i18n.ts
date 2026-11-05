@@ -222,7 +222,7 @@ const en: SiteContent = {
   ],
   contact: [
     "info@bucharestegyagro.com",
-    "+20 100 000 0000",
+    "+20 107 003 3892",
     "Cairo, Egypt — Serving Worldwide",
   ],
 };
@@ -363,7 +363,7 @@ const fr: SiteContent = {
   ],
   contact: [
     "info@bucharestegyagro.com",
-    "+20 100 000 0000",
+    "+20 107 003 3892",
     "Le Caire, Égypte — Service Mondial",
   ],
 };

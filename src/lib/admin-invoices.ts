@@ -98,7 +98,7 @@ export const DEFAULT_EXPORTER = {
   vat: "100-200-300",
   commercialRegistration: "CR-2026-4567",
   taxNumber: "TAX-889977",
-  phone: "+20 100 000 0000",
+  phone: "+20 107 003 3892",
   email: "export@bucharestegyagro.com",
   website: "www.bucharestegyagro.com",
 };

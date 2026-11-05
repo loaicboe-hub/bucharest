@@ -21,9 +21,9 @@ export type SiteSettings = {
 
 export const defaultSiteSettings: SiteSettings = {
   companyName: "BucharestEgyAgro Import and Export",
-  phone: "+20 100 000 0000",
+  phone: "+20 107 003 3892",
   email: "info@bucharestegyagro.com",
-  whatsapp: "+20 100 000 0000",
+  whatsapp: "+20 107 003 3892",
   address: "Cairo, Egypt",
   maps: "https://maps.google.com/?q=Cairo",
   facebook: "https://facebook.com/bucharestegyagro",
