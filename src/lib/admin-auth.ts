@@ -1,4 +1,3 @@
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 import { apiAuth, getSavedUser, clearSession } from "./hostinger-api";
 
 export type AdminSession = {
@@ -63,17 +62,7 @@ export async function signIn(email: string, password: string): Promise<string | 
     // API not connected locally or credentials failed on server
   }
 
-  // 2. If Supabase is configured, try Supabase auth
-  if (isSupabaseConfigured()) {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
-      return error?.message ?? null;
-    } catch (err: any) {
-      return err?.message || "Sign in failed";
-    }
-  }
-
-  // 3. Local dev fallback (offline / Hostinger local preview)
+  // 2. Local dev fallback (offline / Hostinger local preview)
   const local: AdminSession = {
     userId: "admin-1",
     email: cleanEmail || "admin@bucharestegyagro.com",
@@ -107,31 +96,7 @@ export async function signUp(email: string, password: string, fullName: string):
     // API not running locally
   }
 
-  // 2. If Supabase is configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/admin/login`,
-          data: { full_name: fullName },
-        },
-      });
-      if (error) return error.message;
-
-      if (data.session && data.user) {
-        await supabase
-          .from("profiles")
-          .upsert({ id: data.user.id, email: cleanEmail, full_name: fullName });
-      }
-      return null;
-    } catch (err: any) {
-      return err?.message || "Sign up failed";
-    }
-  }
-
-  // 3. Local fallback
+  // 2. Local fallback
   const local: AdminSession = {
     userId: "admin-1",
     email: cleanEmail || "admin@bucharestegyagro.com",
@@ -144,13 +109,6 @@ export async function signUp(email: string, password: string, fullName: string):
 export async function signOut() {
   clearSession();
   setLocalSession(null);
-  if (isSupabaseConfigured()) {
-    try {
-      await supabase.auth.signOut();
-    } catch {
-      /* ignore */
-    }
-  }
 }
 
 export async function getAdminSession(): Promise<AdminSession | null> {
@@ -158,47 +116,15 @@ export async function getAdminSession(): Promise<AdminSession | null> {
   const local = getLocalSession();
   if (local) return local;
 
-  // 2. If Supabase is configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase.auth.getUser();
-      if (!error && data?.user) {
-        return {
-          userId: data.user.id,
-          email: data.user.email ?? "",
-          isAdmin: true,
-        };
-      }
-    } catch {
-      /* ignore */
-    }
-  }
-
   return null;
 }
 
 export async function requestPasswordReset(email: string) {
-  if (!isSupabaseConfigured()) {
-    return null;
-  }
-  try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    return error?.message ?? null;
-  } catch {
-    return null;
-  }
+  void email;
+  return null;
 }
 
 export async function updatePassword(password: string) {
-  if (!isSupabaseConfigured()) {
-    return null;
-  }
-  try {
-    const { error } = await supabase.auth.updateUser({ password });
-    return error?.message ?? null;
-  } catch {
-    return null;
-  }
+  void password;
+  return null;
 }

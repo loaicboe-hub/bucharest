@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { getAdminSession, requestPasswordReset, signIn, signUp } from "@/lib/admin-auth";
-import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
@@ -133,23 +132,21 @@ function LoginPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
-                  {!isSupabaseConfigured() && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full border-dashed"
-                      onClick={() => {
-                        setEmail("admin@bucharestegyagro.com");
-                        setPassword("admin123456");
-                        signIn("admin@bucharestegyagro.com", "admin123456").then(() => {
-                          toast.success("Signed in as Local Admin");
-                          navigate({ to: "/admin/dashboard" });
-                        });
-                      }}
-                    >
-                      🚀 Quick Dev Login (1-Click)
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-dashed"
+                    onClick={() => {
+                      setEmail("admin@bucharestegyagro.com");
+                      setPassword("admin123456");
+                      signIn("admin@bucharestegyagro.com", "admin123456").then(() => {
+                        toast.success("Signed in as Local Admin");
+                        navigate({ to: "/admin/dashboard" });
+                      });
+                    }}
+                  >
+                    🚀 Quick Dev Login (1-Click)
+                  </Button>
                   {!forgotOpen && (
                     <button
                       type="button"

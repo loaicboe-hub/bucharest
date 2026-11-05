@@ -13,6 +13,15 @@ if ($method === 'GET') {
     $stmt = $db->query("SELECT * FROM site_settings WHERE id = 'default' LIMIT 1");
     $row = $stmt->fetch();
 
+    if ($row) {
+        if (empty($row['phone']) || $row['phone'] === '+20 100 000 0000') {
+            $officialNum = '+20 107 003 3892';
+            $db->prepare("UPDATE site_settings SET phone = ?, whatsapp = ? WHERE id = 'default'")->execute([$officialNum, $officialNum]);
+            $row['phone'] = $officialNum;
+            $row['whatsapp'] = $officialNum;
+        }
+    }
+
     if (!$row) {
         $default = [
             'companyName' => 'BucharestEgyAgro Import and Export',

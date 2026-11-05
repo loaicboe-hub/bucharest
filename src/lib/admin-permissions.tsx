@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 import { apiAuth, type HostingerUser } from "./hostinger-api";
 import type { PermissionAction } from "./admin-modules";
 
@@ -84,18 +83,10 @@ export function emptyPermission(module_key: string): ModulePermission {
 export async function isSuperAdmin(userId: string): Promise<boolean> {
   const users = getLocalUsers();
   const user = users.find((u) => u.id === userId);
-  if (user) return user.isSuperAdmin;
-  if (!isSupabaseConfigured()) return true;
-  try {
-    const { data } = await supabase.rpc("is_super_admin", { _user_id: userId });
-    return Boolean(data);
-  } catch {
-    return true;
-  }
+  return user ? user.isSuperAdmin : true;
 }
 
 export async function fetchPermissions(userId: string): Promise<PermissionMap> {
-  // 1. Try Hostinger API
   try {
     const hostingerPerms = await apiAuth.getPermissions(userId);
     if (Array.isArray(hostingerPerms)) {
@@ -113,61 +104,29 @@ export async function fetchPermissions(userId: string): Promise<PermissionMap> {
       return map;
     }
   } catch {
-    /* fallback to local / supabase */
+    /* fallback to local */
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data } = await supabase
-        .from("user_permissions")
-        .select("module_key, can_view, can_create, can_edit, can_delete")
-        .eq("user_id", userId);
-      if (data && data.length > 0) {
-        const map: PermissionMap = {};
-        for (const row of data) map[row.module_key] = row as ModulePermission;
-        setLocalPerms(userId, map);
-        return map;
-      }
-    } catch {
-      /* fallback to local */
-    }
-  }
-
-  // 3. Fallback to localStorage
   return getLocalPerms(userId);
 }
 
 export async function savePermissions(userId: string, perms: ModulePermission[]): Promise<string | null> {
-  // Always update localStorage immediately for instant reactive UI
   const currentMap = getLocalPerms(userId);
   for (const p of perms) {
     currentMap[p.module_key] = p;
   }
   setLocalPerms(userId, currentMap);
 
-  // 1. Try Hostinger API
   try {
     await apiAuth.savePermissions(userId, perms);
   } catch {
     /* fallback */
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const rows = perms.map((p) => ({ ...p, user_id: userId }));
-      await supabase.from("user_permissions").upsert(rows, { onConflict: "user_id,module_key" });
-    } catch {
-      /* ignore */
-    }
-  }
-
   return null;
 }
 
 export async function listAdminUsers(): Promise<AdminUserRow[]> {
-  // 1. Try Hostinger API
   try {
     const remote = await apiAuth.listUsers();
     if (Array.isArray(remote) && remote.length > 0) {
@@ -185,21 +144,6 @@ export async function listAdminUsers(): Promise<AdminUserRow[]> {
     /* fallback to local cache */
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { listAdminUsersFn } = await import("./admin-users.functions");
-      const result = await listAdminUsersFn();
-      if (Array.isArray(result) && result.length > 0) {
-        setLocalUsers(result as AdminUserRow[]);
-        return result as AdminUserRow[];
-      }
-    } catch {
-      /* fallback to local */
-    }
-  }
-
-  // 3. Return local users
   return getLocalUsers();
 }
 
@@ -217,7 +161,6 @@ export async function createAdminUser(form: {
 
   let createdId = `user-${Date.now()}`;
 
-  // 1. Try Hostinger API
   try {
     const res = await apiAuth.createUser({
       email,
@@ -230,18 +173,6 @@ export async function createAdminUser(form: {
     console.warn("[Hostinger API] Create user offline/failed:", err.message);
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { createAdminUser: createServerFnUser } = await import("./admin-users.functions");
-      const res = await createServerFnUser({ data: form });
-      if (res?.id) createdId = res.id;
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // 3. Store in localStorage
   const users = getLocalUsers();
   const existingIdx = users.findIndex((u) => u.email.toLowerCase() === email);
   const newUser: AdminUserRow = {
@@ -263,24 +194,12 @@ export async function createAdminUser(form: {
 }
 
 export async function deleteAdminUser(input: { userId: string }): Promise<{ ok: boolean }> {
-  // 1. Try Hostinger API
   try {
     await apiAuth.deleteUser(input.userId);
   } catch (err: any) {
     console.warn("[Hostinger API] Delete user offline/failed:", err.message);
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { deleteAdminUser: deleteServerFnUser } = await import("./admin-users.functions");
-      await deleteServerFnUser({ data: input });
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // 3. Update localStorage
   const users = getLocalUsers().filter((u) => u.id !== input.userId);
   setLocalUsers(users.length > 0 ? users : DEFAULT_USERS);
 
@@ -292,45 +211,22 @@ export async function setAdminUserPassword(input: { userId: string; password: st
     throw new Error("Password must be at least 8 characters");
   }
 
-  // 1. Try Hostinger API
   try {
     await apiAuth.setPassword(input.userId, input.password);
   } catch (err: any) {
     console.warn("[Hostinger API] Set password offline/failed:", err.message);
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { setAdminUserPassword: setPassServerFn } = await import("./admin-users.functions");
-      await setPassServerFn({ data: input });
-    } catch {
-      /* ignore */
-    }
-  }
-
   return { ok: true };
 }
 
 export async function setSuperAdmin(input: { userId: string; value: boolean }): Promise<{ ok: boolean }> {
-  // 1. Try Hostinger API
   try {
     await apiAuth.setRole(input.userId, input.value);
   } catch (err: any) {
     console.warn("[Hostinger API] Set role offline/failed:", err.message);
   }
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { setSuperAdmin: setSuperServerFn } = await import("./admin-users.functions");
-      await setSuperServerFn({ data: input });
-    } catch {
-      /* ignore */
-    }
-  }
-
-  // 3. Update localStorage
   const users = getLocalUsers().map((u) => (u.id === input.userId ? { ...u, isSuperAdmin: input.value } : u));
   setLocalUsers(users);
 

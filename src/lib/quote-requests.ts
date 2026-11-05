@@ -1,4 +1,3 @@
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 import { apiQuotes } from "./hostinger-api";
 
 export type QuoteStatus = "pending" | "sent" | "won" | "lost";
@@ -57,28 +56,6 @@ export async function fetchQuoteRequests(): Promise<QuoteRequestRow[]> {
     }
   } catch {}
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase
-        .from("quote_requests")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (!error && data) {
-        return data.map((r: any) => ({
-          id: r.id,
-          company: r.company,
-          contactPerson: r.contact_person,
-          email: r.email,
-          country: r.country,
-          product: r.product,
-          quantity: r.quantity,
-          status: (r.status as QuoteStatus) ?? "pending",
-          date: (r.created_at || new Date().toISOString()).slice(0, 10),
-        }));
-      }
-    } catch {}
-  }
   return getLocalQuotes();
 }
 
@@ -94,11 +71,4 @@ export async function deleteQuoteRequest(id: string): Promise<void> {
   try {
     await apiQuotes.delete(id);
   } catch {}
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      await supabase.from("quote_requests").delete().eq("id", id);
-    } catch {}
-  }
 }

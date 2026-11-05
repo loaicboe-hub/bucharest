@@ -1,12 +1,6 @@
-// Brand logo backed by LocalStorage and Supabase.
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
-
-const BUCKET = "site-media";
-const FOLDER = "branding";
-const SIGNED_TTL = 60 * 60 * 24 * 365; // 1 year
 const CACHE_KEY = "nv_logo_cache_v3";
-const CACHE_TTL = 1000 * 60 * 60 * 24 * 14; // re-check at most every 14 days
-const MAX_INLINE_BYTES = 900_000; // keep localStorage well under quota
+const CACHE_TTL = 1000 * 60 * 60 * 24 * 14;
+const MAX_INLINE_BYTES = 900_000;
 
 type LogoCache = { src: string | null; ts: number };
 
@@ -51,18 +45,6 @@ function setCachedLogoUrl(src: string | null) {
   }
 }
 
-async function currentFileName(): Promise<string | null> {
-  if (!isSupabaseConfigured()) return null;
-  try {
-    const { data, error } = await supabase.storage.from(BUCKET).list(FOLDER, { limit: 100 });
-    if (error || !data) return null;
-    const file = data.find((f) => f.name.startsWith("logo."));
-    return file ? file.name : null;
-  } catch {
-    return null;
-  }
-}
-
 async function toDataUrl(url: string): Promise<string | null> {
   try {
     const res = await fetch(url);
@@ -84,26 +66,7 @@ export async function getLogoUrl(force = false): Promise<string | null> {
   const cached = readCache();
   if (!force && cached && Date.now() - cached.ts < CACHE_TTL && cached.src) return cached.src;
 
-  if (!isSupabaseConfigured()) {
-    return cached?.src ?? "/logo.png";
-  }
-
-  try {
-    const name = await currentFileName();
-    if (!name) {
-      return cached?.src ?? "/logo.png";
-    }
-    const { data } = await supabase.storage
-      .from(BUCKET)
-      .createSignedUrl(`${FOLDER}/${name}`, SIGNED_TTL);
-    const url = data?.signedUrl ?? null;
-    if (!url) return cached?.src ?? "/logo.png";
-    const inlined = (await toDataUrl(url)) ?? url;
-    setCachedLogoUrl(inlined);
-    return inlined;
-  } catch {
-    return cached?.src ?? "/logo.png";
-  }
+  return cached?.src ?? "/logo.png";
 }
 
 /** Upload (or replace) the brand logo. */
@@ -113,36 +76,13 @@ export async function uploadLogo(file: File): Promise<string | null> {
 
   const dataUrl = await readFileAsDataUrl(file);
   setCachedLogoUrl(dataUrl);
-
-  if (!isSupabaseConfigured()) {
-    return null;
-  }
-
-  try {
-    await deleteLogo();
-    const ext = file.name.split(".").pop()?.toLowerCase() || "png";
-    const { error } = await supabase.storage
-      .from(BUCKET)
-      .upload(`${FOLDER}/logo.${ext}`, file, { upsert: true, contentType: file.type });
-    return error ? error.message : null;
-  } catch (err: any) {
-    return null;
-  }
+  return null;
 }
 
 /** Remove the stored brand logo. */
 export async function deleteLogo(): Promise<string | null> {
   setCachedLogoUrl(null);
-  if (!isSupabaseConfigured()) return null;
-
-  try {
-    const name = await currentFileName();
-    if (!name) return null;
-    const { error } = await supabase.storage.from(BUCKET).remove([`${FOLDER}/${name}`]);
-    return error ? error.message : null;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /** Fetch the stored logo as a data URL (used for embedding in PDFs). */

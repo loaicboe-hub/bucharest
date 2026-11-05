@@ -1,5 +1,4 @@
-// Site-wide company settings stored in localStorage + Hostinger MySQL + Supabase if configured.
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+// Site-wide company settings stored in localStorage + Hostinger MySQL.
 import { apiSettings } from "./hostinger-api";
 
 export type SiteSettings = {
@@ -48,6 +47,17 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
     } catch {}
   }
 
+  // Clear stale placeholder from cache
+  if (cached && (cached.phone === "+20 100 000 0000" || cached.whatsapp === "+20 100 000 0000" || !cached.phone)) {
+    cached.phone = "+20 107 003 3892";
+    cached.whatsapp = "+20 107 003 3892";
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(cached));
+      } catch {}
+    }
+  }
+
   // 1. Try Hostinger MySQL API
   try {
     const remote = await apiSettings.get();
@@ -74,41 +84,7 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
       return loaded;
     }
   } catch {
-    /* fallback to local / Supabase */
-  }
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase
-        .from("site_settings")
-        .select("*")
-        .eq("id", "default")
-        .maybeSingle();
-
-      if (!error && data) {
-        const loaded: SiteSettings = {
-          companyName: data.company_name,
-          phone: data.phone,
-          email: data.email,
-          whatsapp: data.whatsapp,
-          address: data.address,
-          maps: data.maps_url,
-          facebook: data.facebook,
-          instagram: data.instagram,
-          linkedin: data.linkedin,
-          twitter: data.twitter,
-          seoTitle: data.seo_title || defaultSiteSettings.seoTitle,
-          seoDescription: data.seo_description || defaultSiteSettings.seoDescription,
-          seoKeywords: data.seo_keywords || defaultSiteSettings.seoKeywords,
-          seoOgImage: data.seo_og_image,
-        };
-        if (typeof window !== "undefined") {
-          localStorage.setItem(SETTINGS_KEY, JSON.stringify(loaded));
-        }
-        return loaded;
-      }
-    } catch {}
+    /* fallback to local */
   }
 
   return cached || defaultSiteSettings;
@@ -148,32 +124,6 @@ export async function saveSiteSettings(s: SiteSettings): Promise<string | null> 
     });
   } catch {
     /* fallback */
-  }
-
-  // 2. If Supabase configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { error } = await supabase.from("site_settings").upsert({
-        id: "default",
-        company_name: s.companyName,
-        phone: s.phone,
-        email: s.email,
-        whatsapp: s.whatsapp,
-        address: s.address,
-        maps_url: s.maps,
-        facebook: s.facebook,
-        instagram: s.instagram,
-        linkedin: s.linkedin,
-        twitter: s.twitter,
-        seo_title: s.seoTitle,
-        seo_description: s.seoDescription,
-        seo_keywords: s.seoKeywords,
-        seo_og_image: s.seoOgImage,
-      });
-      return error?.message ?? null;
-    } catch (err: any) {
-      return err?.message ?? null;
-    }
   }
 
   return null;

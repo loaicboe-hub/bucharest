@@ -1,11 +1,6 @@
-// Unified product system backed by localStorage, Hostinger MySQL API, and Supabase if configured.
-import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+// Hostinger-only product catalog and media storage.
 import { CATALOG, type ProductSpecs } from "@/lib/products-catalog";
 import { apiProducts, apiCategories, uploadToHostinger } from "./hostinger-api";
-
-const BUCKET = "site-media";
-const FOLDER = "products";
-const SIGNED_TTL = 60 * 60 * 24 * 365; // 1 year
 
 export type Trade = "export" | "import";
 
@@ -125,8 +120,6 @@ export function blankProduct(trade: Trade, categoryId: string | null): ProductRo
   };
 }
 
-/* ---------------------------------------------------------------- categories */
-
 const CAT_STORAGE_KEY = "app_product_categories";
 const PROD_STORAGE_KEY = "app_products";
 
@@ -152,7 +145,6 @@ function setLocalCategories(cats: ProductCategory[]) {
 }
 
 export async function listCategories(onlyActive = false): Promise<ProductCategory[]> {
-  // 1. Try Hostinger MySQL API
   try {
     const remote = await apiCategories.list(onlyActive);
     if (Array.isArray(remote) && remote.length > 0) {
@@ -160,19 +152,6 @@ export async function listCategories(onlyActive = false): Promise<ProductCategor
       return remote;
     }
   } catch {}
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      let q = supabase.from("product_categories").select("*").order("sort_order");
-      if (onlyActive) q = q.eq("active", true);
-      const { data, error } = await q;
-      if (!error && data && data.length > 0) {
-        setLocalCategories(data as ProductCategory[]);
-        return data as ProductCategory[];
-      }
-    } catch {}
-  }
 
   const cats = getLocalCategories();
   return onlyActive ? cats.filter((c) => c.active) : cats;
@@ -199,29 +178,9 @@ export async function saveCategory(c: Partial<ProductCategory>): Promise<string 
   }
   setLocalCategories(cats);
 
-  // 1. Try Hostinger API
   try {
     await apiCategories.save(category);
   } catch {}
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const payload = {
-        slug: category.slug,
-        name_en: category.name_en,
-        name_ar: category.name_ar,
-        sort_order: category.sort_order,
-        active: category.active,
-        trade: category.trade,
-      };
-      if (c.id) {
-        await supabase.from("product_categories").update(payload).eq("id", c.id);
-      } else {
-        await supabase.from("product_categories").insert(payload);
-      }
-    } catch {}
-  }
 
   return null;
 }
@@ -230,22 +189,12 @@ export async function deleteCategory(id: string): Promise<string | null> {
   const cats = getLocalCategories().filter((c) => c.id !== id);
   setLocalCategories(cats);
 
-  // 1. Try Hostinger API
   try {
     await apiCategories.delete(id);
   } catch {}
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      await supabase.from("product_categories").delete().eq("id", id);
-    } catch {}
-  }
-
   return null;
 }
-
-/* ---------------------------------------------------------------- products */
 
 function defaultProducts(): ProductRow[] {
   return CATALOG.map((p, idx) => ({
@@ -290,28 +239,15 @@ function setLocalProducts(prods: ProductRow[]) {
 }
 
 export async function listPublishedProducts(): Promise<ProductRow[]> {
-  // 1. Try Hostinger API
   try {
     const remote = await apiProducts.list();
     if (Array.isArray(remote) && remote.length > 0) return remote as ProductRow[];
   } catch {}
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("published", true)
-        .order("sort_order");
-      if (!error && data && data.length > 0) return data as unknown as ProductRow[];
-    } catch {}
-  }
   return getLocalProducts().filter((p) => p.published);
 }
 
 export async function listAllProducts(): Promise<ProductRow[]> {
-  // 1. Try Hostinger API
   try {
     const remote = await apiProducts.list({ all: true });
     if (Array.isArray(remote) && remote.length > 0) {
@@ -320,33 +256,15 @@ export async function listAllProducts(): Promise<ProductRow[]> {
     }
   } catch {}
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase.from("products").select("*").order("sort_order");
-      if (!error && data && data.length > 0) {
-        setLocalProducts(data as unknown as ProductRow[]);
-        return data as unknown as ProductRow[];
-      }
-    } catch {}
-  }
   return getLocalProducts();
 }
 
 export async function getProductBySlug(slug: string): Promise<ProductRow | null> {
-  // 1. Try Hostinger API
   try {
     const remote = await apiProducts.get(slug);
     if (remote) return remote as ProductRow;
   } catch {}
 
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const { data, error } = await supabase.from("products").select("*").eq("slug", slug).maybeSingle();
-      if (!error && data) return data as unknown as ProductRow;
-    } catch {}
-  }
   return getLocalProducts().find((p) => p.slug === slug) ?? null;
 }
 
@@ -363,39 +281,9 @@ export async function saveProduct(p: ProductRow): Promise<string | null> {
   }
   setLocalProducts(prods);
 
-  // 1. Try Hostinger MySQL API
   try {
     await apiProducts.save(product);
   } catch {}
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      const payload = {
-        slug: product.slug,
-        trade: product.trade,
-        category_id: product.category_id,
-        name_en: product.name_en,
-        name_ar: product.name_ar,
-        intro_en: product.intro_en,
-        intro_ar: product.intro_ar,
-        description_en: product.description_en,
-        description_ar: product.description_ar,
-        specs_en: product.specs_en,
-        specs_ar: product.specs_ar,
-        hidden_specs: product.hidden_specs,
-        main_image: product.main_image,
-        gallery: product.gallery,
-        published: product.published,
-        sort_order: product.sort_order,
-      };
-      if (p.id) {
-        await supabase.from("products").update(payload).eq("id", p.id);
-      } else {
-        await supabase.from("products").insert(payload);
-      }
-    } catch {}
-  }
 
   return null;
 }
@@ -404,17 +292,9 @@ export async function deleteProduct(id: string): Promise<string | null> {
   const prods = getLocalProducts().filter((p) => p.id !== id);
   setLocalProducts(prods);
 
-  // 1. Try Hostinger MySQL API
   try {
     await apiProducts.delete(id);
   } catch {}
-
-  // 2. Try Supabase if configured
-  if (isSupabaseConfigured()) {
-    try {
-      await supabase.from("products").delete().eq("id", id);
-    } catch {}
-  }
 
   return null;
 }
@@ -430,12 +310,6 @@ export async function setProductPublished(id: string, published: boolean) {
   try {
     if (p) await apiProducts.save(p);
   } catch {}
-
-  if (isSupabaseConfigured()) {
-    try {
-      await supabase.from("products").update({ published }).eq("id", id);
-    } catch {}
-  }
 }
 
 export async function saveOrder(rows: { id: string; sort_order: number }[]) {
@@ -446,46 +320,19 @@ export async function saveOrder(rows: { id: string; sort_order: number }[]) {
   });
   prods.sort((a, b) => a.sort_order - b.sort_order);
   setLocalProducts(prods);
-
-  if (isSupabaseConfigured()) {
-    try {
-      await Promise.all(
-        rows.map((r) => supabase.from("products").update({ sort_order: r.sort_order }).eq("id", r.id)),
-      );
-    } catch {}
-  }
 }
 
 /** Uploads an image to storage or converts to local data URL in dev mode. */
 export async function uploadProductImage(file: File): Promise<{ url?: string; error?: string }> {
-  // 1. Try uploading to Hostinger backend
   try {
     const res = await uploadToHostinger(file, "products");
     if (res?.url) return { url: res.url };
   } catch {}
 
-  // 2. Local fallback data URL if not using Supabase
-  if (!isSupabaseConfigured()) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve({ url: reader.result as string });
-      reader.onerror = () => resolve({ error: "Failed to read image" });
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // 3. Supabase fallback
-  try {
-    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${FOLDER}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-    const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
-      upsert: true,
-      contentType: file.type || "image/jpeg",
-    });
-    if (error) return { error: error.message };
-    const { data } = await supabase.storage.from(BUCKET).createSignedUrl(path, SIGNED_TTL);
-    return data?.signedUrl ? { url: data.signedUrl } : { error: "Could not create image URL." };
-  } catch (err: any) {
-    return { error: err?.message || "Upload failed" };
-  }
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve({ url: reader.result as string });
+    reader.onerror = () => resolve({ error: "Failed to read image" });
+    reader.readAsDataURL(file);
+  });
 }

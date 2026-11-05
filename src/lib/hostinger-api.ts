@@ -369,7 +369,10 @@ export async function uploadToHostinger(
   if (fixedName) formData.append('fixed_name', fixedName);
 
   const headers: Record<string, string> = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    headers['X-Admin-Token'] = token;
+  }
 
   const res = await fetch(`${API_BASE}/upload.php`, {
     method: 'POST',
