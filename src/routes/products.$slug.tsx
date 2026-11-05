@@ -147,9 +147,9 @@ function ProductDetail() {
     <div className="min-h-screen bg-background" dir={dir}>
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-          <Link to="/" className="flex items-center gap-3.5">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gold/50 bg-white p-1 shadow-lg sm:h-16 sm:w-16">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 lg:px-10">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-1 shadow-md sm:h-14 sm:w-14 sm:rounded-2xl">
               <img
                 data-brand-logo
                 src={logo || "/logo.png"}
@@ -157,17 +157,17 @@ function ProductDetail() {
                 className="h-full w-full object-contain"
               />
             </div>
-            <div className="leading-tight">
-              <div className="font-display text-xl font-bold leading-none sm:text-2xl lg:text-3xl">
+            <div className="min-w-0 leading-tight">
+              <div className="truncate font-display text-[15px] font-bold leading-none sm:text-xl lg:text-2xl">
                 <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
               </div>
-              <div className="mt-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{c.brandSub}</div>
+              <div className="mt-1 text-[8px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[10px] sm:tracking-[0.2em]">{c.brandSub}</div>
             </div>
           </Link>
           <Link
             to="/"
             hash="products"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-secondary"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-secondary sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
           >
             {t.back}
           </Link>

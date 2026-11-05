@@ -86,7 +86,7 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   return (
     <div
       aria-label={c.ui.language}
-      className={`inline-flex items-center gap-1 rounded-full border p-1 ${
+      className={`inline-flex shrink-0 items-center gap-0.5 sm:gap-1 rounded-full border p-0.5 sm:p-1 ${
         compact
           ? "border-border bg-white"
           : "border-white/25 bg-white/10 backdrop-blur-md"
@@ -98,7 +98,7 @@ function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
           type="button"
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
-          className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${
+          className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold transition-all ${
             lang === l
               ? "bg-gold text-gold-foreground shadow"
               : compact
@@ -206,12 +206,12 @@ function Index() {
       {/* Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
-          scrolled ? "glass shadow-md py-2.5 sm:py-3" : "bg-transparent py-4 sm:py-5"
+          menuOpen || scrolled ? "glass shadow-md py-2 sm:py-3" : "bg-transparent py-3 sm:py-5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
-          <a href="#top" className="flex shrink-0 items-center gap-3">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gold/50 bg-white p-1 shadow-lg sm:h-16 sm:w-16 lg:h-18 lg:w-18">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-10">
+          <a href="#top" className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-1 shadow-md sm:h-14 sm:w-14 sm:rounded-2xl lg:h-16 lg:w-16">
               <img
                 data-brand-logo
                 suppressHydrationWarning
@@ -221,13 +221,13 @@ function Index() {
               />
             </div>
 
-            <div className="flex flex-col justify-center">
-              <span className="whitespace-nowrap font-display text-lg font-bold leading-tight sm:text-xl lg:text-2xl drop-shadow-sm">
+            <div className="flex min-w-0 flex-col justify-center">
+              <span className="truncate font-display text-[15px] font-bold leading-tight xs:text-base sm:text-xl lg:text-2xl drop-shadow-sm">
                 <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
               </span>
               <span
-                className={`whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.22em] sm:text-[10px] ${
-                  scrolled ? "text-muted-foreground" : "text-white/80"
+                className={`whitespace-nowrap text-[8px] font-semibold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.22em] ${
+                  menuOpen || scrolled ? "text-muted-foreground" : "text-white/80"
                 }`}
               >
                 Import & Export
@@ -269,27 +269,32 @@ function Index() {
             <LanguageSwitcher compact={scrolled} />
           </div>
 
-          <div className="ml-auto flex items-center gap-2.5 md:hidden">
-            <LanguageSwitcher compact={scrolled} />
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:hidden">
+            <LanguageSwitcher compact={menuOpen || scrolled} />
             <button
+              type="button"
               aria-label={c.ui.toggleMenu}
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`rounded-lg p-1.5 ${scrolled ? "text-foreground" : "text-white"}`}
+              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                menuOpen || scrolled
+                  ? "border-border/60 bg-white/70 text-foreground shadow-sm hover:bg-black/5"
+                  : "border-white/20 bg-white/10 text-white backdrop-blur-md hover:bg-white/20"
+              }`}
             >
-              {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {menuOpen ? <X className="h-5 w-5 shrink-0" /> : <Menu className="h-5 w-5 shrink-0" />}
             </button>
           </div>
         </div>
 
         {menuOpen && (
-          <div className="glass border-t border-white/20 md:hidden">
-            <nav className="flex flex-col gap-1 p-6">
+          <div className="glass border-t border-border/40 md:hidden animate-in fade-in slide-in-from-top-2 duration-200">
+            <nav className="flex flex-col gap-1 p-4 sm:p-6 max-h-[calc(100vh-80px)] overflow-y-auto">
               {nav.map((n) => (
                 <a
                   key={n.href}
                   href={n.href}
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-lg px-4 py-3 text-foreground transition-colors hover:bg-fresh/10"
+                  className="rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-fresh/10"
                 >
                   {n.label}
                 </a>
@@ -297,14 +302,14 @@ function Index() {
               <Link
                 to="/news"
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-foreground transition-colors hover:bg-fresh/10"
+                className="rounded-xl px-4 py-3 text-base font-medium text-foreground transition-colors hover:bg-fresh/10"
               >
                 {c.ui.ourNews || "Our News"}
               </Link>
               <a
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
-                className="mt-2 rounded-full bg-gold px-5 py-3 text-center font-semibold text-gold-foreground"
+                className="mt-2 rounded-full bg-gold px-5 py-3 text-center text-sm font-semibold text-gold-foreground shadow-md"
               >
                 {c.ui.requestQuote}
               </a>
