@@ -1,4 +1,4 @@
-import { apiAuth, getSavedUser, clearSession } from "./hostinger-api";
+import { apiAuth, getSavedUser, getSavedToken, clearSession } from "./hostinger-api";
 
 export type AdminSession = {
   userId: string;
@@ -8,12 +8,35 @@ export type AdminSession = {
 
 const LOCAL_SESSION_KEY = "app_local_admin_session";
 
+function isLocalPreviewHost(): boolean {
+  if (typeof window === "undefined") return false;
+  const h = window.location.hostname;
+  return h === "localhost" || h === "127.0.0.1";
+}
+
+function isTokenValidLocally(token: string | null): boolean {
+  if (!token) return false;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return false;
+    const payload = JSON.parse(atob(parts[1]));
+    if (payload?.exp && payload.exp * 1000 < Date.now()) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function getLocalSession(): AdminSession | null {
   if (typeof window === "undefined") return null;
 
-  // 1. Check saved Hostinger user session
+  const token = getSavedToken();
   const hostingerUser = getSavedUser();
-  if (hostingerUser) {
+
+  // Require a valid non-expired JWT token + saved user on production
+  if (token && isTokenValidLocally(token) && hostingerUser) {
     return {
       userId: String(hostingerUser.id),
       email: hostingerUser.email,
@@ -21,7 +44,14 @@ function getLocalSession(): AdminSession | null {
     };
   }
 
-  // 2. Check local dev session
+  // On live domain, NEVER trust a stale session without a real JWT token
+  if (!isLocalPreviewHost()) {
+    clearSession();
+    setLocalSession(null);
+    return null;
+  }
+
+  // Local dev fallback only when running on localhost
   try {
     const raw = localStorage.getItem(LOCAL_SESSION_KEY);
     return raw ? JSON.parse(raw) : null;
@@ -46,23 +76,36 @@ function setLocalSession(session: AdminSession | null) {
 export async function signIn(email: string, password: string): Promise<string | null> {
   const cleanEmail = email.trim().toLowerCase();
 
-  // 1. Try Hostinger MySQL API first
   try {
     const user = await apiAuth.login(cleanEmail, password);
     if (user) {
       const session: AdminSession = {
         userId: String(user.id),
         email: user.email,
-        isAdmin: true,
+        isAdmin: Boolean(user.isAdmin ?? true),
       };
       setLocalSession(session);
       return null;
     }
-  } catch {
-    // API not connected locally or credentials failed on server
+  } catch (err: any) {
+    // On live domain, NEVER silently bypass login or fake a session!
+    if (!isLocalPreviewHost()) {
+      clearSession();
+      setLocalSession(null);
+      return err?.message || "Invalid email or password";
+    }
+    if (err?.message && /invalid|password|credentials|required|unauthorized/i.test(err.message)) {
+      return err.message;
+    }
   }
 
-  // 2. Local dev fallback (offline / Hostinger local preview)
+  if (!isLocalPreviewHost()) {
+    clearSession();
+    setLocalSession(null);
+    return "Authentication failed. Please check your email and password.";
+  }
+
+  // Localhost offline dev preview fallback only (when PHP backend isn't running)
   const local: AdminSession = {
     userId: "admin-1",
     email: cleanEmail || "admin@bucharestegyagro.com",
@@ -75,7 +118,6 @@ export async function signIn(email: string, password: string): Promise<string | 
 export async function signUp(email: string, password: string, fullName: string): Promise<string | null> {
   const cleanEmail = email.trim().toLowerCase();
 
-  // 1. Try Hostinger MySQL API
   try {
     const res = await apiAuth.createUser({
       email: cleanEmail,
@@ -84,19 +126,18 @@ export async function signUp(email: string, password: string, fullName: string):
       superAdmin: true,
     });
     if (res?.id) {
-      const local: AdminSession = {
-        userId: String(res.id),
-        email: cleanEmail,
-        isAdmin: true,
-      };
-      setLocalSession(local);
-      return null;
+      return signIn(cleanEmail, password);
     }
-  } catch {
-    // API not running locally
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Account creation requires an active super admin login.";
+    }
   }
 
-  // 2. Local fallback
+  if (!isLocalPreviewHost()) {
+    return "Unable to create account.";
+  }
+
   const local: AdminSession = {
     userId: "admin-1",
     email: cleanEmail || "admin@bucharestegyagro.com",
@@ -112,11 +153,7 @@ export async function signOut() {
 }
 
 export async function getAdminSession(): Promise<AdminSession | null> {
-  // 1. Try Hostinger session / local session
-  const local = getLocalSession();
-  if (local) return local;
-
-  return null;
+  return getLocalSession();
 }
 
 export async function requestPasswordReset(email: string) {

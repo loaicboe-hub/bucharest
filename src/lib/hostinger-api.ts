@@ -35,6 +35,7 @@ export function clearSession() {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
+  localStorage.removeItem('app_local_admin_session');
 }
 
 export function getSavedUser(): HostingerUser | null {
@@ -63,8 +64,13 @@ async function request<T = any>(endpoint: string, options: RequestInit = {}): Pr
   }
 
   const url = `${API_BASE}/${endpoint.replace(/^\//, '')}`;
-  const res = await fetch(url, { ...options, headers });
+  const res = await fetch(url, { ...options, headers, cache: 'no-store' });
   const data = await res.json().catch(() => ({}));
+
+  if (res.status === 401 && !endpoint.includes('action=login')) {
+    clearSession();
+    throw new Error(data.error || 'Session expired. Please log out and log in again.');
+  }
 
   if (!res.ok || data.success === false) {
     throw new Error(data.error || `Request failed with status ${res.status}`);
@@ -156,10 +162,16 @@ export const apiProducts = {
   },
 
   async save(product: any) {
-    const method = product.id ? 'PUT' : 'POST';
-    return request<{ success: boolean; id?: string }>('products.php', {
-      method,
+    return request<{ success: boolean; id?: string; slug?: string }>('products.php', {
+      method: 'POST',
       body: JSON.stringify(product),
+    });
+  },
+
+  async reorder(rows: { id: string; sort_order: number }[]) {
+    return request<{ success: boolean }>('products.php?action=reorder', {
+      method: 'POST',
+      body: JSON.stringify({ rows }),
     });
   },
 
@@ -181,7 +193,7 @@ export const apiCategories = {
   },
 
   async save(category: any) {
-    return request<{ success: boolean; id: string }>('categories.php', {
+    return request<{ success: boolean; id: string; slug?: string; category?: any }>('categories.php', {
       method: 'POST',
       body: JSON.stringify(category),
     });
@@ -210,9 +222,8 @@ export const apiNews = {
   },
 
   async save(article: any) {
-    const method = article.id ? 'PUT' : 'POST';
-    return request<{ success: boolean; id?: string }>('news.php', {
-      method,
+    return request<{ success: boolean; id?: string; slug?: string }>('news.php', {
+      method: 'POST',
       body: JSON.stringify(article),
     });
   },
@@ -378,9 +389,14 @@ export async function uploadToHostinger(
     method: 'POST',
     body: formData,
     headers,
+    cache: 'no-store',
   });
 
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    clearSession();
+    throw new Error(data.error || 'Session expired. Please log out and log in again.');
+  }
   if (!res.ok || !data.success) {
     throw new Error(data.error || 'Upload to Hostinger failed');
   }

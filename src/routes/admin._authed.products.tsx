@@ -48,7 +48,10 @@ function ProductsPage() {
   const catName = (id: string | null) => cats.find((c) => c.id === id)?.name_en ?? "—";
 
   const openNew = () => {
-    setDraft(blankProduct(tab, cats[0]?.id ?? null));
+    const matchingCat = cats.find((c) => c.trade === tab) ?? cats[0] ?? null;
+    const item = blankProduct(tab, matchingCat?.id ?? null);
+    item.sort_order = visible.length + 1;
+    setDraft(item);
     setOpen(true);
   };
   const openEdit = (p: ProductRow) => { setDraft({ ...p }); setOpen(true); };
@@ -57,12 +60,16 @@ function ProductsPage() {
     const error = await deleteProduct(p.id);
     if (error) return toast.error(error);
     toast.success("Deleted");
-    refresh();
+    await refresh();
   };
 
   const togglePublish = async (p: ProductRow) => {
     setRows((rs) => rs.map((r) => (r.id === p.id ? { ...r, published: !r.published } : r)));
-    await setProductPublished(p.id, !p.published);
+    const error = await setProductPublished(p.id, !p.published);
+    if (error) {
+      toast.error(error);
+      await refresh();
+    }
   };
 
   const move = async (index: number, dir: -1 | 1) => {
@@ -72,7 +79,11 @@ function ProductsPage() {
     [group[index], group[target]] = [group[target], group[index]];
     const ordered = group.map((r, i) => ({ ...r, sort_order: i + 1 }));
     setRows((rs) => rs.map((r) => ordered.find((o) => o.id === r.id) ?? r));
-    await saveOrder(ordered.map((r) => ({ id: r.id, sort_order: r.sort_order })));
+    const error = await saveOrder(ordered.map((r) => ({ id: r.id, sort_order: r.sort_order })));
+    if (error) {
+      toast.error(error);
+      await refresh();
+    }
   };
 
   return (

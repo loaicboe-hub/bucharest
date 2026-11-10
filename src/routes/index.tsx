@@ -508,13 +508,14 @@ function Index() {
             }
             const ungrouped = list.filter((p) => !tradeCats.some((cat) => cat.id === p.category_id));
             if (ungrouped.length)
-              tabs.push({ id: "other", label: lang === "ar" ? "أخرى" : "Other", items: ungrouped });
+              tabs.push({ id: "other", label: lang === "fr" ? "Autres" : "Other", items: ungrouped });
 
             const allTabs =
               tabs.length > 1
-                ? [{ id: "all", label: lang === "ar" ? "الكل" : "All", items: list }, ...tabs]
+                ? [{ id: "all", label: lang === "fr" ? "Tout" : "All", items: list }, ...tabs]
                 : tabs;
             const current = allTabs.find((t) => t.id === activeCat) ?? allTabs[0];
+            const currentItems = current?.items ?? [];
 
             return (
               <>
@@ -536,25 +537,33 @@ function Index() {
                     ))}
                   </div>
                 )}
-                <div
-                  key={`${trade}-${current?.id}`}
-                  className="animate-fade-up mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                >
-                  {(current?.items ?? []).map((p) => {
-                    const l = localized(p, lang);
-                    return (
-                      <ProductCard
-                        key={p.id}
-                        name={l.name}
-                        desc={l.intro}
-                        img={productImage(p)}
-                        slug={p.slug}
-                        premium={c.ui.premium}
-                        learnMore={c.ui.learnMore}
-                      />
-                    );
-                  })}
-                </div>
+                {currentItems.length === 0 ? (
+                  <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-10 text-center">
+                    <p className="text-muted-foreground">
+                      {lang === "fr" ? "Aucun produit dans cette catégorie pour le moment." : "No products available in this category yet."}
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    key={`${trade}-${current?.id}`}
+                    className="animate-fade-up mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                  >
+                    {currentItems.map((p) => {
+                      const l = localized(p, lang);
+                      return (
+                        <ProductCard
+                          key={p.id}
+                          name={l.name}
+                          desc={l.intro}
+                          img={productImage(p)}
+                          slug={p.slug}
+                          premium={c.ui.premium}
+                          learnMore={c.ui.learnMore}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </>
             );
           })()}

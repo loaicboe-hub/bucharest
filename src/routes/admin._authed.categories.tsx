@@ -39,6 +39,7 @@ function CategoriesPage() {
   const [rows, setRows] = useState<ProductCategory[]>([]);
   const [draft, setDraft] = useState<ProductCategory | null>(null);
   const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const refresh = async () => setRows(await listCategories());
   useEffect(() => { refresh(); }, []);
@@ -49,23 +50,29 @@ function CategoriesPage() {
   const save = async () => {
     if (!draft) return;
     if (!draft.name_en.trim()) return toast.error("English name is required");
+    setBusy(true);
     const error = await saveCategory({ ...draft, slug: draft.slug || slugify(draft.name_en) });
+    setBusy(false);
     if (error) return toast.error(error);
     toast.success("Category saved");
     setOpen(false);
-    refresh();
+    await refresh();
   };
 
   const remove = async (c: ProductCategory) => {
     const error = await deleteCategory(c.id);
     if (error) return toast.error(error);
     toast.success("Deleted");
-    refresh();
+    await refresh();
   };
 
   const toggleActive = async (c: ProductCategory) => {
     setRows((rs) => rs.map((r) => (r.id === c.id ? { ...r, active: !r.active } : r)));
-    await saveCategory({ ...c, active: !c.active });
+    const error = await saveCategory({ ...c, active: !c.active });
+    if (error) {
+      toast.error(error);
+      await refresh();
+    }
   };
 
   const move = async (index: number, dir: -1 | 1) => {
@@ -75,7 +82,12 @@ function CategoriesPage() {
     [next[index], next[target]] = [next[target], next[index]];
     const ordered = next.map((r, i) => ({ ...r, sort_order: i + 1 }));
     setRows(ordered);
-    await Promise.all(ordered.map((c) => saveCategory(c)));
+    const errs = await Promise.all(ordered.map((c) => saveCategory(c)));
+    const firstErr = errs.find(Boolean);
+    if (firstErr) {
+      toast.error(firstErr);
+      await refresh();
+    }
   };
 
   return (
@@ -177,7 +189,7 @@ function CategoriesPage() {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={save}>Save</Button>
+            <Button onClick={save} disabled={busy}>{busy ? "Saving..." : "Save"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

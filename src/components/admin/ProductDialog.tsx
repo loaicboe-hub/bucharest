@@ -54,23 +54,29 @@ export function ProductDialog({
 
   const onMainImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
     setBusy(true);
     const { url, error } = await uploadProductImage(file);
     setBusy(false);
     if (error || !url) return toast.error(error ?? "Upload failed");
     setDraft({ ...draft, main_image: url });
+    toast.success("Image uploaded");
   };
 
   const onGalleryImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    e.target.value = "";
     if (!files.length) return;
     setBusy(true);
     const results = await Promise.all(files.map(uploadProductImage));
     setBusy(false);
     const urls = results.map((r) => r.url).filter(Boolean) as string[];
-    if (!urls.length) return toast.error("Upload failed");
+    const err = results.find((r) => r.error)?.error;
+    if (!urls.length) return toast.error(err ?? "Upload failed");
+    if (err) toast.warning(err);
     setDraft({ ...draft, gallery: [...draft.gallery, ...urls] });
+    toast.success("Gallery image uploaded");
   };
 
   const save = async () => {
@@ -104,7 +110,21 @@ export function ProductDialog({
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label>Type</Label>
-            <Select value={draft.trade} onValueChange={(v) => setDraft({ ...draft, trade: v as ProductRow["trade"] })}>
+            <Select
+              value={draft.trade}
+              onValueChange={(v) => {
+                const newTrade = v as ProductRow["trade"];
+                const currentCat = categories.find((c) => c.id === draft.category_id);
+                const matchingCat = currentCat && currentCat.trade === newTrade
+                  ? currentCat
+                  : categories.find((c) => c.trade === newTrade);
+                setDraft({
+                  ...draft,
+                  trade: newTrade,
+                  category_id: matchingCat ? matchingCat.id : draft.category_id,
+                });
+              }}
+            >
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="export">Export Products</SelectItem>
@@ -116,12 +136,21 @@ export function ProductDialog({
             <Label>Category</Label>
             <Select
               value={draft.category_id ?? ""}
-              onValueChange={(v) => setDraft({ ...draft, category_id: v })}
+              onValueChange={(v) => {
+                const chosen = categories.find((c) => c.id === v);
+                setDraft({
+                  ...draft,
+                  category_id: v,
+                  trade: chosen ? chosen.trade : draft.trade,
+                });
+              }}
             >
               <SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger>
               <SelectContent>
                 {categories.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.name_en}</SelectItem>
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name_en} ({c.trade === "import" ? "Import" : "Export"})
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

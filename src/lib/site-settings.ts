@@ -91,14 +91,9 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
 }
 
 export async function saveSiteSettings(s: SiteSettings): Promise<string | null> {
-  // Always persist locally in browser
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
-    } catch {}
-  }
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-  // 1. Try Hostinger MySQL API
+  // 1. Save to Hostinger MySQL API
   try {
     await apiSettings.save({
       companyName: s.companyName,
@@ -122,8 +117,14 @@ export async function saveSiteSettings(s: SiteSettings): Promise<string | null> 
       seoOgImage: s.seoOgImage,
       seo_og_image: s.seoOgImage,
     });
-  } catch {
-    /* fallback */
+  } catch (err: any) {
+    if (!isLocal) return err?.message || "Failed to save settings to server.";
+  }
+
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    } catch {}
   }
 
   return null;

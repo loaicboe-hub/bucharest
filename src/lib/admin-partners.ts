@@ -57,18 +57,10 @@ export async function listPartners(onlyEnabled = false): Promise<Partner[]> {
 }
 
 export async function savePartner(p: Partner): Promise<string | null> {
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
   const partners = getLocalPartners();
-  const id = p.id || `partner-${Date.now()}`;
+  const id = p.id || `partner-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
   const partner: Partner = { ...p, id, sortOrder: p.sortOrder || partners.length + 1 };
-
-  const idx = partners.findIndex((item) => item.id === id);
-  if (idx >= 0) {
-    partners[idx] = partner;
-  } else {
-    partners.push(partner);
-  }
-  setLocalPartners(partners);
-  notify();
 
   try {
     await apiPartners.save({
@@ -80,19 +72,32 @@ export async function savePartner(p: Partner): Promise<string | null> {
       enabled: partner.enabled,
       sort_order: partner.sortOrder,
     });
-  } catch {}
+  } catch (err: any) {
+    if (!isLocal) return err?.message || "Failed to save partner to server.";
+  }
 
+  const idx = partners.findIndex((item) => item.id === partner.id);
+  if (idx >= 0) {
+    partners[idx] = partner;
+  } else {
+    partners.push(partner);
+  }
+  setLocalPartners(partners);
+  notify();
   return null;
 }
 
 export async function deletePartner(id: string): Promise<string | null> {
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+  try {
+    await apiPartners.delete(id);
+  } catch (err: any) {
+    if (!isLocal) return err?.message || "Failed to delete partner from server.";
+  }
+
   const partners = getLocalPartners().filter((p) => p.id !== id);
   setLocalPartners(partners);
   notify();
-
-  try {
-    await apiPartners.delete(id);
-  } catch {}
   return null;
 }
 

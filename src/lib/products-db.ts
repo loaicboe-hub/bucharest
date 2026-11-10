@@ -52,6 +52,18 @@ export const EMPTY_SPECS: ProductSpecs = {
   certifications: "",
 };
 
+function isLocalPreviewHost(): boolean {
+  if (typeof window === "undefined") return false;
+  const h = window.location.hostname;
+  return h === "localhost" || h === "127.0.0.1";
+}
+
+function makeShortId(prefix: string): string {
+  const ts = Date.now().toString(36);
+  const rand = Math.random().toString(36).slice(2, 6);
+  return `${prefix}-${ts}${rand}`;
+}
+
 export function slugify(value: string) {
   return value
     .toLowerCase()
@@ -147,8 +159,8 @@ function setLocalCategories(cats: ProductCategory[]) {
 export async function listCategories(onlyActive = false): Promise<ProductCategory[]> {
   try {
     const remote = await apiCategories.list(onlyActive);
-    if (Array.isArray(remote) && remote.length > 0) {
-      setLocalCategories(remote);
+    if (Array.isArray(remote)) {
+      if (!onlyActive) setLocalCategories(remote);
       return remote;
     }
   } catch {}
@@ -159,10 +171,10 @@ export async function listCategories(onlyActive = false): Promise<ProductCategor
 
 export async function saveCategory(c: Partial<ProductCategory>): Promise<string | null> {
   const cats = getLocalCategories();
-  const id = c.id || `cat-${Date.now()}`;
+  const id = c.id || makeShortId("cat");
   const category: ProductCategory = {
     id,
-    slug: c.slug || slugify(c.name_en || ""),
+    slug: c.slug || slugify(c.name_en || "") || makeShortId("cat"),
     name_en: c.name_en ?? "",
     name_ar: c.name_ar ?? "",
     sort_order: c.sort_order ?? cats.length + 1,
@@ -170,29 +182,37 @@ export async function saveCategory(c: Partial<ProductCategory>): Promise<string 
     trade: c.trade ?? "export",
   };
 
-  const existingIdx = cats.findIndex((item) => item.id === id);
+  try {
+    const res = await apiCategories.save(category);
+    if (res?.id) category.id = res.id;
+    if (res?.slug) category.slug = res.slug;
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to save category to server.";
+    }
+  }
+
+  const existingIdx = cats.findIndex((item) => item.id === category.id);
   if (existingIdx >= 0) {
     cats[existingIdx] = category;
   } else {
     cats.push(category);
   }
   setLocalCategories(cats);
-
-  try {
-    await apiCategories.save(category);
-  } catch {}
-
   return null;
 }
 
 export async function deleteCategory(id: string): Promise<string | null> {
-  const cats = getLocalCategories().filter((c) => c.id !== id);
-  setLocalCategories(cats);
-
   try {
     await apiCategories.delete(id);
-  } catch {}
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to delete category from server.";
+    }
+  }
 
+  const cats = getLocalCategories().filter((c) => c.id !== id);
+  setLocalCategories(cats);
   return null;
 }
 
@@ -241,7 +261,7 @@ function setLocalProducts(prods: ProductRow[]) {
 export async function listPublishedProducts(): Promise<ProductRow[]> {
   try {
     const remote = await apiProducts.list();
-    if (Array.isArray(remote) && remote.length > 0) return remote as ProductRow[];
+    if (Array.isArray(remote)) return remote as ProductRow[];
   } catch {}
 
   return getLocalProducts().filter((p) => p.published);
@@ -250,7 +270,7 @@ export async function listPublishedProducts(): Promise<ProductRow[]> {
 export async function listAllProducts(): Promise<ProductRow[]> {
   try {
     const remote = await apiProducts.list({ all: true });
-    if (Array.isArray(remote) && remote.length > 0) {
+    if (Array.isArray(remote)) {
       setLocalProducts(remote as ProductRow[]);
       return remote as ProductRow[];
     }
@@ -270,49 +290,81 @@ export async function getProductBySlug(slug: string): Promise<ProductRow | null>
 
 export async function saveProduct(p: ProductRow): Promise<string | null> {
   const prods = getLocalProducts();
-  const id = p.id || `prod-${p.slug || slugify(p.name_en)}-${Date.now()}`;
-  const product: ProductRow = { ...p, id, slug: p.slug || slugify(p.name_en) };
+  const id = p.id || makeShortId("prod");
+  const product: ProductRow = {
+    ...p,
+    id,
+    slug: p.slug || slugify(p.name_en) || makeShortId("item"),
+  };
 
-  const idx = prods.findIndex((item) => item.id === id || item.slug === product.slug);
+  try {
+    const res = await apiProducts.save(product);
+    if (res?.id) product.id = res.id;
+    if (res?.slug) product.slug = res.slug;
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to save product to server.";
+    }
+  }
+
+  const idx = prods.findIndex((item) => item.id === product.id);
   if (idx >= 0) {
     prods[idx] = product;
   } else {
     prods.push(product);
   }
   setLocalProducts(prods);
-
-  try {
-    await apiProducts.save(product);
-  } catch {}
-
   return null;
 }
 
 export async function deleteProduct(id: string): Promise<string | null> {
-  const prods = getLocalProducts().filter((p) => p.id !== id);
-  setLocalProducts(prods);
-
   try {
     await apiProducts.delete(id);
-  } catch {}
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to delete product from server.";
+    }
+  }
 
+  const prods = getLocalProducts().filter((p) => p.id !== id);
+  setLocalProducts(prods);
   return null;
 }
 
-export async function setProductPublished(id: string, published: boolean) {
+export async function setProductPublished(id: string, published: boolean): Promise<string | null> {
   const prods = getLocalProducts();
   const p = prods.find((item) => item.id === id);
+  const updated = p ? { ...p, published } : null;
+
+  try {
+    if (updated) {
+      await apiProducts.save(updated);
+    } else {
+      const remote = await apiProducts.get(id);
+      if (remote) await apiProducts.save({ ...remote, published });
+    }
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to update publish status.";
+    }
+  }
+
   if (p) {
     p.published = published;
     setLocalProducts(prods);
   }
-
-  try {
-    if (p) await apiProducts.save(p);
-  } catch {}
+  return null;
 }
 
-export async function saveOrder(rows: { id: string; sort_order: number }[]) {
+export async function saveOrder(rows: { id: string; sort_order: number }[]): Promise<string | null> {
+  try {
+    await apiProducts.reorder(rows);
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return err?.message || "Failed to save product order.";
+    }
+  }
+
   const prods = getLocalProducts();
   const orderMap = new Map(rows.map((r) => [r.id, r.sort_order]));
   prods.forEach((p) => {
@@ -320,14 +372,23 @@ export async function saveOrder(rows: { id: string; sort_order: number }[]) {
   });
   prods.sort((a, b) => a.sort_order - b.sort_order);
   setLocalProducts(prods);
+  return null;
 }
 
-/** Uploads an image to storage or converts to local data URL in dev mode. */
+/** Uploads an image to Hostinger storage (falls back to Data URL only on localhost). */
 export async function uploadProductImage(file: File): Promise<{ url?: string; error?: string }> {
   try {
     const res = await uploadToHostinger(file, "products");
     if (res?.url) return { url: res.url };
-  } catch {}
+  } catch (err: any) {
+    if (!isLocalPreviewHost()) {
+      return { error: err?.message || "Failed to upload image to server." };
+    }
+  }
+
+  if (!isLocalPreviewHost()) {
+    return { error: "Failed to upload image to server." };
+  }
 
   return new Promise((resolve) => {
     const reader = new FileReader();

@@ -1,4 +1,8 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-router";
+import { apiAuth } from "@/lib/hostinger-api";
+import { signOut } from "@/lib/admin-auth";
+import { toast } from "sonner";
 import { Languages } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
@@ -44,6 +48,19 @@ export const Route = createFileRoute("/admin/_authed")({
 function AuthedLayout() {
   const { session, isSuper, permissions } = Route.useRouteContext();
   const { t, lang, setLang, dir } = useAdminLang();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const h = window.location.hostname;
+    if (h === "localhost" || h === "127.0.0.1") return;
+
+    apiAuth.me().catch(async () => {
+      await signOut();
+      toast.error("Admin session expired. Please sign in again.");
+      navigate({ to: "/admin/login" });
+    });
+  }, [navigate]);
   return (
     <PermissionsProvider value={{ isSuper, permissions }}>
     <SidebarProvider>

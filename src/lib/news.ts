@@ -102,48 +102,60 @@ export async function listAllNews(): Promise<NewsArticle[]> {
 
 export async function saveNews(article: NewsArticle): Promise<string | null> {
   const items = getLocalNews();
-  const id = article.id || `news-${Date.now()}`;
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+  const id = article.id || `news-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
   const item: NewsArticle = {
     ...article,
     id,
-    slug: article.slug || slugifyNews(article.title),
+    slug: article.slug || slugifyNews(article.title) || id,
     updated_at: new Date().toISOString(),
   };
 
-  const idx = items.findIndex((a) => a.id === id || a.slug === item.slug);
+  try {
+    const res = await apiNews.save(item);
+    if (res?.id) item.id = res.id;
+    if (res?.slug) item.slug = res.slug;
+  } catch (err: any) {
+    if (!isLocal) return err?.message || "Failed to save article to server.";
+  }
+
+  const idx = items.findIndex((a) => a.id === item.id);
   if (idx >= 0) {
     items[idx] = item;
   } else {
     items.unshift(item);
   }
   setLocalNews(items);
-
-  try {
-    await apiNews.save(item);
-  } catch {}
-
   return null;
 }
 
 export async function deleteNews(id: string): Promise<string | null> {
-  const items = getLocalNews().filter((a) => a.id !== id);
-  setLocalNews(items);
-
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
   try {
     await apiNews.delete(id);
-  } catch {}
+  } catch (err: any) {
+    if (!isLocal) return err?.message || "Failed to delete article from server.";
+  }
+
+  const items = getLocalNews().filter((a) => a.id !== id);
+  setLocalNews(items);
   return null;
 }
 
-/** Uploads an image to storage or converts to local data URL. */
+/** Uploads an image to storage or converts to local data URL on localhost. */
 export async function uploadNewsImage(file: File): Promise<{ url?: string; error?: string }> {
   if (!file.type.startsWith("image/")) return { error: "Please choose an image file." };
   if (file.size > 8 * 1024 * 1024) return { error: "Image is too large. Keep it under 8 MB." };
 
+  const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
   try {
     const res = await uploadToHostinger(file, "news");
     if (res?.url) return { url: res.url };
-  } catch {}
+  } catch (err: any) {
+    if (!isLocal) return { error: err?.message || "Failed to upload image to server." };
+  }
+
+  if (!isLocal) return { error: "Failed to upload image to server." };
 
   return new Promise((resolve) => {
     const reader = new FileReader();
