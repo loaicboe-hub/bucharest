@@ -16,6 +16,7 @@ import {
   Link2,
 } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
+import { sanitizeRichHtml, sanitizeUrl } from "@/lib/sanitize";
 import {
   getNewsBySlug,
   listPublishedNews,
@@ -102,7 +103,7 @@ function NewsDetail() {
   }, [slug]);
 
   const title = article ? (lang === "fr" && article.title_ar) || article.title : "";
-  const content = article ? (lang === "fr" && article.content_ar) || article.content : "";
+  const content = article ? sanitizeRichHtml((lang === "fr" && article.content_ar) || article.content) : "";
 
   useEffect(() => {
     if (title) document.title = `${title} | BucharestEgyAgro Import and Export`;
@@ -178,9 +179,9 @@ function NewsDetail() {
           )}
         </div>
 
-        {article.featured_image && (
+        {article.featured_image && sanitizeUrl(article.featured_image, true) && (
           <img
-            src={article.featured_image}
+            src={sanitizeUrl(article.featured_image, true)}
             alt={title}
             className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover shadow-lg"
           />

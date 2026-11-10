@@ -32,6 +32,7 @@ import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
 import { WhatsAppButton, WhatsAppIcon } from "@/components/WhatsAppButton";
 import { useLang, initLang } from "@/lib/i18n";
+import { sanitizeUrl } from "@/lib/sanitize";
 import {
   Award,
   ShieldCheck,
@@ -1025,9 +1026,9 @@ function Index() {
               <div className="mt-6 flex gap-3">
                 {(
                   [
-                    [Facebook, site.facebook || footer.social.facebook],
-                    [Instagram, site.instagram || footer.social.instagram],
-                    [Linkedin, site.linkedin || footer.social.linkedin],
+                    [Facebook, sanitizeUrl(site.facebook || footer.social.facebook, false)],
+                    [Instagram, sanitizeUrl(site.instagram || footer.social.instagram, false)],
+                    [Linkedin, sanitizeUrl(site.linkedin || footer.social.linkedin, false)],
                     ...(site.whatsapp || site.phone
                       ? [[WhatsAppIcon, ('https://wa.me/' + (site.whatsapp || site.phone).replace(/[^0-9]/g, ''))] as const]
                       : []),
@@ -1154,18 +1155,21 @@ function FooterCol({ title, links }: { title: string; links: FooterLink[] }) {
         {title}
       </div>
       <ul className="mt-4 space-y-2.5 text-sm">
-        {links.map((l) => (
+        {links.map((l) => {
+          const safeHref = sanitizeUrl(l.href, true) || "#top";
+          return (
           <li key={l.label}>
             <a
-              href={l.href || "#top"}
-              target={l.href?.startsWith("http") ? "_blank" : undefined}
-              rel="noreferrer"
+              href={safeHref}
+              target={safeHref.startsWith("http") ? "_blank" : undefined}
+              rel="noopener noreferrer"
               className="text-primary-foreground/70 transition-colors hover:text-gold"
             >
               {l.label}
             </a>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

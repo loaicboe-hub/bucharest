@@ -64,7 +64,8 @@ if ($method === 'GET') {
 
         sendJson(['success' => true, 'products' => $products]);
     } catch (PDOException $e) {
-        sendError('Failed to fetch products: ' . $e->getMessage(), 500);
+        error_log('Products fetch DB error: ' . $e->getMessage());
+        sendError('Failed to fetch products', 500);
     }
 }
 
@@ -121,10 +122,11 @@ if ($method === 'POST' || $method === 'PUT') {
             }
         }
 
-        $mainImage = trim($input['main_image'] ?? '');
-        if (strpos($mainImage, 'data:image/') === 0 && strlen($mainImage) > 500) {
+        $mainImageRaw = trim((string)($input['main_image'] ?? ''));
+        if (strpos($mainImageRaw, 'data:image/') === 0 && strlen($mainImageRaw) > 500) {
             sendError('Image must be uploaded to the server first rather than embedded as base64.', 400);
         }
+        $mainImage = sanitizeSafeUrl($mainImageRaw, true);
 
         // Check if updating an existing product or inserting a new one
         $checkIdStmt = $db->prepare("SELECT id FROM products WHERE id = ? LIMIT 1");
@@ -141,7 +143,11 @@ if ($method === 'POST' || $method === 'PUT') {
         $specsEn = json_encode($input['specs_en'] ?? new stdClass(), JSON_UNESCAPED_UNICODE);
         $specsAr = json_encode($input['specs_ar'] ?? new stdClass(), JSON_UNESCAPED_UNICODE);
         $hiddenSpecs = json_encode($input['hidden_specs'] ?? [], JSON_UNESCAPED_UNICODE);
-        $gallery = json_encode($input['gallery'] ?? [], JSON_UNESCAPED_UNICODE);
+        $rawGallery = is_array($input['gallery'] ?? null) ? $input['gallery'] : [];
+        $safeGallery = array_values(array_filter(array_map(function($g) {
+            return sanitizeSafeUrl((string)$g, true);
+        }, array_slice($rawGallery, 0, 20))));
+        $gallery = json_encode($safeGallery, JSON_UNESCAPED_UNICODE);
         $published = isset($input['published']) ? ($input['published'] ? 1 : 0) : 1;
         $sortOrder = intval($input['sort_order'] ?? 1);
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Bold, Italic, Underline, List, ListOrdered, Heading2, Link2, Quote, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sanitizeRichHtml, sanitizeUrl } from "@/lib/sanitize";
 
 /** Lightweight rich text editor (contentEditable + document.execCommand). */
 export function RichTextEditor({
@@ -17,13 +18,14 @@ export function RichTextEditor({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (ref.current && ref.current.innerHTML !== value) ref.current.innerHTML = value;
+    const clean = sanitizeRichHtml(value);
+    if (ref.current && ref.current.innerHTML !== clean) ref.current.innerHTML = clean;
   }, [value]);
 
   const exec = (command: string, arg?: string) => {
     ref.current?.focus();
     document.execCommand(command, false, arg);
-    onChange(ref.current?.innerHTML ?? "");
+    onChange(sanitizeRichHtml(ref.current?.innerHTML ?? ""));
   };
 
   const tools = [
@@ -61,8 +63,9 @@ export function RichTextEditor({
           title="Insert link"
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => {
-            const url = window.prompt("Link URL");
-            if (url) exec("createLink", url);
+            const rawUrl = window.prompt("Link URL (https:// or /path)");
+            const safe = sanitizeUrl(rawUrl, true);
+            if (safe) exec("createLink", safe);
           }}
         >
           <Link2 className="h-4 w-4" />
@@ -85,7 +88,7 @@ export function RichTextEditor({
         contentEditable
         suppressContentEditableWarning
         data-placeholder={placeholder}
-        onInput={(e) => onChange((e.target as HTMLDivElement).innerHTML)}
+        onInput={(e) => onChange(sanitizeRichHtml((e.target as HTMLDivElement).innerHTML))}
         className="prose-editor min-h-[220px] w-full overflow-y-auto p-3 text-sm outline-none [&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:italic [&_h2]:mb-2 [&_h2]:mt-3 [&_h2]:text-lg [&_h2]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5"
       />
     </div>

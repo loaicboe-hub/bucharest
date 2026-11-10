@@ -132,23 +132,30 @@ function LoginPage() {
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Sign in
                   </Button>
-                  {typeof window !== "undefined" &&
+                  {import.meta.env.DEV &&
+                    typeof window !== "undefined" &&
                     (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && (
                       <Button
                         type="button"
                         variant="outline"
                         className="w-full border-dashed"
                         onClick={() => {
-                          setEmail("admin@bucharestegyagro.com");
-                          setPassword("admin123456");
-                          signIn("admin@bucharestegyagro.com", "admin123456").then((err) => {
+                          const devEmail = "admin@bucharestegyagro.com";
+                          const devPass = import.meta.env.VITE_DEV_ADMIN_PASS || "";
+                          setEmail(devEmail);
+                          if (!devPass) {
+                            toast.info("Enter password or set VITE_DEV_ADMIN_PASS in local .env");
+                            return;
+                          }
+                          setPassword(devPass);
+                          signIn(devEmail, devPass).then((err) => {
                             if (err) return toast.error(err);
                             toast.success("Signed in as Local Admin");
                             navigate({ to: "/admin/dashboard" });
                           });
                         }}
                       >
-                        🚀 Quick Dev Login (1-Click)
+                        Quick Dev Login (Local Dev)
                       </Button>
                     )}
                   {!forgotOpen && (

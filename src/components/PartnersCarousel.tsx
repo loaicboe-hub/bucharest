@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { listPartners, PARTNERS_EVENT, type Partner } from "@/lib/admin-partners";
+import { sanitizeUrl } from "@/lib/sanitize";
 
 export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?: string }) {
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -45,9 +46,12 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
           }}
         >
           {loop.map((p, i) => {
+            const safeLogo = sanitizeUrl(p.logo, true);
+            const safeUrl = sanitizeUrl(p.url, false);
+            if (!safeLogo) return null;
             const img = (
               <img
-                src={p.logo}
+                src={safeLogo}
                 alt={p.name ? `${p.name} logo` : "Partner logo"}
                 loading="lazy"
                 className="max-h-full max-w-full object-contain select-none transition-transform duration-300"
@@ -59,8 +63,8 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
                 className="flex h-20 w-32 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-card p-2.5 shadow-sm transition-all duration-300 sm:h-28 sm:w-44 sm:rounded-2xl sm:p-3.5 md:h-36 md:w-56 md:p-5"
                 aria-hidden={i >= partners.length}
               >
-                {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" title={p.name} className="flex h-full w-full items-center justify-center">
+                {safeUrl ? (
+                  <a href={safeUrl} target="_blank" rel="noopener noreferrer" title={p.name} className="flex h-full w-full items-center justify-center">
                     {img}
                   </a>
                 ) : (

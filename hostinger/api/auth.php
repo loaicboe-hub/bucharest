@@ -5,24 +5,40 @@ $db = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
-// 1. POST ?action=login
+// 1. POST ?action=login (Rate-limited & Brute-Force Protected)
 if ($method === 'POST' && $action === 'login') {
     $input = getJsonInput();
-    $email = trim(strtolower($input['email'] ?? ''));
-    $password = $input['password'] ?? '';
+    $email = trim(strtolower((string)($input['email'] ?? '')));
+    $password = (string)($input['password'] ?? '');
 
-    if (empty($email) || empty($password)) {
-        sendError('Email and password are required', 400);
+    if ($email === '' || $password === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        enforceLoginRateLimit($email);
+        recordFailedLoginAttempt($email);
+        sendError('Valid email and password are required', 400);
     }
 
-    $stmt = $db->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if (!$user || !password_verify($password, $user['password_hash'])) {
+    if (strlen($password) > 200) {
         sendError('Invalid email or password', 401);
     }
 
+    // Check IP, IP+email lockout, and distributed per-email cap BEFORE bcrypt/DB work
+    enforceLoginRateLimit($email);
+
+    try {
+        $stmt = $db->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+    } catch (PDOException $e) {
+        error_log('Auth login DB error: ' . $e->getMessage());
+        sendError('Authentication service temporarily unavailable', 500);
+    }
+
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        recordFailedLoginAttempt($email);
+        sendError('Invalid email or password', 401);
+    }
+
+    clearFailedLoginAttempts($email);
     $token = generateToken($user['id'], $user['email'], $user['role']);
 
     sendJson([
@@ -96,13 +112,13 @@ if ($method === 'POST' && $action === 'create-user') {
     }
 
     $input = getJsonInput();
-    $email = trim(strtolower($input['email'] ?? ''));
-    $password = $input['password'] ?? '';
-    $fullName = trim($input['fullName'] ?? $input['full_name'] ?? '');
+    $email = trim(strtolower((string)($input['email'] ?? '')));
+    $password = (string)($input['password'] ?? '');
+    $fullName = substr(trim((string)($input['fullName'] ?? $input['full_name'] ?? '')), 0, 191);
     $role = !empty($input['superAdmin']) ? 'super_admin' : 'admin';
 
-    if (empty($email) || strlen($password) < 6) {
-        sendError('Valid email and password (min 6 chars) are required', 400);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 8 || strlen($password) > 200) {
+        sendError('Valid email and strong password (8-200 chars) are required', 400);
     }
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -116,6 +132,7 @@ if ($method === 'POST' && $action === 'create-user') {
         if ($e->getCode() == 23000) {
             sendError('An account with this email already exists', 409);
         }
+        error_log('Create user DB error: ' . $e->getMessage());
         sendError('Failed to create user', 500);
     }
 }
@@ -127,8 +144,8 @@ if ($method === 'DELETE' && $action === 'delete-user') {
         sendError('Super admin permission required', 403);
     }
 
-    $userId = $_GET['id'] ?? '';
-    if (empty($userId)) sendError('User ID is required', 400);
+    $userId = trim((string)($_GET['id'] ?? ''));
+    if ($userId === '') sendError('User ID is required', 400);
     if ($userId === $authUser['sub']) sendError('Cannot delete your own account', 400);
 
     $stmt = $db->prepare("DELETE FROM users WHERE id = ?");
@@ -143,10 +160,10 @@ if ($method === 'POST' && $action === 'set-password') {
         sendError('Super admin permission required', 403);
     }
     $input = getJsonInput();
-    $userId = $input['userId'] ?? '';
-    $password = $input['password'] ?? '';
-    if (empty($userId) || strlen($password) < 6) {
-        sendError('User ID and valid password (min 6 chars) are required', 400);
+    $userId = trim((string)($input['userId'] ?? ''));
+    $password = (string)($input['password'] ?? '');
+    if ($userId === '' || strlen($password) < 8 || strlen($password) > 200) {
+        sendError('User ID and valid password (min 8 chars) are required', 400);
     }
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
@@ -161,9 +178,9 @@ if ($method === 'POST' && $action === 'set-role') {
         sendError('Super admin permission required', 403);
     }
     $input = getJsonInput();
-    $userId = $input['userId'] ?? '';
+    $userId = trim((string)($input['userId'] ?? ''));
     $role = !empty($input['value']) || ($input['role'] ?? '') === 'super_admin' ? 'super_admin' : 'admin';
-    if (empty($userId)) sendError('User ID is required', 400);
+    if ($userId === '') sendError('User ID is required', 400);
     $stmt = $db->prepare("UPDATE users SET role = ? WHERE id = ?");
     $stmt->execute([$role, $userId]);
     sendJson(['success' => true]);
@@ -172,8 +189,8 @@ if ($method === 'POST' && $action === 'set-role') {
 // 8. GET ?action=permissions&userId=...
 if ($method === 'GET' && $action === 'permissions') {
     requireAuth();
-    $userId = $_GET['userId'] ?? '';
-    if (empty($userId)) sendError('User ID is required', 400);
+    $userId = trim((string)($_GET['userId'] ?? ''));
+    if ($userId === '') sendError('User ID is required', 400);
     $stmt = $db->prepare("SELECT module_key, can_view, can_create, can_edit, can_delete FROM user_permissions WHERE user_id = ?");
     $stmt->execute([$userId]);
     $rows = $stmt->fetchAll();
@@ -187,12 +204,12 @@ if ($method === 'POST' && $action === 'save-permissions') {
         sendError('Super admin permission required', 403);
     }
     $input = getJsonInput();
-    $userId = $input['userId'] ?? '';
+    $userId = trim((string)($input['userId'] ?? ''));
     $perms = $input['permissions'] ?? [];
-    if (empty($userId)) sendError('User ID is required', 400);
+    if ($userId === '' || !is_array($perms)) sendError('User ID is required', 400);
 
     foreach ($perms as $p) {
-        $key = $p['module_key'] ?? '';
+        $key = substr(preg_replace('/[^a-z0-9._-]/i', '', (string)($p['module_key'] ?? '')), 0, 100);
         if (!$key) continue;
         $stmt = $db->prepare("
             INSERT INTO user_permissions (id, user_id, module_key, can_view, can_create, can_edit, can_delete)

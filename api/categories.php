@@ -18,7 +18,8 @@ if ($method === 'GET') {
 
         sendJson(['success' => true, 'categories' => $categories]);
     } catch (PDOException $e) {
-        sendError('Failed to fetch categories: ' . $e->getMessage(), 500);
+        error_log('Categories list DB error: ' . $e->getMessage());
+        sendError('Failed to fetch categories', 500);
     }
 }
 
@@ -28,7 +29,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $input = getJsonInput();
 
     try {
-        $rawId = trim($input['id'] ?? $_GET['id'] ?? '');
+        $rawId = trim((string)($input['id'] ?? $_GET['id'] ?? ''));
         if ($rawId === '') {
             $id = 'cat-' . bin2hex(random_bytes(6));
         } elseif (strlen($rawId) > 36) {
@@ -37,9 +38,9 @@ if ($method === 'POST' || $method === 'PUT') {
             $id = $rawId;
         }
 
-        $rawSlug = trim($input['slug'] ?? '');
+        $rawSlug = trim((string)($input['slug'] ?? ''));
         if ($rawSlug === '') {
-            $rawSlug = trim($input['name_en'] ?? '');
+            $rawSlug = trim((string)($input['name_en'] ?? ''));
         }
         $slug = trim(preg_replace('/[^a-z0-9]+/i', '-', strtolower($rawSlug)), '-');
         if ($slug === '') {
@@ -47,8 +48,8 @@ if ($method === 'POST' || $method === 'PUT') {
         }
 
         $trade = ($input['trade'] ?? 'export') === 'import' ? 'import' : 'export';
-        $nameEn = trim($input['name_en'] ?? '');
-        $nameAr = trim($input['name_ar'] ?? '');
+        $nameEn = substr(trim((string)($input['name_en'] ?? '')), 0, 191);
+        $nameAr = substr(trim((string)($input['name_ar'] ?? '')), 0, 191);
         $sortOrder = intval($input['sort_order'] ?? 1);
         $active = isset($input['active']) ? ($input['active'] ? 1 : 0) : 1;
 

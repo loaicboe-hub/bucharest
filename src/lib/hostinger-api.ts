@@ -67,6 +67,12 @@ async function request<T = any>(endpoint: string, options: RequestInit = {}): Pr
   const res = await fetch(url, { ...options, headers, cache: 'no-store' });
   const data = await res.json().catch(() => ({}));
 
+  if (res.status === 429) {
+    const retryAfter = res.headers.get('Retry-After');
+    const waitHint = retryAfter ? ` Please wait ${retryAfter} seconds.` : '';
+    throw new Error(data.error || `Too many requests.${waitHint}`);
+  }
+
   if (res.status === 401 && !endpoint.includes('action=login')) {
     clearSession();
     throw new Error(data.error || 'Session expired. Please log out and log in again.');
@@ -393,6 +399,11 @@ export async function uploadToHostinger(
   });
 
   const data = await res.json().catch(() => ({}));
+  if (res.status === 429) {
+    const retryAfter = res.headers.get('Retry-After');
+    const waitHint = retryAfter ? ` Please wait ${retryAfter} seconds.` : '';
+    throw new Error(data.error || `Too many uploads.${waitHint}`);
+  }
   if (res.status === 401) {
     clearSession();
     throw new Error(data.error || 'Session expired. Please log out and log in again.');

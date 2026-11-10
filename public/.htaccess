@@ -2,6 +2,10 @@
 # BucharestEgyAgro - Hostinger Apache / LiteSpeed Configuration (.htaccess)
 # ==============================================================================
 
+<IfModule mod_autoindex.c>
+  IndexIgnore *
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -10,18 +14,48 @@
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # 2. Allow direct access to API scripts and uploads folder
+  # 2. Block dangerous HTTP methods (TRACE / TRACK / CONNECT)
+  RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|CONNECT) [NC]
+  RewriteRule ^ - [F,L]
+
+  # 3. Block vulnerability scanners and exploit bots
+  RewriteCond %{HTTP_USER_AGENT} (sqlmap|nikto|nmap|nessus|acunetix|havij|masscan|zgrab|gobuster|dirbuster|wfuzz|hydra|libwww-perl) [NC]
+  RewriteRule ^ - [F,L]
+
+  # 4. Block malicious query-string probes (path traversal, SQLi, XSS, PHP stream wrappers)
+  RewriteCond %{QUERY_STRING} (\.\./|\.\.\\|%2e%2e|%00|<script|javascript:|vbscript:|php://|phar://|expect://|union.*select|into\s+outfile|benchmark\(|base64_encode\() [NC]
+  RewriteRule ^ - [F,L]
+
+  # 5. Block direct web access to dotfiles, SQL dumps, logs, backups, and config files
+  RewriteRule (^|/)\.(?!well-known/) - [F,L]
+  RewriteRule \.(sql|env|log|bak|old|orig|tmp|swp|sh|ini|dist)$ - [NC,F,L]
+  RewriteRule ^(package(-lock)?\.json|composer\.(json|lock)|bunfig\.toml|tsconfig\.json|vite\.config\..*|README\.md|AGENTS\.md|nitro\.json)$ - [NC,F,L]
+
+  # 6. Disallow script execution anywhere inside /uploads/
+  RewriteRule ^uploads/.*\.(php|php[0-9]|phtml|phar|pl|py|rb|cgi|sh|bash|asp|aspx|jsp|html|htm|xhtml|svg|svgz|js|mjs|vbs|exe|dll|bat|cmd)$ - [NC,F,L]
+
+  # 7. Allow direct access to API scripts and sanitized uploads folder
   RewriteRule ^api/ - [L]
   RewriteRule ^uploads/ - [L]
 
-  # 3. Serve existing files and directories directly
+  # 8. Serve existing files and directories directly
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 4. Route all other requests to index.html for Single-Page Application (SPA)
+  # 9. Route all other requests to index.html for Single-Page Application (SPA)
   RewriteRule ^ index.html [L]
 </IfModule>
+
+<FilesMatch "\.(?i:sql|env|log|bak|old|sh|ini|htaccess|htpasswd)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
 
 # ------------------------------------------------------------------------------
 # Performance: Gzip Compression
@@ -54,8 +88,10 @@
 # Security Headers
 # ------------------------------------------------------------------------------
 <IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set X-XSS-Protection "1; mode=block"
-  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 </IfModule>

@@ -20,24 +20,29 @@ if ($method === 'GET') {
 
             $row['gallery'] = json_decode($row['gallery'] ?: '[]', true);
             $row['tags'] = json_decode($row['tags'] ?: '[]', true);
+            $row['content'] = sanitizeSafeHtml((string)($row['content'] ?? ''));
+            $row['content_ar'] = sanitizeSafeHtml((string)($row['content_ar'] ?? ''));
             $row['published'] = (bool)$row['published'];
             sendJson(['success' => true, 'article' => $row]);
         }
 
         $where = $all ? "" : "WHERE published = 1";
-        $stmt = $db->query("SELECT * FROM news $where ORDER BY published_at DESC, created_at DESC");
+        $stmt = $db->query("SELECT * FROM news $where ORDER BY published_at DESC, created_at DESC LIMIT 200");
         $rows = $stmt->fetchAll();
 
         $articles = array_map(function($r) {
             $r['gallery'] = json_decode($r['gallery'] ?: '[]', true);
             $r['tags'] = json_decode($r['tags'] ?: '[]', true);
+            $r['content'] = sanitizeSafeHtml((string)($r['content'] ?? ''));
+            $r['content_ar'] = sanitizeSafeHtml((string)($r['content_ar'] ?? ''));
             $r['published'] = (bool)$r['published'];
             return $r;
         }, $rows);
 
         sendJson(['success' => true, 'articles' => $articles]);
     } catch (PDOException $e) {
-        sendError('Failed to fetch articles: ' . $e->getMessage(), 500);
+        error_log('News fetch DB error: ' . $e->getMessage());
+        sendError('Failed to fetch articles', 500);
     }
 }
 
@@ -47,7 +52,7 @@ if ($method === 'POST' || $method === 'PUT') {
     $input = getJsonInput();
 
     try {
-        $rawId = trim($input['id'] ?? $_GET['id'] ?? '');
+        $rawId = trim((string)($input['id'] ?? $_GET['id'] ?? ''));
         if ($rawId === '') {
             $id = 'news-' . bin2hex(random_bytes(6));
         } elseif (strlen($rawId) > 36) {
@@ -56,9 +61,13 @@ if ($method === 'POST' || $method === 'PUT') {
             $id = $rawId;
         }
 
-        $title = trim($input['title'] ?? '');
-        $titleAr = trim($input['title_ar'] ?? '');
-        $rawSlug = trim($input['slug'] ?? '');
+        $title = substr(trim((string)($input['title'] ?? '')), 0, 255);
+        $titleAr = substr(trim((string)($input['title_ar'] ?? '')), 0, 255);
+        if ($title === '' && $titleAr === '') {
+            sendError('Article title is required', 400);
+        }
+
+        $rawSlug = trim((string)($input['slug'] ?? ''));
         if ($rawSlug === '') {
             $rawSlug = $title !== '' ? $title : $titleAr;
         }
@@ -77,10 +86,29 @@ if ($method === 'POST' || $method === 'PUT') {
             $slug = substr($slug, 0, 175) . '-' . bin2hex(random_bytes(2));
         }
 
-        $gallery = json_encode($input['gallery'] ?? [], JSON_UNESCAPED_UNICODE);
-        $tags = json_encode($input['tags'] ?? [], JSON_UNESCAPED_UNICODE);
+        $rawGallery = is_array($input['gallery'] ?? null) ? $input['gallery'] : [];
+        $safeGallery = array_values(array_filter(array_map(function($g) {
+            return sanitizeSafeUrl((string)$g, true);
+        }, array_slice($rawGallery, 0, 20))));
+        $gallery = json_encode($safeGallery, JSON_UNESCAPED_UNICODE);
+
+        $rawTags = is_array($input['tags'] ?? null) ? $input['tags'] : [];
+        $safeTags = array_values(array_filter(array_map(function($t) {
+            return substr(trim((string)$t), 0, 50);
+        }, array_slice($rawTags, 0, 20))));
+        $tags = json_encode($safeTags, JSON_UNESCAPED_UNICODE);
+
         $published = isset($input['published']) ? ($input['published'] ? 1 : 0) : 1;
-        $publishedAt = !empty($input['published_at']) ? $input['published_at'] : date('Y-m-d H:i:s');
+        $publishedAt = !empty($input['published_at']) ? substr((string)$input['published_at'], 0, 32) : date('Y-m-d H:i:s');
+
+        $excerpt = sanitizeSafeHtml((string)($input['excerpt'] ?? ''));
+        $excerptAr = sanitizeSafeHtml((string)($input['excerpt_ar'] ?? ''));
+        $content = sanitizeSafeHtml((string)($input['content'] ?? ''));
+        $contentAr = sanitizeSafeHtml((string)($input['content_ar'] ?? ''));
+        $featuredImage = substr(sanitizeSafeUrl((string)($input['featured_image'] ?? ''), true), 0, 500);
+        $category = substr(trim((string)($input['category'] ?? '')), 0, 100);
+        $author = substr(trim((string)($input['author'] ?? 'BucharestEgyAgro')), 0, 100);
+        $videoUrl = substr(sanitizeSafeUrl((string)($input['video_url'] ?? ''), false), 0, 500);
 
         if ($exists) {
             $stmt = $db->prepare("
@@ -106,16 +134,16 @@ if ($method === 'POST' || $method === 'PUT') {
                 $slug,
                 $title,
                 $titleAr,
-                $input['excerpt'] ?? '',
-                $input['excerpt_ar'] ?? '',
-                $input['content'] ?? '',
-                $input['content_ar'] ?? '',
-                $input['featured_image'] ?? '',
+                $excerpt,
+                $excerptAr,
+                $content,
+                $contentAr,
+                $featuredImage,
                 $gallery,
-                $input['category'] ?? '',
+                $category,
                 $tags,
-                $input['author'] ?? 'BucharestEgyAgro',
-                $input['video_url'] ?? '',
+                $author,
+                $videoUrl,
                 $published,
                 $publishedAt,
                 $id
@@ -133,16 +161,16 @@ if ($method === 'POST' || $method === 'PUT') {
                 $slug,
                 $title,
                 $titleAr,
-                $input['excerpt'] ?? '',
-                $input['excerpt_ar'] ?? '',
-                $input['content'] ?? '',
-                $input['content_ar'] ?? '',
-                $input['featured_image'] ?? '',
+                $excerpt,
+                $excerptAr,
+                $content,
+                $contentAr,
+                $featuredImage,
                 $gallery,
-                $input['category'] ?? '',
+                $category,
                 $tags,
-                $input['author'] ?? 'BucharestEgyAgro',
-                $input['video_url'] ?? '',
+                $author,
+                $videoUrl,
                 $published,
                 $publishedAt
             ]);
@@ -150,7 +178,8 @@ if ($method === 'POST' || $method === 'PUT') {
 
         sendJson(['success' => true, 'id' => $id, 'slug' => $slug]);
     } catch (PDOException $e) {
-        sendError('Database error while saving article: ' . $e->getMessage(), 500);
+        error_log('News save DB error: ' . $e->getMessage());
+        sendError('Database error while saving article', 500);
     }
 }
 
@@ -169,7 +198,8 @@ if ($method === 'DELETE') {
         $stmt->execute([$id]);
         sendJson(['success' => true]);
     } catch (PDOException $e) {
-        sendError('Database error while deleting article: ' . $e->getMessage(), 500);
+        error_log('News delete DB error: ' . $e->getMessage());
+        sendError('Database error while deleting article', 500);
     }
 }
 
