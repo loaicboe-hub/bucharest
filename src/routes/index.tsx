@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { submitQuoteRequest } from "@/lib/quote-requests";
+import { submitContactRequest } from "@/lib/contact-requests";
 import {
   defaultFooterConfig,
   loadFooterConfig,
@@ -130,6 +132,68 @@ function Index() {
 
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [formBusy, setFormBusy] = useState(false);
+  const contactFormRef = useRef<HTMLFormElement>(null);
+
+  const handleLeadSubmit = async (mode: "inquiry" | "quote") => {
+    const formEl = contactFormRef.current;
+    if (!formEl || formBusy) return;
+    const fd = new FormData(formEl);
+    const name = String(fd.get("name") ?? "").trim();
+    const company = String(fd.get("company") ?? "").trim();
+    const country = String(fd.get("country") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    const phone = String(fd.get("phone") ?? "").trim();
+    const product = String(fd.get("product") ?? "").trim();
+    const message = String(fd.get("message") ?? "").trim();
+
+    if (mode === "inquiry" && (!name || !email || !message)) {
+      setFormMsg({ type: "error", text: c.ui.errRequired });
+      return;
+    }
+    if (mode === "quote" && ((!name && !company) || !email)) {
+      setFormMsg({ type: "error", text: c.ui.errRequired });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFormMsg({ type: "error", text: c.ui.errEmail });
+      return;
+    }
+
+    setFormBusy(true);
+    setFormMsg(null);
+    try {
+      if (mode === "quote") {
+        await submitQuoteRequest({
+          company: company || name,
+          contactPerson: name || company,
+          email,
+          country,
+          product,
+          quantity: message || "Standard Quote Request",
+        });
+        setFormMsg({ type: "success", text: c.ui.okQuote });
+      } else {
+        await submitContactRequest({
+          name,
+          company,
+          country,
+          email,
+          phone,
+          message,
+        });
+        setFormMsg({ type: "success", text: c.ui.okSent });
+      }
+      formEl.reset();
+    } catch (err: any) {
+      setFormMsg({
+        type: "error",
+        text: err?.message || "Unable to submit request right now. Please try again later.",
+      });
+    } finally {
+      setFormBusy(false);
+    }
+  };
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
   const [sectionImages, setSectionImages] = useState<Record<string, string>>({});
   const [heroBg, setHeroBg] = useState<string>(kemetEdenHero);
@@ -911,22 +975,10 @@ function Index() {
             </div>
 
             <form
+              ref={contactFormRef}
               onSubmit={(e) => {
                 e.preventDefault();
-                const fd = new FormData(e.currentTarget);
-                const name = String(fd.get("name") ?? "").trim();
-                const email = String(fd.get("email") ?? "").trim();
-                const message = String(fd.get("message") ?? "").trim();
-                if (!name || !email || !message) {
-                  setFormMsg({ type: "error", text: c.ui.errRequired });
-                  return;
-                }
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                  setFormMsg({ type: "error", text: c.ui.errEmail });
-                  return;
-                }
-                setFormMsg({ type: "success", text: c.ui.okSent });
-                e.currentTarget.reset();
+                void handleLeadSubmit("inquiry");
               }}
               className="lg:col-span-3 rounded-3xl border border-gold/40 bg-white/95 backdrop-blur-xl p-8 shadow-2xl lg:p-10"
             >
@@ -952,14 +1004,16 @@ function Index() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   type="submit"
-                  className="group inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 font-semibold text-white shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl"
+                  disabled={formBusy}
+                  className="group inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 font-semibold text-white shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl disabled:opacity-60"
                 >
                   {c.ui.sendInquiry} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFormMsg({ type: "success", text: c.ui.okQuote })}
-                  className="inline-flex items-center gap-2 rounded-full border-2 border-gold/70 bg-white/90 px-7 py-3.5 font-bold text-primary shadow-sm transition-all hover:bg-gold hover:text-stone-900"
+                  disabled={formBusy}
+                  onClick={() => void handleLeadSubmit("quote")}
+                  className="inline-flex items-center gap-2 rounded-full border-2 border-gold/70 bg-white/90 px-7 py-3.5 font-bold text-primary shadow-sm transition-all hover:bg-gold hover:text-stone-900 disabled:opacity-60"
                 >
                   {c.ui.requestQuotation}
                 </button>

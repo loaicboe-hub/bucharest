@@ -303,16 +303,38 @@ export const apiQuotes = {
   },
 
   async updateStatus(id: string, status: string) {
-    return request<{ success: boolean }>('quotes.php', {
-      method: 'PUT',
-      body: JSON.stringify({ id, status }),
-    });
+    try {
+      return await request<{ success: boolean }>('quotes.php', {
+        method: 'PUT',
+        body: JSON.stringify({ id, status }),
+      });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('405') || msg.includes('501') || msg.includes('Method not allowed') || msg.includes('Failed to fetch')) {
+        return request<{ success: boolean }>('quotes.php?action=status', {
+          method: 'POST',
+          body: JSON.stringify({ id, status }),
+        });
+      }
+      throw err;
+    }
   },
 
   async delete(id: string) {
-    return request<{ success: boolean }>(`quotes.php?id=${encodeURIComponent(id)}`, {
-      method: 'DELETE',
-    });
+    try {
+      return await request<{ success: boolean }>(`quotes.php?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('405') || msg.includes('501') || msg.includes('Method not allowed') || msg.includes('Failed to fetch')) {
+        return request<{ success: boolean }>(`quotes.php?action=delete&id=${encodeURIComponent(id)}`, {
+          method: 'POST',
+          body: JSON.stringify({ id }),
+        });
+      }
+      throw err;
+    }
   },
 };
 
@@ -330,16 +352,38 @@ export const apiContacts = {
   },
 
   async updateStatus(id: string, status: string) {
-    return request<{ success: boolean }>('contacts.php', {
-      method: 'PUT',
-      body: JSON.stringify({ id, status }),
-    });
+    try {
+      return await request<{ success: boolean }>('contacts.php', {
+        method: 'PUT',
+        body: JSON.stringify({ id, status }),
+      });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('405') || msg.includes('501') || msg.includes('Method not allowed') || msg.includes('Failed to fetch')) {
+        return request<{ success: boolean }>('contacts.php?action=status', {
+          method: 'POST',
+          body: JSON.stringify({ id, status }),
+        });
+      }
+      throw err;
+    }
   },
 
   async delete(id: string) {
-    return request<{ success: boolean }>(`contacts.php?id=${encodeURIComponent(id)}`, {
-      method: 'DELETE',
-    });
+    try {
+      return await request<{ success: boolean }>(`contacts.php?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      });
+    } catch (err: any) {
+      const msg = String(err?.message || '');
+      if (msg.includes('405') || msg.includes('501') || msg.includes('Method not allowed') || msg.includes('Failed to fetch')) {
+        return request<{ success: boolean }>(`contacts.php?action=delete&id=${encodeURIComponent(id)}`, {
+          method: 'POST',
+          body: JSON.stringify({ id }),
+        });
+      }
+      throw err;
+    }
   },
 };
 

@@ -4,8 +4,49 @@ require_once __DIR__ . '/config.php';
 $db = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 
-// 1. POST - Submit a new quote request from the website (Public - Strictly Rate Limited)
+// 1. POST - Admin actions (?action=delete|status) OR public website quote submission
 if ($method === 'POST') {
+    $action = trim((string)($_GET['action'] ?? ''));
+
+    // Admin fallback delete via POST (protects against gateways/proxies blocking HTTP DELETE)
+    if ($action === 'delete') {
+        requireAuth();
+        $input = getJsonInput();
+        $id = trim((string)(!empty($_GET['id']) ? $_GET['id'] : ($input['id'] ?? '')));
+        if ($id === '') sendError('Quote ID is required', 400);
+
+        try {
+            $stmt = $db->prepare("DELETE FROM quote_requests WHERE id = ?");
+            $stmt->execute([$id]);
+            sendJson(['success' => true, 'deleted' => $stmt->rowCount(), 'id' => $id]);
+        } catch (PDOException $e) {
+            error_log('Quote delete DB error: ' . $e->getMessage());
+            sendError('Failed to delete quote request', 500);
+        }
+    }
+
+    // Admin fallback status update via POST
+    if ($action === 'status') {
+        requireAuth();
+        $input = getJsonInput();
+        $id = trim((string)($input['id'] ?? $_GET['id'] ?? ''));
+        $status = (string)($input['status'] ?? 'pending');
+        $allowedStatuses = ['pending', 'sent', 'won', 'lost'];
+
+        if ($id === '') sendError('Quote ID is required', 400);
+        if (!in_array($status, $allowedStatuses, true)) sendError('Invalid quote status', 400);
+
+        try {
+            $stmt = $db->prepare("UPDATE quote_requests SET status = ? WHERE id = ?");
+            $stmt->execute([$status, $id]);
+            sendJson(['success' => true]);
+        } catch (PDOException $e) {
+            error_log('Quote status DB error: ' . $e->getMessage());
+            sendError('Failed to update quote status', 500);
+        }
+    }
+
+    // Public quote request submission (Strictly Rate Limited)
     enforceRateLimit('quotes_submit_short', 5, 900, '', 'Too many quote requests sent. Please wait 15 minutes before sending another.');
     enforceRateLimit('quotes_submit_daily', 20, 86400, '', 'Daily quote request limit reached. Please contact us via phone or WhatsApp.');
 
@@ -91,20 +132,34 @@ if ($method === 'PUT') {
     if ($id === '') sendError('Quote ID is required', 400);
     if (!in_array($status, $allowedStatuses, true)) sendError('Invalid quote status', 400);
 
-    $stmt = $db->prepare("UPDATE quote_requests SET status = ? WHERE id = ?");
-    $stmt->execute([$status, $id]);
-    sendJson(['success' => true]);
+    try {
+        $stmt = $db->prepare("UPDATE quote_requests SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $id]);
+        sendJson(['success' => true]);
+    } catch (PDOException $e) {
+        error_log('Quote status DB error: ' . $e->getMessage());
+        sendError('Failed to update quote status', 500);
+    }
 }
 
 // 4. DELETE - Delete quote (Admin only)
 if ($method === 'DELETE') {
     requireAuth();
     $id = trim((string)($_GET['id'] ?? ''));
+    if ($id === '') {
+        $input = getJsonInput();
+        $id = trim((string)($input['id'] ?? ''));
+    }
     if ($id === '') sendError('Quote ID is required', 400);
 
-    $stmt = $db->prepare("DELETE FROM quote_requests WHERE id = ?");
-    $stmt->execute([$id]);
-    sendJson(['success' => true]);
+    try {
+        $stmt = $db->prepare("DELETE FROM quote_requests WHERE id = ?");
+        $stmt->execute([$id]);
+        sendJson(['success' => true, 'deleted' => $stmt->rowCount(), 'id' => $id]);
+    } catch (PDOException $e) {
+        error_log('Quote delete DB error: ' . $e->getMessage());
+        sendError('Failed to delete quote request', 500);
+    }
 }
 
 sendError('Method not allowed', 405);

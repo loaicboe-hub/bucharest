@@ -154,6 +154,7 @@ const Sidebar = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     side?: "left" | "right";
+    dir?: "ltr" | "rtl";
     variant?: "sidebar" | "floating" | "inset";
     collapsible?: "offcanvas" | "icon" | "none";
   }
@@ -161,6 +162,7 @@ const Sidebar = React.forwardRef<
   (
     {
       side = "left",
+      dir,
       variant = "sidebar",
       collapsible = "offcanvas",
       className,
@@ -192,10 +194,13 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-(--sidebar-width) bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            dir={dir}
+            className="z-[60] w-(--sidebar-width) max-w-[85vw] border-sidebar-border bg-white bg-sidebar p-0 text-slate-900 text-sidebar-foreground opacity-100 shadow-2xl antialiased [filter:none] [backdrop-filter:none] [&>button]:hidden"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+                backgroundColor: "var(--sidebar, #ffffff)",
+                color: "var(--sidebar-foreground, #0f172a)",
               } as React.CSSProperties
             }
             side={side}
@@ -204,7 +209,7 @@ const Sidebar = React.forwardRef<
               <SheetTitle>Sidebar</SheetTitle>
               <SheetDescription>Displays the mobile sidebar.</SheetDescription>
             </SheetHeader>
-            <div className="flex h-full w-full flex-col">{children}</div>
+            <div className="flex h-full w-full flex-col bg-white text-slate-900 opacity-100 [filter:none]">{children}</div>
           </SheetContent>
         </Sheet>
       );

@@ -4,8 +4,49 @@ require_once __DIR__ . '/config.php';
 $db = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 
-// 1. POST - Submit contact form from website (Public - Strictly Rate Limited)
+// 1. POST - Admin actions (?action=delete|status) OR public website contact submission
 if ($method === 'POST') {
+    $action = trim((string)($_GET['action'] ?? ''));
+
+    // Admin fallback delete via POST (protects against gateways/proxies blocking HTTP DELETE)
+    if ($action === 'delete') {
+        requireAuth();
+        $input = getJsonInput();
+        $id = trim((string)(!empty($_GET['id']) ? $_GET['id'] : ($input['id'] ?? '')));
+        if ($id === '') sendError('Contact ID is required', 400);
+
+        try {
+            $stmt = $db->prepare("DELETE FROM contact_requests WHERE id = ?");
+            $stmt->execute([$id]);
+            sendJson(['success' => true, 'deleted' => $stmt->rowCount(), 'id' => $id]);
+        } catch (PDOException $e) {
+            error_log('Contact delete DB error: ' . $e->getMessage());
+            sendError('Failed to delete contact request', 500);
+        }
+    }
+
+    // Admin fallback status update via POST
+    if ($action === 'status') {
+        requireAuth();
+        $input = getJsonInput();
+        $id = trim((string)($input['id'] ?? $_GET['id'] ?? ''));
+        $status = (string)($input['status'] ?? 'new');
+        $allowedStatuses = ['new', 'in-progress', 'closed'];
+
+        if ($id === '') sendError('Contact ID is required', 400);
+        if (!in_array($status, $allowedStatuses, true)) sendError('Invalid contact status', 400);
+
+        try {
+            $stmt = $db->prepare("UPDATE contact_requests SET status = ? WHERE id = ?");
+            $stmt->execute([$status, $id]);
+            sendJson(['success' => true]);
+        } catch (PDOException $e) {
+            error_log('Contact status DB error: ' . $e->getMessage());
+            sendError('Failed to update contact status', 500);
+        }
+    }
+
+    // Public contact submission (Strictly Rate Limited)
     enforceRateLimit('contacts_submit_short', 5, 900, '', 'Too many messages submitted. Please wait 15 minutes before sending another.');
     enforceRateLimit('contacts_submit_daily', 20, 86400, '', 'Daily message limit reached. Please reach us directly via phone or WhatsApp.');
 
@@ -91,20 +132,34 @@ if ($method === 'PUT') {
     if ($id === '') sendError('Contact ID is required', 400);
     if (!in_array($status, $allowedStatuses, true)) sendError('Invalid contact status', 400);
 
-    $stmt = $db->prepare("UPDATE contact_requests SET status = ? WHERE id = ?");
-    $stmt->execute([$status, $id]);
-    sendJson(['success' => true]);
+    try {
+        $stmt = $db->prepare("UPDATE contact_requests SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $id]);
+        sendJson(['success' => true]);
+    } catch (PDOException $e) {
+        error_log('Contact status DB error: ' . $e->getMessage());
+        sendError('Failed to update contact status', 500);
+    }
 }
 
 // 4. DELETE - Delete contact (Admin only)
 if ($method === 'DELETE') {
     requireAuth();
     $id = trim((string)($_GET['id'] ?? ''));
+    if ($id === '') {
+        $input = getJsonInput();
+        $id = trim((string)($input['id'] ?? ''));
+    }
     if ($id === '') sendError('Contact ID is required', 400);
 
-    $stmt = $db->prepare("DELETE FROM contact_requests WHERE id = ?");
-    $stmt->execute([$id]);
-    sendJson(['success' => true]);
+    try {
+        $stmt = $db->prepare("DELETE FROM contact_requests WHERE id = ?");
+        $stmt->execute([$id]);
+        sendJson(['success' => true, 'deleted' => $stmt->rowCount(), 'id' => $id]);
+    } catch (PDOException $e) {
+        error_log('Contact delete DB error: ' . $e->getMessage());
+        sendError('Failed to delete contact request', 500);
+    }
 }
 
 sendError('Method not allowed', 405);
