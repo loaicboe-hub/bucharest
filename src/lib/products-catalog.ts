@@ -156,7 +156,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Oranges",
       intro: "Navel, Valencia & Baladi · >45% juice yield · Calibres 48–113 · 45-day reefer shelf life.",
       description:
-        "Egyptian Navel and Valencia oranges are among the most sought-after citrus varieties in the world, prized for their deep orange colour, high Brix level and excellent shipping performance. Grown in the fertile soils of the Nile Delta and Upper Egypt, our oranges are hand-picked at optimum maturity, washed, waxed, graded by weight and packed the same day under strict quality control. Every consignment is pre-cooled and shipped in temperature-controlled reefer containers, guaranteeing arrival in perfect condition for supermarkets, wholesalers and juice processors worldwide.",
+        "Egyptian Navel and Valencia oranges offer deep orange colour, high Brix level, and dependable sea-transit endurance. Grown in the fertile soils of the Nile Delta, Ismailia, and Upper Egypt, our oranges are picked at maturity, washed, waxed, graded by weight, and packed at the packhouse under documented batch inspection. Consignments are forced-air pre-cooled and shipped in temperature-controlled reefer containers for supermarkets, wholesalers, and juice processors.",
       specs: {
         scientificName: "Citrus sinensis",
         variety: "Navel, Valencia, Baladi",
@@ -176,7 +176,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Oranges",
       intro: "Navel, Valencia & Baladi · >45% de jus · Calibres 48–113 · Tenue reefer 45 jours.",
       description:
-        "Les oranges Navel et Valencia d'Égypte comptent parmi les variétés les plus recherchées au monde, reconnues pour leur couleur intense, leur taux de Brix élevé et leur excellente tenue au transport. Cultivées dans les terres fertiles du delta du Nil et de Haute-Égypte, nos oranges sont cueillies à maturité optimale, lavées, cirées, calibrées et conditionnées le jour même sous contrôle qualité rigoureux. Chaque lot est pré-refroidi et expédié en conteneurs frigorifiques reefer pour garantir une fraîcheur intacte.",
+        "Les oranges Navel et Valencia d'Égypte sont reconnues pour leur couleur intense, leur taux de Brix élevé et leur bonne tenue au transport maritime. Cultivées dans le delta du Nil, à Ismaïlia et en Haute-Égypte, nos oranges sont cueillies à maturité, lavées, cirées, calibrées et emballées en station avec contrôle par lot. Chaque expédition est pré-refroidie et chargée en conteneur reefer sous température régulée.",
       specs: {
         scientificName: "Citrus sinensis",
         variety: "Navel, Valencia, Baladi",
@@ -196,7 +196,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "البرتقال",
       intro: "أبو سرة وفالنسيا وبلدي · عصير >45% · مقاسات 48–113 · صلاحية شحن 45 يوماً.",
       description:
-        "يُعد البرتقال المصري أبو سرة وفالنسيا من أشهر أصناف الموالح وأكثرها طلباً في الأسواق العالمية بفضل لونه الزاهي ونسبة السكر المرتفعة وقدرته الفائقة على تحمّل الشحن الطويل. يُزرع في الأراضي الخصبة بدلتا النيل وصعيد مصر، ويُقطف يدوياً عند اكتمال النضج ليُغسل ويُشمع ويُفرز ويُعبأ في نفس اليوم تحت رقابة جودة صارمة، ثم يُبرّد مسبقاً ويُشحن في حاويات مبردة ليصل بأفضل حالة لأسواق التجزئة والمصانع حول العالم.",
+        "يتميز البرتقال المصري أبو سرة وفالنسيا بلونه البرتقالي الزاهي وارتفاع نسبة العصير والسكر وتحمّله للشحن البحري. يُزرع في دلتا النيل والإسماعيلية وصعيد مصر، ويُقطف عند اكتمال النضج ليُغسل ويُشمع ويُفرز بالوزن في محطة التعبئة، ثم يُبرّد مسبقاً بالهواء المدفوع ويُشحن في حاويات مبردة لأسواق التجزئة ومصانع العصير.",
       specs: {
         scientificName: "Citrus sinensis",
         variety: "أبو سرة (نافل)، فالنسيا، بلدي",
@@ -216,7 +216,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Апельсины",
       intro: "Навел, Валенсия, Балади · сок >45% · калибры 48–113 · 45 дней в рефконтейнере.",
       description:
-        "Египетские апельсины сортов Навел и Валенсия входят в число самых востребованных цитрусовых в мире благодаря насыщенному цвету, высокому уровню Брикс и отличной транспортабельности. Выращенные на плодородных почвах дельты Нила и Верхнего Египта, плоды собираются вручную на пике зрелости, моются, покрываются пищевым воском, калибруются и упаковываются в день сбора под строгим контролем качества с последующим предварительным охлаждением.",
+        "Египетские апельсины сортов Навел и Валенсия отличаются насыщенным цветом, высоким содержанием сока (>45%) и хорошей сохранностью при морских перевозках. Выращенные в дельте Нила, Исмаилии и Верхнем Египте плоды собираются при достижении зрелости, моются, покрываются пищевым воском, калибруются по весу на линии и охлаждаются перед погрузкой в рефконтейнер.",
       specs: {
         scientificName: "Citrus sinensis",
         variety: "Навел, Валенсия, Балади",
@@ -242,7 +242,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Grapes",
       intro: "Early Sweet, Superior & Flame · Brix 16–20° · 17–22 mm · SO₂ punnet packs (4.5–5 kg).",
       description:
-        "Our seedless table grapes are cultivated on selected farms in Egypt's early-season regions, allowing us to supply European and Gulf markets weeks ahead of most origins. Bunches are field-packed into punnets with SO₂ pads, rapidly pre-cooled and stored in dedicated grape chambers. Strict residue monitoring and batch-level traceability make our grapes a reliable programme item for retail chains.",
+        "Our seedless table grapes are cultivated on selected farms in Egypt's early-season regions, allowing early dispatch to European and Gulf ports. Bunches are packed into punnets with SO₂ pads, forced-air pre-cooled, and held in dedicated cooling rooms with MRL testing and batch-level lot numbers for retail programmes.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "Early Sweet, Flame Seedless, Superior, Crimson",
@@ -262,7 +262,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Raisins",
       intro: "Early Sweet, Superior & Flame · Brix 16–20° · 17–22 mm · Barquettes 500 g avec SO₂.",
       description:
-        "Nos raisins de table sans pépins sont cultivés dans des terroirs précoces d'Égypte, nous permettant d'approvisionner les marchés européens et internationaux plusieurs semaines avant d'autres origines. Les grappes sont emballées directement au champ en barquettes avec buvards SO₂, pré-refroidies rapidement et stockées sous atmosphère contrôlée avec traçabilité intégrale.",
+        "Nos raisins de table sans pépins proviennent de parcelles précoces d'Égypte, permettant des expéditions dès le début de campagne vers l'Europe et le Golfe. Les grappes sont emballées en barquettes avec buvards SO₂, pré-refroidies rapidement par air forcé et enregistrées par numéro de lot.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "Early Sweet, Flame Seedless, Superior, Crimson",
@@ -282,7 +282,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "العنب",
       intro: "إيرلي سويت وسوبريور وفليم · سكريات 16–20 بريكس · 17–22 ملم · بانيتات 500 جم مع SO₂.",
       description:
-        "يُزرع عنب المائدة الخالي من البذور في مزارع مختارة بمناطق الإنتاج المبكر في مصر، مما يتيح لنا توريده إلى الأسواق الأوروبية والخليجية قبل معظم الدول المنافسة بأسابيع. تُعبأ العناقيد في عبوات بانيت مع شرائح الحماية SO₂ وتُبرّد فور الحصاد مع تتبع كامل ومعايير فحص صارمة لمتبقيات المبيدات.",
+        "يُزرع عنب المائدة الخالي من البذور في مناطق الإنتاج المبكر بمصر، مما يتيح بدء التوريد إلى أوروبا والخليج مبكراً في الموسم. تُعبأ العناقيد في بانيتات مزودة بأوراق الحماية SO₂ وتُبرّد مسبقاً مباشرة بعد التعبئة مع متابعة أرقام التشغيلات وتحاليل المتبقيات.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "إيرلي سويت، فليم سيدلس، سوبريور، كريمسون",
@@ -302,7 +302,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Виноград",
       intro: "Эрли Свит, Супериор, Флейм · Брикс 16–20° · 17–22 мм · Пинетки 500 г с SO₂.",
       description:
-        "Наш бессемянный столовый виноград выращивается в регионах раннего созревания в Египте, что позволяет поставлять свежий урожай на рынки Европы и Персидского залива на несколько недель раньше других поставщиков. Грозди фасуются в пинетки с SO₂-вкладышами, быстро охлаждаются и проходят строгий контроль безопасности и прослеживаемости.",
+        "Наш бессемянный столовый виноград выращивается в регионах раннего созревания Египта для оперативной отгрузки в порты Европы и стран Персидского залива. Грозди фасуются в пинетки с SO₂-вкладышами, проходят быстрое охлаждение и прослеживаются по номеру партии.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "Эрли Свит, Флейм Сидлисс, Супериор, Кримсон",
@@ -368,7 +368,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "المانجو",
       intro: "كيت وكينت ونعومي · لب خالٍ من الألياف · 250–900 جم · كراتين 4–5 كجم بحراً أو جواً.",
       description:
-        "تشتهر المانجو المصرية برائحتها العطرية القوية ولبها الناعم الخالي من الألياف وحلاوتها الاستثنائية. نصدر أفخر الأصناف المنتقاة لقوامها المتماسك وصلاحيتها الطويلة، والمقطوفة عند نسبة المادة الجافة المثالية مع المعالجة بالماء الساخن حسب متطلبات السوق والتغليف في طبقة واحدة لحماية الثمار بحراً وجواً.",
+        "تتميز المانجو المصرية برائحتها العطرية القوية ولبها الناعم الخالي من الألياف. نصدر الأصناف التجارية المنتقاة (كيت وكينت ونعومي) لقوامها المتماسك وصلاحيتها للشحن، مع القطاف عند نسبة المادة الجافة المناسبة والمعالجة بالماء الساخن عند الطلب والتغليف في طبقة واحدة بحراً وجواً.",
       specs: {
         scientificName: "Mangifera indica",
         variety: "كيت، كينت، نعومي، زبدة، فجر كلان",
@@ -434,7 +434,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Grenades",
       intro: "Wonderful & 116 · 300–700 g/fruit (6–12 pcs) · Plateaux 4–5 kg · 60–90 jours reefer.",
       description:
-        "La grenade égyptienne Wonderful offre des arilles d'un rouge rubis intense, une écorce fine et un équilibre gustatif parfait entre douceur et acidité. Chaque fruit est soigneusement brossé, trié et conditionné en plateaux alvéolés pour supporter de longs trajets maritimes vers l'Europe et le monde.",
+        "La grenade égyptienne Wonderful offre des arilles rouge rubis, une écorce fine et un équilibre entre douceur et acidité. Chaque fruit est brossé, calibré et conditionné en plateaux alvéolés pour les trajets maritimes vers l'Europe, la Russie, le Golfe et l'Asie.",
       specs: {
         scientificName: "Punica granatum",
         variety: "Wonderful, 116, Early Foreign",
@@ -500,7 +500,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Strawberries",
       intro: "Fortuna, Festival & Sensation · Fresh air cargo (2 kg cartons) & IQF sea bulk (10 kg).",
       description:
-        "Egypt's mild winter produces intensely coloured, highly aromatic strawberries from November through April. Fruit is field-packed, force-air cooled within two hours of harvest and moved through an unbroken cold chain. We supply fresh berries by air freight and IQF-grade fruit by sea for processors and retailers.",
+        "Egypt's mild winter yields bright red, aromatic strawberries from November through April. Berries are field-packed, forced-air pre-cooled immediately after picking, and dispatched fresh by air cargo or frozen IQF in reefer containers for processors and retailers.",
       specs: {
         scientificName: "Fragaria × ananassa",
         variety: "Fortuna, Festival, Sensation, Winter Star",
@@ -520,7 +520,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Fraises",
       intro: "Fortuna, Festival & Sensation · Frais par avion (2 kg) et surgelé IQF mer (10 kg).",
       description:
-        "L'hiver tempéré d'Égypte permet la production de fraises d'une couleur rouge éclatante et d'un arôme intense de novembre à avril. Les fruits sont emballés au champ, refroidis par ventilation forcée sous deux heures et acheminés en chaîne du froid absolue par avion en frais ou par mer en surgelé IQF.",
+        "L'hiver tempéré d'Égypte permet de récolter des fraises rouges parfumées de novembre à avril. Les fruits sont emballés à la parcelle, pré-refroidis par ventilation forcée après récolte et expédiés en frais par avion ou en surgelé IQF par mer.",
       specs: {
         scientificName: "Fragaria × ananassa",
         variety: "Fortuna, Festival, Sensation, Winter Star",
@@ -540,7 +540,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "الفراولة",
       intro: "فورتونا وفستيفال وسينسيشن · طازجة جواً (كراتين 2 كجم) ومجمدة IQF بحراً (10 كجم).",
       description:
-        "ينتج شتاء مصر المعتدل فراولة ذات لون أحمر لامع ورائحة فواحة من نوفمبر حتى أبريل. تُعبأ الثمار في الحقل وتُبرّد بالهواء المدفوع خلال ساعتين من القطف ضمن سلسلة تبريد متواصلة، ونوفّرها طازجة عبر الشحن الجوي أو مجمدة بتقنية IQF عبر الشحن البحري للمصانع وسلاسل التجزئة.",
+        "ينتج شتاء مصر المعتدل فراولة ذات لون أحمر لامع ورائحة عطرية من نوفمبر حتى أبريل. تُعبأ الثمار في الحقل وتُبرّد بالهواء المدفوع فور القطف، ونوفّرها طازجة عبر الشحن الجوي أو مجمدة بتقنية IQF عبر الحاويات البحرية المبردة للمصانع وسلاسل التجزئة.",
       specs: {
         scientificName: "Fragaria × ananassa",
         variety: "فورتونا، فستيفال، سينسيشن، وينتر ستار",
@@ -692,7 +692,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Pommes de Terre",
       intro: "Spunta, Hermes & Lady Rosetta · Calibres 35–80+ mm · Sacs filet/jute 10–25 kg & big bags.",
       description:
-        "Les pommes de terre égyptiennes sont cultivées dans des sols sablonneux exempts de virus et préparées pour les marchés les plus exigeants de l'UE et du monde. Nous fournissons des variétés de table et d'industrie avec un taux de matière sèche régulier, une belle chair et un lavage soigné.",
+        "Les pommes de terre égyptiennes sont cultivées dans des sols sablonneux préparés pour l'exportation vers l'Union Européenne, la Russie et le Golfe. Nous fournissons des variétés de table et d'industrie avec un taux de matière sèche régulier et un lavage ou brossage en station.",
       specs: {
         scientificName: "Solanum tuberosum",
         variety: "Spunta, Cara, Hermes, Lady Rosetta, Diamond",
@@ -712,7 +712,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "البطاطس",
       intro: "سبونتا وهيرمس وليدي روزيتا · مقاسات 35–80+ ملم · أجولة 10/25 كجم وجامبو باج.",
       description:
-        "تُزرع البطاطس المصرية في أراضٍ رملية خالية من الأمراض ومؤهلة للتصدير إلى أصعب الأسواق مثل الاتحاد الأوروبي وروسيا. نوفر أصناف المائدة والتصنيع بنسبة مادة جافة متجانسة وسكريات مختزلة منخفضة ولون قلي ممتاز، وتخضع كل شحنة للغسيل أو التنظيف بالفرشاة والفرز وفحص الخلو من العفن البني قبل الشحن.",
+        "تُزرع البطاطس المصرية في أراضٍ رملية مخصصة للتصدير نحو أسواق الاتحاد الأوروبي وروسيا وأفريقيا. نوفر أصناف المائدة والتصنيع بنسبة مادة جافة متجانسة وسكريات مختزلة منخفضة، مع الغسيل أو التنظيف بالفرشاة والفرز وإصدار مستندات الحجر الزراعي قبل الشحن.",
       specs: {
         scientificName: "Solanum tuberosum",
         variety: "سبونتا، كارا، هيرمس، ليدي روزيتا، دايموند",
@@ -758,7 +758,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Onions",
       intro: "Giza 6, Golden Yellow & Red · Calibres 40–90 mm · Tight cured skin · 10/20/25 kg mesh bags.",
       description:
-        "Egyptian onions are known worldwide for their high dry matter, strong pungency and outstanding storability. We supply fresh and cured golden, red and white onions in bulk or retail packaging, all machine-graded, hand-sorted and cured to ensure tight skins and minimal transit losses.",
+        "Egyptian onions are widely imported in Europe, Russia, and the Gulf for their high dry matter, firm pungency, and extended storage tolerance. We supply fresh and cured golden, red, and white onions calibrated and cured for tight dry outer skins.",
       specs: {
         scientificName: "Allium cepa",
         variety: "Giza 6, Golden Yellow, Red Star, White",
@@ -798,7 +798,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "البصل",
       intro: "جيزة 6 والذهبي والأحمر · مقاسات 40–90 ملم · قشرة جافة محكمة · أجولة 10–25 كجم.",
       description:
-        "يشتهر البصل المصري عالمياً بارتفاع نسبة المادة الجافة ونكهته القوية وقدرته الاستثنائية على التخزين والشحن. نوفر البصل الذهبي والأحمر والأبيض طازجاً ومجففاً في عبوات جملة أو تجزئة، بعد تدريجه آلياً وفرزه يدوياً وتجفيفه لضمان قشرة جافة محكمة وأقل فاقد أثناء النقل.",
+        "يحظى البصل المصري بإقبال مستمر في أسواق أوروبا وروسيا والخليج لارتفاع نسبة المادة الجافة وصلابته وتحمله للتخزين. نوفر البصل الذهبي والأحمر والأبيض طازجاً ومجففاً في عبوات جملة أو تجزئة بعد التدريج والتجفيف لضمان قشرة جافة محكمة.",
       specs: {
         scientificName: "Allium cepa",
         variety: "جيزة 6، أصفر ذهبي، أحمر، أبيض",
@@ -818,7 +818,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Репчатый лук",
       intro: "Гиза 6, Золотистый, Красный · калибры 40–90 мм · просушенная шелуха · сетки 10–25 кг.",
       description:
-        "Египетский репчатый лук известен во всём мире высоким содержанием сухих веществ, выраженным вкусом и отличной лёжкостью. Мы поставляем золотистый, красный и белый лук в сетках для опта и розницы после тщательной сушки, калибровки и ручной переборки.",
+        "Египетский репчатый лук востребован в странах Европы, России и Залива благодаря высокому содержанию сухих веществ и хорошей лёжкости. Мы поставляем золотистый, красный и белый лук в сетках после естественной просушки, калибровки и переборки.",
       specs: {
         scientificName: "Allium cepa",
         variety: "Гиза 6, Золотисто-жёлтый, Красный, Белый",
@@ -950,7 +950,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Patates Douces",
       intro: "Beauregard & Covington · Affinées 7 jours · Calibres 150–600 g · Cartons 5/6/10 kg.",
       description:
-        "Nos patates douces Beauregard sont affinées pendant 7 jours pour stabiliser la peau et développer la teneur en sucres, puis calibrées selon les standards européens les plus rigoureux. Riches en bêta-carotène, elles offrent une texture crémeuse et savoureuse.",
+        "Nos patates douces Beauregard sont affinées pendant 7 jours pour stabiliser la peau et développer les sucres, puis calibrées par poids pour les circuits de distribution en Europe et dans le Golfe.",
       specs: {
         scientificName: "Ipomoea batatas",
         variety: "Beauregard, Covington, Violette",
@@ -1056,7 +1056,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "الفاصوليا الخضراء",
       intro: "بوليستا ونوماد وسيرينجيتي · إكسترا فاين (<6 ملم) · تبريد مائي للشحن الجوي والمجمد IQF.",
       description:
-        "تُقطف الفاصوليا الخضراء الرفيعة والفائقة النعومة يدوياً كل يوم، وتُفرز من حيث الاستقامة واللون ثم تُبرّد مائياً خلال ساعات للحفاظ على قرمشتها، وتُشحن طازجة جواً إلى أوروبا أو مجمدة بتقنية IQF بحراً كأحد أبرز برامجنا الشتوية المنتظمة.",
+        "تُقطف الفاصوليا الخضراء الرفيعة والناعمة (إكسترا فاين) يدوياً يومياً، وتُفرز حسب الاستقامة واللون ثم تُبرّد مائياً فور الحصاد، وتُشحن طازجة جواً أو مجمدة بتقنية IQF بحراً في برامجنا الشتوية.",
       specs: {
         scientificName: "Phaseolus vulgaris",
         variety: "بوليستا، نوماد، سيرينجيتي (رفيع وإكسترا فاين)",
@@ -1276,8 +1276,8 @@ export const PAGE_UI: Record<
   en: {
     home: "Home",
     products: "Products",
-    premium: "Export Grade Produce",
-    requestQuote: "Request Quote",
+    premium: "Egyptian Export Produce",
+    requestQuote: "Get a Quote",
     gallery: "Product Gallery",
     info: "Product Information",
     description: "Description",
@@ -1290,7 +1290,7 @@ export const PAGE_UI: Record<
   fr: {
     home: "Accueil",
     products: "Produits",
-    premium: "Qualité Exportation",
+    premium: "Production d'Exportation Égyptienne",
     requestQuote: "Demander un Devis",
     gallery: "Galerie du Produit",
     info: "Fiche Technique",
@@ -1304,7 +1304,7 @@ export const PAGE_UI: Record<
   ar: {
     home: "الرئيسية",
     products: "المنتجات",
-    premium: "درجة التصدير الأولى",
+    premium: "محاصيل تصدير مصرية",
     requestQuote: "اطلب عرض سعر",
     gallery: "معرض صور المنتج",
     info: "المواصفات الفنية",
@@ -1318,7 +1318,7 @@ export const PAGE_UI: Record<
   ru: {
     home: "Главная",
     products: "Продукция",
-    premium: "Экспортный класс",
+    premium: "Египетский сельхозэкспорт",
     requestQuote: "Запросить цену",
     gallery: "Галерея товара",
     info: "Характеристики",

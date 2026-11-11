@@ -30,7 +30,7 @@ import { defaultSiteSettings, loadSiteSettings, type SiteSettings } from "@/lib/
 import { getAboutVideoUrl } from "@/lib/about-video";
 import { getSectionImageUrl } from "@/lib/section-image";
 import { useTransparentLogo } from "@/lib/transparent-image";
-import { BrandMark, BrandWatermark } from "@/components/BrandMark";
+import { BrandMark } from "@/components/BrandMark";
 import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
 import { WhatsAppButton, WhatsAppIcon } from "@/components/WhatsAppButton";
@@ -88,8 +88,6 @@ const contactIcons = [Mail, Phone, MapPin];
 
 const BLANK_PIXEL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-
-const FEATURED_PRODUCT_SLUGS = new Set(["oranges", "mangoes", "potatoes"]);
 
 function Index() {
 
@@ -270,7 +268,7 @@ function Index() {
             </div>
 
             <div className="flex min-w-0 flex-col justify-center">
-              <span className="truncate font-display text-[15px] font-bold leading-tight xs:text-base sm:text-xl lg:text-2xl drop-shadow-sm">
+              <span className="truncate font-display text-[15px] font-bold leading-tight sm:text-xl lg:text-2xl drop-shadow-sm">
                 <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
               </span>
               <span
@@ -406,7 +404,7 @@ function Index() {
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold animate-pulse" />
               <span>{c.ui.heroBadge}</span>
             </div>
-            <h1 className="font-display text-[28px] xs:text-[32px] font-bold leading-[1.15] text-white sm:text-5xl lg:text-[3.75rem]">
+            <h1 className="font-display text-[clamp(1.7rem,7vw,2.35rem)] font-bold leading-[1.15] text-white sm:text-5xl lg:text-[3.75rem]">
               {c.ui.heroTitle1}{" "}
               <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
@@ -439,7 +437,7 @@ function Index() {
                   className="glass-dark flex items-center gap-2 rounded-xl px-3 py-2 text-white sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-3"
                 >
                   <BIcon className="h-4 w-4 shrink-0 text-gold sm:h-5 sm:w-5" />
-                  <span className="whitespace-nowrap text-xs font-medium sm:text-sm">{label}</span>
+                  <span className="text-xs font-medium sm:whitespace-nowrap sm:text-sm">{label}</span>
                 </div>
                 );
               })}
@@ -455,8 +453,8 @@ function Index() {
       </section>
 
       {/* About */}
-      <section id="about" className="scroll-mt-24 sm:scroll-mt-32 relative overflow-hidden py-20 lg:py-32">
-        <SectionLeafBg opacity="opacity-[0.28] sm:opacity-[0.35]" />
+      <section id="about" className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32">
+        <SectionLeafBg opacity="opacity-[0.22] sm:opacity-[0.28]" />
         <SectionWave />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-10">
@@ -465,13 +463,13 @@ function Index() {
               <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-[24px] xs:text-[28px] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
+            <h2 className="max-w-full font-display text-[clamp(1.375rem,5.8vw,2.25rem)] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
               {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
             </h2>
             <PharaonicDivider className="my-2" />
           </div>
 
-          <div className="mt-8 rounded-3xl border border-gold/40 bg-card/90 p-6 shadow-[var(--shadow-soft)] backdrop-blur-md sm:mt-10 sm:p-12">
+          <div className="mt-8 rounded-3xl border border-gold/40 bg-card/95 p-6 shadow-[var(--shadow-soft)] backdrop-blur-md sm:mt-10 sm:p-12">
             <p className="text-base leading-relaxed text-foreground sm:text-xl font-medium">
               {c.ui.aboutP1}
             </p>
@@ -499,7 +497,7 @@ function Index() {
       {/* Products */}
       <section
         id="products"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.products
             ? {
@@ -515,12 +513,6 @@ function Index() {
       >
         {!sectionImages.products && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.products && (
-          <BrandWatermark
-            position={dir === "rtl" ? "left" : "right"}
-            className="bottom-8 top-auto opacity-[0.015]"
-          />
-        )}
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
@@ -631,7 +623,7 @@ function Index() {
                           desc={l.intro}
                           img={productImage(p)}
                           slug={p.slug}
-                          showPremium={FEATURED_PRODUCT_SLUGS.has(p.slug)}
+                          showPremium={false}
                           premium={c.ui.premium}
                           season={l.specs.season}
                           packing={l.specs.packaging}
@@ -657,7 +649,7 @@ function Index() {
       {/* Why Us */}
       <section
         id="why"
-        className="scroll-mt-24 sm:scroll-mt-32 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.whyUs
             ? {
@@ -673,41 +665,38 @@ function Index() {
       >
         {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.whyUs && (
-          <BrandWatermark position="center" className="w-[46rem] opacity-[0.018]" />
-        )}
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center sm:gap-5">
             <BrandMark showName={false} markClassName="h-20 w-20 shadow-lg sm:h-28 sm:w-28" />
-            <div>
+            <div className="max-w-full">
               <div className="mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh sm:mb-4">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
                 <span className="h-px w-8 bg-fresh" />
               </div>
-              <h2 className="font-display text-3xl font-bold leading-tight text-primary sm:text-5xl lg:text-6xl">
+              <h2 className="font-display text-[26px] font-bold leading-tight text-primary sm:text-5xl lg:text-6xl break-words">
                 {c.ui.whyTitle}
               </h2>
             </div>
           </div>
 
-          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-5 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
             {c.whyUs.map((w, wi) => {
               const WIcon = whyIcons[wi];
               return (
               <div
                 key={w.title}
-                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
+                className="group relative min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-6 sm:p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="absolute -end-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
-                <div className="relative">
+                <div className="relative min-w-0">
                   <div className="grid h-12 w-12 place-items-center rounded-xl gradient-primary text-white shadow-lg">
                     <WIcon className="h-6 w-6" />
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-semibold text-primary">
+                  <h3 className="mt-5 font-display text-lg font-semibold text-primary sm:text-xl break-words">
                     {w.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground break-words">
                     {w.desc}
                   </p>
                 </div>
@@ -721,7 +710,7 @@ function Index() {
       {/* Process */}
       <section
         id="process"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.process
             ? {
@@ -737,7 +726,6 @@ function Index() {
       >
         {!sectionImages.process && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.process && <BrandWatermark position="center" />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
@@ -745,7 +733,7 @@ function Index() {
               <span className="h-px w-8 bg-fresh" /> {c.ui.processEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-[26px] font-bold leading-tight text-primary sm:text-5xl lg:text-6xl break-words">
               {c.ui.processTitle1} <span className="text-gradient-gold">{c.ui.processTitleGold}</span>
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
@@ -757,7 +745,7 @@ function Index() {
             {c.process.map((step, i) => (
               <div
                 key={step.title}
-                className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
+                className="group relative min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-card p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
               >
                 <span className="absolute end-5 top-3 font-display text-6xl font-bold text-fresh/10 transition-colors group-hover:text-gold/20">
                   {String(i + 1).padStart(2, "0")}
@@ -765,10 +753,10 @@ function Index() {
                 <div className="grid h-12 w-12 place-items-center rounded-xl bg-fresh/10 font-display text-lg font-bold text-fresh transition-colors group-hover:bg-fresh group-hover:text-white">
                   {i + 1}
                 </div>
-                <h3 className="relative mt-5 font-display text-xl font-semibold text-primary">
+                <h3 className="relative mt-5 font-display text-lg font-semibold text-primary sm:text-xl break-words">
                   {step.title}
                 </h3>
-                <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
+                <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground break-words">
                   {step.desc}
                 </p>
                 <span className="absolute inset-x-0 bottom-0 h-1 origin-left rtl:origin-right scale-x-0 bg-gradient-to-r from-fresh to-gold transition-transform duration-300 group-hover:scale-x-100" />
@@ -782,7 +770,7 @@ function Index() {
       {/* Certifications */}
       <section
         id="certificate"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.certificate
             ? {
@@ -799,13 +787,13 @@ function Index() {
         {!sectionImages.certificate && <SectionLeafBg />}
         <SectionWave />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.certsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-[26px] font-bold leading-tight text-primary sm:text-5xl lg:text-6xl break-words">
               {c.ui.certsTitle}
             </h2>
           </div>
@@ -815,15 +803,15 @@ function Index() {
               return (
               <div
                 key={cert.title}
-                className="group relative overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-card to-cream p-8 text-center transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
+                className="group relative min-w-0 overflow-hidden rounded-2xl border border-gold/30 bg-gradient-to-br from-card to-cream p-6 sm:p-8 text-center transition-all hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]"
               >
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br from-gold to-[oklch(0.68_0.14_75)] text-gold-foreground shadow-lg transition-transform group-hover:scale-110">
                   <CIcon className="h-8 w-8" />
                 </div>
-                <div className="mt-5 font-display text-xl font-bold text-primary">
+                <div className="mt-5 font-display text-lg font-bold text-primary sm:text-xl break-words">
                   {cert.title}
                 </div>
-                <div className="mt-1 text-sm text-muted-foreground">{cert.sub}</div>
+                <div className="mt-1 text-sm text-muted-foreground break-words">{cert.sub}</div>
               </div>
               );
             })}
@@ -834,7 +822,7 @@ function Index() {
       {/* Global Markets */}
       <section
         id="markets"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.markets
             ? {
@@ -850,7 +838,6 @@ function Index() {
       >
         {!sectionImages.markets && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.markets && <BrandWatermark position={dir === "rtl" ? "left" : "right"} />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -890,7 +877,7 @@ function Index() {
       {/* Contact */}
       <section
         id="contact"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.contact
             ? {

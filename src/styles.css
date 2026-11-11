@@ -56,7 +56,7 @@
 :root {
   --background: oklch(0.965 0.025 80);    /* Egyptian papyrus light parchment */
   --foreground: oklch(0.22 0.03 145);     /* Deep rich green-black text */
-  --card: oklch(0.985 0.018 82 / 0.90);   /* Warm papyrus card */
+  --card: oklch(0.985 0.018 82);          /* Solid warm papyrus card for sharp readability */
   --card-foreground: oklch(0.22 0.03 145);
   --popover: oklch(0.985 0.018 82);
   --popover-foreground: oklch(0.22 0.03 145);

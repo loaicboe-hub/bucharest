@@ -3,7 +3,7 @@ import { SectionWave } from "@/components/SectionWave";
 import { SectionLeafBg } from "@/components/SectionLeafBg";
 import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronRight, X } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
@@ -206,9 +206,9 @@ function ProductDetail() {
         <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-2 lg:px-10">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              <ShieldCheck className="h-3.5 w-3.5 text-gold" /> {t.premium}
+              <span className="h-1.5 w-1.5 rounded-full bg-gold" /> {t.premium}
             </span>
-            <h1 className="mt-5 font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl break-words">
               {data.name}
             </h1>
             <p className="mt-4 max-w-xl text-lg text-muted-foreground">{data.intro}</p>
@@ -307,6 +307,11 @@ function ProductDetail() {
           <Link
             to="/"
             hash="contact"
+            onClick={() => {
+              try {
+                sessionStorage.setItem("bea_quote_product", data.name);
+              } catch {}
+            }}
             className="mt-8 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-105"
           >
             {t.requestQuote} <Arrow className="h-4 w-4" />

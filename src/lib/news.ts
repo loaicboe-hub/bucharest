@@ -187,25 +187,25 @@ const SEEDED_NEWS_TRANSLATIONS: Record<
     fr: {
       title: "BucharestEgyAgro développe ses programmes d'exportation d'agrumes pour 2026",
       excerpt:
-        "Grâce à des lignes de calibrage de pointe et une logistique frigorifique renforcée, nous lançons une saison record d'exportation d'agrumes.",
+        "Grâce à des lignes de calibrage modernes et une logistique frigorifique renforcée, nous préparons nos expéditions saisonnières d'agrumes.",
       content:
-        "BucharestEgyAgro est fière d'annoncer le lancement officiel de son programme d'exportation d'agrumes d'hiver pour 2026, avec des oranges Valencia et Navel de première qualité expédiées directement des vergers égyptiens vers l'Europe et le monde entier.",
+        "BucharestEgyAgro annonce le lancement de son programme d'exportation d'agrumes d'hiver pour 2026, avec des oranges Valencia et Navel calibrées et pré-refroidies expédiées des vergers égyptiens vers les ports d'Europe, du Golfe et d'Asie.",
       category: "Actualités de l'entreprise",
     },
     ru: {
       title: "BucharestEgyAgro расширяет экспортные программы по цитрусовым на 2026 год",
       excerpt:
-        "Благодаря современным линиям сортировки и расширенной рефрижераторной логистике мы готовы к рекордным отгрузкам цитрусовых.",
+        "Благодаря современным линиям сортировки и расширенной рефрижераторной логистике мы подготовили сезонные отгрузки цитрусовых.",
       content:
-        "Компания BucharestEgyAgro с гордостью объявляет об официальном запуске расширенного сезона экспорта зимних цитрусовых 2026 года — отборных апельсинов сортов Валенсия и Навел, поставляемых напрямую из египетских садов в порты Европы и мира.",
+        "Компания BucharestEgyAgro объявляет о запуске сезонной программы экспорта зимних цитрусовых 2026 года — отборных апельсинов сортов Валенсия и Навел из египетских хозяйств в порты Европы, стран Залива и Азии.",
       category: "Новости компании",
     },
     ar: {
       title: "بوخارست إيجي أجرو توسع برامج تصدير الموالح لموسم 2026",
       excerpt:
-        "بخطوط فرز حديثة وشبكة لوجستية مبردة متطورة، نبدأ شحن أضخم كميات موالح للأسواق الأوروبية والعربية.",
+        "بخطوط فرز حديثة وشبكة لوجستية مبردة متطورة، نبدأ شحن دفعات الموالح للأسواق الأوروبية والعربية.",
       content:
-        "تفخر شركة بوخارست إيجي أجرو بالإعلان عن انطلاق موسم تصدير الموالح لعام 2026 وفق اشتراطات التصدير الدولية ومعايير الجودة والرقابة الفعّالة.",
+        "تعلن شركة بوخارست إيجي أجرو عن انطلاق موسم تصدير الموالح لعام 2026 من أصناف فالنسيا وأبو سرة وفق اشتراطات الحجر الزراعي وإجراءات التصدير.",
       category: "أخبار الشركة",
     },
   },

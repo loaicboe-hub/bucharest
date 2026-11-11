@@ -100,7 +100,7 @@ const FR_TEXT: Record<string, string> = {
 const AR_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "فواكه وخضروات مصرية طازجة للأسواق العالمية بجودة تصديرية ثابتة ولوجستيات تبريد موثوقة.",
+    "فواكه وخضروات مصرية طازجة للأسواق الدولية بجودة تصديرية ثابتة ولوجستيات تبريد موثوقة.",
   // column titles
   Company: "الشركة",
   Products: "المنتجات",
@@ -109,7 +109,7 @@ const AR_TEXT: Record<string, string> = {
   About: "من نحن",
   "Why Us": "لماذا نحن",
   "Export Process": "آلية التصدير",
-  "Global Markets": "الأسواق العالمية",
+  "Global Markets": "الأسواق المستهدفة",
   "Fresh Fruits": "فواكه طازجة",
   Vegetables: "خضروات طازجة",
   Seasonal: "المنتجات الموسمية",
