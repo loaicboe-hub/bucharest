@@ -29,9 +29,9 @@ export const defaultSiteSettings: SiteSettings = {
   instagram: "https://instagram.com/bucharestegyagro",
   linkedin: "https://linkedin.com/company/bucharestegyagro",
   twitter: "",
-  seoTitle: "BucharestEgyAgro Import and Export | Premium Fresh Fruits & Vegetables Exporter",
+  seoTitle: "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter",
   seoDescription:
-    "BucharestEgyAgro Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Premium certified quality.",
+    "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to international markets.",
   seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Premium Produce, BucharestEgyAgro",
   seoOgImage: "",
 };

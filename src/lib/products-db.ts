@@ -121,6 +121,40 @@ const STD_CATEGORIES: Record<string, Record<Lang, string>> = {
   },
 };
 
+const LEGACY_SEED_TITLES = new Set([
+  "Fresh Valencia & Navel Oranges",
+  "Superior & Flame Seedless Grapes",
+  "Fresh Premium Egyptian Mangoes",
+  "Wonderful Pomegranates",
+  "Fresh & IQF Strawberries",
+  "Adalia & Eureka Fresh Lemons",
+  "Fresh Table & Processing Potatoes",
+  "Golden & Red Egyptian Onions",
+  "Fresh & Dry Egyptian Garlic",
+  "Beauregard Sweet Potatoes",
+  "Fine & Extra-Fine Green Beans",
+  "Colored Bell & Chili Peppers",
+  "برتقال فالنسيا ونافيلا طازج",
+  "عنب سوبريور وفليم بدون بذور",
+  "مانجو مصرية طازجة ممتازة",
+  "رمان وندرفل مصري فاخر",
+  "فراولة طازجة ومجمدة IQF",
+  "ليمون أضاليا ويوريكا طازج",
+  "بطاطس طازجة للمائدة والتصنيع",
+  "بصل ذهبي وأحمر مصري",
+  "ثوم مصري طازج وجاف",
+  "بطاطا حلوة بورجارد فاخرة",
+  "فاصوليا خضراء رفيعة وفاخرة",
+  "فلفل ألوان وفلفل حار",
+]);
+
+function pickTitle(raw: string | undefined, fallback: string | undefined): string {
+  const clean = (raw ?? "").trim();
+  if (!clean) return fallback ?? "";
+  if (fallback && LEGACY_SEED_TITLES.has(clean)) return fallback;
+  return clean;
+}
+
 export function localized(p: ProductRow, lang: Lang) {
   const cat = CATALOG_BY_SLUG.get(p.slug);
   const nameIsAr = HAS_ARABIC.test(p.name_ar || "");
@@ -131,29 +165,38 @@ export function localized(p: ProductRow, lang: Lang) {
   const descIsRu = HAS_CYRILLIC.test(p.description_ar || "");
 
   if (lang === "en") {
+    const rawSpecsEn = { ...(p.specs_en ?? {}) };
+    if (cat?.en.specs.certifications && rawSpecsEn.certifications && /GLOBALG\.A\.P\.|ISO 9001|ISO 22000|BRC|SMETA|Sedex/i.test(rawSpecsEn.certifications)) {
+      rawSpecsEn.certifications = cat.en.specs.certifications;
+    }
     return {
-      name: p.name_en || cat?.en.name || "",
+      name: pickTitle(p.name_en, cat?.en.name),
       intro: p.intro_en || cat?.en.intro || "",
       description: p.description_en || cat?.en.description || "",
       specs: {
         ...EMPTY_SPECS,
-        ...(cat?.en.specs.origin ? { origin: cat.en.specs.origin } : {}),
-        ...(cat?.en.specs.category ? { category: cat.en.specs.category } : {}),
-        ...(p.specs_en ?? {}),
+        ...(cat?.en.specs ?? {}),
+        ...rawSpecsEn,
       },
     };
   }
 
   if (lang === "ar") {
+    const specsArStr = JSON.stringify(p.specs_ar ?? {});
+    const specsIsAr = HAS_ARABIC.test(specsArStr);
     if (nameIsAr || introIsAr || descIsAr) {
+      const rawSpecsAr = specsIsAr ? { ...(p.specs_ar ?? {}) } : {};
+      if (cat?.ar.specs.certifications && rawSpecsAr.certifications && /GLOBALG\.A\.P\.|ISO|BRC/i.test(rawSpecsAr.certifications)) {
+        rawSpecsAr.certifications = cat.ar.specs.certifications;
+      }
       return {
-        name: (nameIsAr ? p.name_ar : "") || cat?.ar.name || p.name_ar || p.name_en,
+        name: pickTitle(nameIsAr ? p.name_ar : "", cat?.ar.name) || p.name_ar || p.name_en,
         intro: (introIsAr ? p.intro_ar : "") || cat?.ar.intro || p.intro_ar || p.intro_en,
         description: (descIsAr ? p.description_ar : "") || cat?.ar.description || p.description_ar || p.description_en,
         specs: {
           ...EMPTY_SPECS,
           ...(cat?.ar.specs ?? {}),
-          ...(p.specs_ar ?? {}),
+          ...rawSpecsAr,
         },
       };
     }
@@ -175,13 +218,13 @@ export function localized(p: ProductRow, lang: Lang) {
 
     if (frName || frIntro || frDesc) {
       return {
-        name: frName || cat?.fr.name || p.name_en,
+        name: frName || cat?.fr.name || pickTitle(p.name_en, cat?.en.name),
         intro: frIntro || cat?.fr.intro || p.intro_en,
         description: frDesc || cat?.fr.description || p.description_en,
         specs: {
           ...EMPTY_SPECS,
           ...(cat?.fr.specs ?? {}),
-          ...(specsSafeFr ? (p.specs_ar ?? {}) : (p.specs_en ?? {})),
+          ...(specsSafeFr ? (p.specs_ar ?? {}) : (cat ? {} : (p.specs_en ?? {}))),
         },
       };
     }
@@ -196,11 +239,17 @@ export function localized(p: ProductRow, lang: Lang) {
 
   // Russian ("ru")
   if (nameIsRu || introIsRu || descIsRu) {
+    const specsArStr = JSON.stringify(p.specs_ar ?? {});
+    const specsIsRu = HAS_CYRILLIC.test(specsArStr);
     return {
       name: (nameIsRu ? p.name_ar : "") || cat?.ru.name || p.name_en,
       intro: (introIsRu ? p.intro_ar : "") || cat?.ru.intro || p.intro_en,
       description: (descIsRu ? p.description_ar : "") || cat?.ru.description || p.description_en,
-      specs: { ...EMPTY_SPECS, ...(cat?.ru.specs ?? {}), ...(p.specs_ar ?? {}), ...(p.specs_en ?? {}) },
+      specs: {
+        ...EMPTY_SPECS,
+        ...(cat?.ru.specs ?? {}),
+        ...(specsIsRu ? (p.specs_ar ?? {}) : (cat ? {} : (p.specs_en ?? {}))),
+      },
     };
   }
   if (cat?.ru) return cat.ru;

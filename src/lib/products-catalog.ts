@@ -79,10 +79,10 @@ type BaseLocaleInput = {
   specs: Omit<ProductSpecs, "origin" | "category" | "certifications">;
 };
 
-const CERT_EN = "GLOBALG.A.P., Phytosanitary Certificate, Certificate of Origin";
-const CERT_FR = "GLOBALG.A.P., Certificat Phytosanitaire, Certificat d'Origine";
-const CERT_AR = "GLOBALG.A.P.، شهادة الصحة النباتية، شهادة المنشأ";
-const CERT_RU = "GLOBALG.A.P., фитосанитарный сертификат, сертификат происхождения";
+const CERT_EN = "Phytosanitary Certificate, Certificate of Origin, Export Health Certificate";
+const CERT_FR = "Certificat Phytosanitaire, Certificat d'Origine, Certificat Sanitaire";
+const CERT_AR = "شهادة الصحة النباتية، شهادة المنشأ، الشهادة الصحية للتصدير";
+const CERT_RU = "Фитосанитарный сертификат, сертификат происхождения, ветеринарно-санитарный сертификат";
 
 function build(
   slug: string,
@@ -242,7 +242,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Grapes",
       intro: "Hand-picked table grapes, plump, crisp and cold-chain fresh.",
       description:
-        "Our seedless table grapes are cultivated on selected farms in Egypt's early-season regions, allowing us to supply European and Gulf markets weeks ahead of most origins. Bunches are field-packed into punnets with SO₂ pads, rapidly pre-cooled and stored in dedicated grape chambers. Strict residue monitoring and GLOBALG.A.P. traceability make our grapes a reliable programme item for retail chains.",
+        "Our seedless table grapes are cultivated on selected farms in Egypt's early-season regions, allowing us to supply European and Gulf markets weeks ahead of most origins. Bunches are field-packed into punnets with SO₂ pads, rapidly pre-cooled and stored in dedicated grape chambers. Strict residue monitoring and batch-level traceability make our grapes a reliable programme item for retail chains.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "Early Sweet, Flame Seedless, Superior, Crimson",
@@ -302,7 +302,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Виноград",
       intro: "Столовый виноград ручного сбора, сочный, хрустящий и охлаждённый в холодовой цепи.",
       description:
-        "Наш бессемянный столовый виноград выращивается в регионах раннего созревания в Египте, что позволяет поставлять свежий урожай на рынки Европы и Персидского залива на несколько недель раньше других поставщиков. Грозди фасуются в пинетки с SO₂-вкладышами, быстро охлаждаются и проходят строгую сертификацию GLOBALG.A.P.",
+        "Наш бессемянный столовый виноград выращивается в регионах раннего созревания в Египте, что позволяет поставлять свежий урожай на рынки Европы и Персидского залива на несколько недель раньше других поставщиков. Грозди фасуются в пинетки с SO₂-вкладышами, быстро охлаждаются и проходят строгий контроль безопасности и прослеживаемости.",
       specs: {
         scientificName: "Vitis vinifera",
         variety: "Эрли Свит, Флейм Сидлисс, Супериор, Кримсон",
@@ -1201,7 +1201,7 @@ export const SPEC_LABELS: Record<Lang, Record<keyof ProductSpecs, string>> = {
     transportation: "Transportation",
     moq: "MOQ",
     loading: "Loading Capacity",
-    certifications: "Certifications",
+    certifications: "Export Documents",
   },
   fr: {
     scientificName: "Nom Scientifique",
@@ -1218,7 +1218,7 @@ export const SPEC_LABELS: Record<Lang, Record<keyof ProductSpecs, string>> = {
     transportation: "Transport",
     moq: "Quantité Min. (MOQ)",
     loading: "Capacité de Chargement",
-    certifications: "Certifications",
+    certifications: "Documents d'Export",
   },
   ar: {
     scientificName: "الاسم العلمي",
@@ -1235,7 +1235,7 @@ export const SPEC_LABELS: Record<Lang, Record<keyof ProductSpecs, string>> = {
     transportation: "الشحن والنقل",
     moq: "الحد الأدنى للطلب",
     loading: "سعة التحميل",
-    certifications: "الشهادات والاعتمادات",
+    certifications: "مستندات التصدير",
   },
   ru: {
     scientificName: "Латинское название",
@@ -1252,7 +1252,7 @@ export const SPEC_LABELS: Record<Lang, Record<keyof ProductSpecs, string>> = {
     transportation: "Транспортировка",
     moq: "Мин. партия (MOQ)",
     loading: "Загрузка контейнера",
-    certifications: "Сертификаты",
+    certifications: "Экспортные документы",
   },
 };
 

@@ -17,9 +17,10 @@ export function WhatsAppIcon({ className = "h-7 w-7" }: { className?: string }) 
 interface WhatsAppButtonProps {
   whatsapp?: string;
   phone?: string;
+  floating?: boolean;
 }
 
-export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
+export function WhatsAppButton({ whatsapp, phone, floating = false }: WhatsAppButtonProps) {
   const { c, dir } = useLang();
   const rawNumber = whatsapp || phone || "+20 107 003 3892";
   const cleanNumber = rawNumber.replace(/[^0-9]/g, "");
@@ -36,21 +37,22 @@ export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
     <aside
       aria-label="WhatsApp Contact"
       dir={dir}
-      className="fixed bottom-6 left-6 z-50 flex items-center group pointer-events-auto"
+      className={
+        floating
+          ? "fixed bottom-6 left-6 z-50 flex items-center group pointer-events-auto"
+          : "inline-flex items-center group"
+      }
     >
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={c.ui.whatsappLabel || "Chat on WhatsApp"}
-        className="relative flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl hover:shadow-[#25D366]/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
+        className="relative inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-5 py-3 text-white shadow-lg transition-all duration-300 hover:bg-[#20bd5a] hover:shadow-[#25D366]/35 active:scale-95"
       >
-        {/* Pulsing halo */}
-        <span className="absolute -inset-1 rounded-full bg-[#25D366] opacity-30 animate-ping pointer-events-none" />
+        <WhatsAppIcon className="h-5 w-5 shrink-0 text-white" />
 
-        <WhatsAppIcon className="h-6 w-6 text-white shrink-0" />
-
-        <span className="hidden sm:inline-block font-semibold text-sm tracking-wide">
+        <span className="font-semibold text-sm tracking-wide">
           {c.ui.whatsappLabel || "WhatsApp Chat"}
         </span>
       </a>

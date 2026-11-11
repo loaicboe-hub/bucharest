@@ -12,7 +12,7 @@ const KEY = "fd_footer_config";
 
 export const defaultFooterConfig: FooterConfig = {
   tagline:
-    "Premium fresh fruits & vegetables exported worldwide since 2026. Premium certified quality you can rely on.",
+    "Fresh Egyptian fruits & vegetables supplied to international markets with consistent export quality and reliable cold-chain logistics.",
   columns: [
     {
       title: "Company",
@@ -77,7 +77,7 @@ export function saveFooterConfig(cfg: FooterConfig) {
 const FR_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "Fruits et légumes frais de première qualité exportés dans le monde entier depuis 2026. Une qualité certifiée sur laquelle vous pouvez compter.",
+    "Fruits et légumes frais égyptiens fournis aux marchés internationaux avec une qualité export constante et une chaîne du froid fiable.",
   // column titles
   Company: "Entreprise",
   Products: "Produits",
@@ -100,7 +100,7 @@ const FR_TEXT: Record<string, string> = {
 const AR_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "فواكه وخضروات طازجة فاخرة تُصدّر إلى جميع أنحاء العالم منذ عام 2026. جودة معتمدة وموثوقة.",
+    "فواكه وخضروات مصرية طازجة للأسواق العالمية بجودة تصديرية ثابتة ولوجستيات تبريد موثوقة.",
   // column titles
   Company: "الشركة",
   Products: "المنتجات",
@@ -123,7 +123,7 @@ const AR_TEXT: Record<string, string> = {
 const RU_TEXT: Record<string, string> = {
   // tagline
   [defaultFooterConfig.tagline]:
-    "Свежие фрукты и овощи премиум-класса с экспортом по всему миру с 2026 года. Сертифицированное качество, на которое можно положиться.",
+    "Свежие египетские фрукты и овощи для международных рынков со стабильным экспортным качеством и надёжной холодовой логистикой.",
   // column titles
   Company: "Компания",
   Products: "Продукция",

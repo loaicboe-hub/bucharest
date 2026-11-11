@@ -73,22 +73,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BucharestEgyAgro Import and Export | Premium Fresh Fruits & Vegetables Exporter" },
+      { title: "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter" },
       {
         name: "description",
         content:
-          "BucharestEgyAgro Import and Export is a leading exporter of premium fresh fruits and vegetables since 2026. Serving international markets with exceptional quality and reliable export services.",
+          "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to international markets with strict quality control and cold-chain logistics.",
       },
       {
         name: "keywords",
         content:
-          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Premium Produce, Fresh Produce Export, BucharestEgyAgro",
+          "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Fresh Produce Export, BucharestEgyAgro",
       },
       { name: "author", content: "BucharestEgyAgro Import and Export" },
-      { property: "og:title", content: "BucharestEgyAgro Import and Export | Premium Fresh Produce Exporter" },
+      { property: "og:title", content: "BucharestEgyAgro Import and Export | Fresh Produce Exporter" },
       {
         property: "og:description",
-        content: "Premium fresh fruits & vegetables exported worldwide since 2026. Premium certified quality.",
+        content: "Fresh Egyptian fruits & vegetables exported worldwide with strict quality control.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

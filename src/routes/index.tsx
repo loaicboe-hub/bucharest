@@ -82,20 +82,19 @@ export const Route = createFileRoute("/")({
 
 const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
 const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
-const badgeIcons = [Award, BadgeCheck, Globe2];
+const badgeIcons = [Sprout, BadgeCheck, Globe2];
 const contactIcons = [Mail, Phone, MapPin];
 
 const BLANK_PIXEL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
+const FEATURED_PRODUCT_SLUGS = new Set(["oranges", "mangoes", "potatoes"]);
+
 function Index() {
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [trade, setTrade] = useState<"export" | "import">("export");
   const [activeCat, setActiveCat] = useState<string>("all");
-
-  const [showTop, setShowTop] = useState(false);
   const [footerRaw, setFooter] = useState<FooterConfig>(defaultFooterConfig);
   const [logo, setLogo] = useState<string | null>(null);
 
@@ -163,6 +162,15 @@ function Index() {
       setFormBusy(false);
     }
   };
+
+  const handleSelectProductQuote = (productName: string) => {
+    const formEl = contactFormRef.current;
+    if (formEl) {
+      const productInput = formEl.elements.namedItem("product") as HTMLInputElement | null;
+      if (productInput) productInput.value = productName;
+    }
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  };
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
   const [sectionImages, setSectionImages] = useState<Record<string, string>>({});
   const [heroBg, setHeroBg] = useState<string>(kemetEdenHero);
@@ -214,7 +222,6 @@ function Index() {
         const y = window.scrollY;
         // hysteresis avoids rapid toggling (flicker) right at the threshold
         setScrolled((prev) => (prev ? y > 20 : y > 60));
-        setShowTop((prev) => (prev ? y > 500 : y > 600));
       });
     };
     onScroll();
@@ -386,40 +393,46 @@ function Index() {
         <div className={`absolute inset-0 ${dir === "rtl" ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-black/75 via-black/35 to-black/15`} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
-        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-36 pb-20 sm:px-6 sm:pt-40 sm:pb-24 lg:grid-cols-12 lg:px-10 lg:pt-44">
+        <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-4 pt-32 pb-16 sm:px-6 sm:pt-40 sm:pb-24 lg:grid-cols-12 lg:px-10 lg:pt-44">
           <div className="max-w-3xl animate-fade-up lg:col-span-7">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full glass-dark px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-white sm:mb-6 sm:px-4 sm:py-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
-              {c.ui.heroBadge}
+            <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full glass-dark px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-white sm:mb-6 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.2em]">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold animate-pulse" />
+              <span>{c.ui.heroBadge}</span>
             </div>
-            <h1 className="font-display text-4xl font-bold leading-[1.1] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="font-display text-[28px] xs:text-[32px] font-bold leading-[1.15] text-white sm:text-5xl lg:text-[3.75rem]">
               {c.ui.heroTitle1}{" "}
               <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
               {c.ui.heroTitle2}
             </h1>
-            <p className="mt-4 max-w-2xl text-base text-white/85 sm:mt-6 sm:text-xl">
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:mt-6 sm:text-xl">
               {c.ui.heroSub}
             </p>
-            <div className="mt-8 flex flex-wrap gap-4 sm:mt-10">
+            <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-10 sm:gap-4">
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-[1.03] hover:brightness-105 sm:px-8 sm:py-4 sm:text-base"
+              >
+                {c.ui.getQuote} <ArrowRight className="h-4 w-4 shrink-0" />
+              </a>
               <a
                 href="#products"
-                className="inline-flex items-center gap-2 rounded-full glass-dark px-7 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/20 sm:px-8 sm:py-4 sm:text-base"
+                className="inline-flex items-center gap-2 rounded-full glass-dark px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 sm:px-8 sm:py-4 sm:text-base"
               >
                 {c.ui.exploreProducts}
               </a>
             </div>
 
-            <div className="mt-10 grid max-w-2xl grid-cols-3 gap-2 sm:mt-14 sm:gap-4">
+            <div className="mt-8 flex flex-wrap gap-2 sm:mt-12 sm:grid sm:max-w-2xl sm:grid-cols-3 sm:gap-4">
               {c.badges.map((label, bi) => {
                 const BIcon = badgeIcons[bi];
                 return (
                 <div
                   key={label}
-                  className="glass-dark flex items-center gap-2 rounded-xl p-2.5 text-white sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-3"
+                  className="glass-dark flex items-center gap-2 rounded-xl px-3 py-2 text-white sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-3"
                 >
                   <BIcon className="h-4 w-4 shrink-0 text-gold sm:h-5 sm:w-5" />
-                  <span className="truncate text-xs font-medium sm:text-sm">{label}</span>
+                  <span className="whitespace-nowrap text-xs font-medium sm:text-sm">{label}</span>
                 </div>
                 );
               })}
@@ -429,46 +442,46 @@ function Index() {
         </div>
 
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] animate-float">
+        <div className="hidden sm:block absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-[0.3em] animate-float">
           {c.ui.scroll}
         </div>
       </section>
 
       {/* About */}
-      <section id="about" className="relative overflow-hidden py-24 lg:py-32">
+      <section id="about" className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32">
         <SectionLeafBg opacity="opacity-[0.32] sm:opacity-[0.38]" />
         <SectionWave />
 
-        <div className="relative z-10 mx-auto max-w-5xl px-6 text-center lg:px-10">
+        <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-10">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-3">
             <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-[26px] xs:text-[28px] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
               {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
             </h2>
             <PharaonicDivider className="my-2" />
           </div>
 
-          <div className="mt-10 rounded-3xl border border-gold/40 bg-card/90 p-8 shadow-[var(--shadow-soft)] backdrop-blur-md sm:p-12">
-            <p className="text-lg leading-relaxed text-foreground sm:text-xl font-medium">
+          <div className="mt-8 rounded-3xl border border-gold/40 bg-card/90 p-6 shadow-[var(--shadow-soft)] backdrop-blur-md sm:mt-10 sm:p-12">
+            <p className="text-base leading-relaxed text-foreground sm:text-xl font-medium">
               {c.ui.aboutP1}
             </p>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
               {c.ui.aboutP2}
             </p>
 
-            <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:grid-cols-4 sm:gap-6">
               {c.stats.map((s) => (
                 <div
                   key={s.l}
-                  className="rounded-2xl border border-gold/30 bg-cream/70 p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-md"
+                  className="rounded-2xl border border-gold/30 bg-cream/70 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-md sm:p-6"
                 >
-                  <div className="font-display text-3xl font-bold sm:text-4xl">
+                  <div className="font-display text-2xl font-bold sm:text-4xl">
                     <span className="text-gradient-gold font-extrabold">{s.n}</span>
                   </div>
-                  <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:text-sm">{s.l}</div>
+                  <div className="mt-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:mt-2 sm:text-sm">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -479,7 +492,7 @@ function Index() {
       {/* Products */}
       <section
         id="products"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.products
             ? {
@@ -495,52 +508,45 @@ function Index() {
       >
         {!sectionImages.products && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.products && <BrandWatermark position={dir === "rtl" ? "left" : "right"} />}
+        {!sectionImages.products && (
+          <BrandWatermark
+            position={dir === "rtl" ? "left" : "right"}
+            className="bottom-8 top-auto opacity-[0.02]"
+          />
+        )}
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.productsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
               {c.ui.productsTitle}
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
+            <p className="mt-4 text-base text-muted-foreground sm:text-lg">
               {c.ui.productsSub}
             </p>
           </div>
 
-          <div className="mt-10 flex justify-center">
-            <div className="inline-flex rounded-full border border-border bg-card p-1 shadow-sm">
-              {(["export", "import"] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => { setTrade(t); setActiveCat("all"); }}
-                  className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
-                    trade === t
-                      ? "bg-fresh text-white shadow"
-                      : "text-muted-foreground hover:text-primary"
-                  }`}
-                >
-                  {t === "export" ? c.ui.exportProducts : c.ui.importProducts}
-                </button>
-              ))}
-            </div>
+          <div className="mt-6 flex justify-center sm:mt-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-fresh/25 bg-fresh/10 px-4 py-1.5 text-xs font-semibold text-fresh sm:px-5 sm:py-2 sm:text-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-fresh" />
+              {c.ui.exportProducts}
+            </span>
           </div>
 
           {(() => {
-            const list = dbProducts.filter((p) => p.trade === trade);
-            const tradeCats = categories.filter((cat) => cat.trade === trade);
+            const list = dbProducts.filter((p) => p.trade === "export");
+            const tradeCats = categories.filter((cat) => cat.trade === "export");
 
             if (!list.length && !tradeCats.length) {
               return (
                 <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-12 text-center">
                   <h3 className="font-display text-2xl font-semibold text-primary">
-                    {trade === "export" ? c.ui.exportProducts : c.ui.importProducts}
+                    {c.ui.exportProducts}
                   </h3>
-                  <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{c.ui.importEmpty}</p>
+                  <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{c.ui.noCategoryProducts}</p>
                   <a
                     href="#contact"
                     className="mt-6 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.03]"
@@ -551,11 +557,19 @@ function Index() {
               );
             }
 
+            const tabLabelForCat = (cat: ProductCategory) => {
+              const s = cat.slug?.toLowerCase();
+              const n = cat.name_en?.toLowerCase();
+              if (s === "fruits" || n === "fresh fruits" || n === "fruits") return c.ui.filterFruits;
+              if (s === "vegetables" || n === "fresh vegetables" || n === "vegetables") return c.ui.filterVegetables;
+              return categoryName(cat, lang);
+            };
+
             const tabs: { id: string; label: string; items: ProductRow[] }[] = [];
             for (const cat of tradeCats) {
               tabs.push({
                 id: cat.id,
-                label: categoryName(cat, lang),
+                label: tabLabelForCat(cat),
                 items: list.filter((p) => p.category_id === cat.id),
               });
             }
@@ -573,13 +587,13 @@ function Index() {
             return (
               <>
                 {allTabs.length > 1 && (
-                  <div className="mt-8 flex flex-wrap justify-center gap-2">
+                  <div className="mt-6 flex flex-wrap justify-center gap-1.5 sm:mt-8 sm:gap-2">
                     {allTabs.map((tab) => (
                       <button
                         key={tab.id}
                         type="button"
                         onClick={() => setActiveCat(tab.id)}
-                        className={`rounded-full border px-5 py-2 text-sm font-semibold transition-all ${
+                        className={`rounded-full border px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-all sm:px-5 sm:py-2 sm:text-sm ${
                           current?.id === tab.id
                             ? "border-fresh bg-fresh text-white shadow"
                             : "border-border bg-card text-muted-foreground hover:border-fresh/60 hover:text-primary"
@@ -598,8 +612,8 @@ function Index() {
                   </div>
                 ) : (
                   <div
-                    key={`${trade}-${current?.id}`}
-                    className="animate-fade-up mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+                    key={`export-${current?.id}`}
+                    className="animate-fade-up mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3"
                   >
                     {currentItems.map((p) => {
                       const l = localized(p, lang);
@@ -610,8 +624,17 @@ function Index() {
                           desc={l.intro}
                           img={productImage(p)}
                           slug={p.slug}
+                          showPremium={FEATURED_PRODUCT_SLUGS.has(p.slug)}
                           premium={c.ui.premium}
-                          learnMore={c.ui.learnMore}
+                          season={l.specs.season}
+                          packing={l.specs.packaging}
+                          moq={l.specs.moq}
+                          seasonLabel={c.ui.seasonLabel}
+                          packingLabel={c.ui.packingLabel}
+                          moqLabel={c.ui.moqLabel}
+                          quoteLabel={c.ui.getQuote}
+                          specsLabel={c.ui.viewSpecs}
+                          onRequestQuote={() => handleSelectProductQuote(l.name)}
                         />
                       );
                     })}
@@ -627,7 +650,7 @@ function Index() {
       {/* Why Us */}
       <section
         id="why"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.whyUs
             ? {
@@ -644,18 +667,18 @@ function Index() {
         {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
         {!sectionImages.whyUs && (
-          <BrandWatermark position="center" className="w-[46rem] opacity-[0.07]" />
+          <BrandWatermark position="center" className="w-[46rem] opacity-[0.025]" />
         )}
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 text-center">
-            <BrandMark showName={false} markClassName="h-28 w-28 shadow-lg md:h-32 md:w-32" />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center sm:gap-6">
+            <BrandMark showName={false} markClassName="h-24 w-24 shadow-lg sm:h-28 sm:w-28 md:h-32 md:w-32" />
             <div>
-              <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
+              <div className="mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh sm:mb-4">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
                 <span className="h-px w-8 bg-fresh" />
               </div>
-              <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+              <h2 className="font-display text-3xl font-bold leading-tight text-primary sm:text-5xl lg:text-6xl">
                 {c.ui.whyTitle}
               </h2>
             </div>
@@ -691,7 +714,7 @@ function Index() {
       {/* Process */}
       <section
         id="process"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.process
             ? {
@@ -709,13 +732,13 @@ function Index() {
         <SectionWave />
         {!sectionImages.process && <BrandWatermark position="center" />}
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.processEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
               {c.ui.processTitle1} <span className="text-gradient-gold">{c.ui.processTitleGold}</span>
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
@@ -752,7 +775,7 @@ function Index() {
       {/* Certifications */}
       <section
         id="certificate"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.certificate
             ? {
@@ -769,13 +792,13 @@ function Index() {
         {!sectionImages.certificate && <SectionLeafBg />}
         <SectionWave />
 
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
               <span className="h-px w-8 bg-fresh" /> {c.ui.certsEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+            <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
               {c.ui.certsTitle}
             </h2>
           </div>
@@ -804,7 +827,7 @@ function Index() {
       {/* Global Markets */}
       <section
         id="markets"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.markets
             ? {
@@ -822,15 +845,15 @@ function Index() {
         <SectionWave />
         {!sectionImages.markets && <BrandWatermark position={dir === "rtl" ? "left" : "right"} />}
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
               <div className="flex items-center gap-4">
-                <BrandMark showName={false} className="shrink-0" markClassName="h-24 w-24 sm:h-28 sm:w-28" />
-                <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl lg:text-6xl">
+                <BrandMark showName={false} className="shrink-0" markClassName="h-20 w-20 sm:h-28 sm:w-28" />
+                <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
                   {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
                 </h2>
               </div>
@@ -863,7 +886,7 @@ function Index() {
       {/* Contact */}
       <section
         id="contact"
-        className="relative overflow-hidden py-24 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.contact
             ? {
@@ -883,13 +906,13 @@ function Index() {
           <div className="absolute inset-0 bg-stone-900/10 backdrop-blur-[1px] pointer-events-none" />
         )}
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-5 lg:items-start">
-            <div className="lg:col-span-2 rounded-3xl border border-gold/30 bg-white/95 backdrop-blur-xl p-8 shadow-2xl lg:p-10">
+            <div className="lg:col-span-2 rounded-3xl border border-gold/30 bg-white/95 backdrop-blur-xl p-6 shadow-2xl sm:p-8 lg:p-10">
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.contactEyebrow}
               </div>
-              <h2 className="font-display text-4xl font-bold text-primary sm:text-5xl">
+              <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl">
                 {c.ui.contactTitle1} <span className="text-gradient-gold">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
               </h2>
               <p className="mt-4 text-stone-700 font-normal leading-relaxed">
@@ -966,7 +989,7 @@ function Index() {
                 e.preventDefault();
                 void handleLeadSubmit("inquiry");
               }}
-              className="lg:col-span-3 rounded-3xl border border-gold/40 bg-white/95 backdrop-blur-xl p-8 shadow-2xl lg:p-10"
+              className="lg:col-span-3 rounded-3xl border border-gold/40 bg-white/95 backdrop-blur-xl p-6 shadow-2xl sm:p-8 lg:p-10"
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label={c.ui.fName} type="text" name="name" />
@@ -1026,10 +1049,21 @@ function Index() {
         subtitle={c.ui.partnersSub}
       />
 
-      {/* Soft mint wave leading into the footer */}
+      {/* Soft mint wave leading into bottom action bar & footer */}
       <div className="relative overflow-hidden bg-mint">
         <SectionWave gradient />
-        <div className="h-24 md:h-32" />
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 pt-14 pb-10 sm:px-6 md:pt-20 md:pb-12">
+          <WhatsAppButton whatsapp={site.whatsapp} phone={site.phone} />
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label={c.ui.backToTop}
+            className="inline-flex items-center gap-2 rounded-full border border-fresh/30 bg-white px-5 py-3 text-sm font-semibold text-primary shadow-md transition-all hover:-translate-y-0.5 hover:border-fresh hover:shadow-lg"
+          >
+            <ArrowUp className="h-4 w-4 text-fresh" />
+            <span>{c.ui.backToTop}</span>
+          </button>
+        </div>
       </div>
 
       {/* Footer */}
@@ -1100,19 +1134,7 @@ function Index() {
         </div>
       </footer>
 
-      {/* WhatsApp Floating Chat Button */}
-      <WhatsAppButton whatsapp={site.whatsapp} phone={site.phone} />
 
-      {/* Back to top */}
-      {showTop && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label={c.ui.backToTop}
-          className="fixed bottom-8 right-8 z-40 grid h-12 w-12 place-items-center rounded-full gradient-primary text-white shadow-xl transition-all hover:scale-110"
-        >
-          <ArrowUp className="h-5 w-5" />
-        </button>
-      )}
     </div>
   );
 }
@@ -1122,42 +1144,107 @@ function ProductCard({
   name,
   desc,
   img,
+  showPremium,
   premium,
-  learnMore,
+  season,
+  packing,
+  moq,
+  seasonLabel,
+  packingLabel,
+  moqLabel,
+  quoteLabel,
+  specsLabel,
   slug,
+  onRequestQuote,
 }: {
   name: string;
   desc: string;
   img: string;
+  showPremium: boolean;
   premium: string;
-  learnMore: string;
+  season?: string;
+  packing?: string;
+  moq?: string;
+  seasonLabel: string;
+  packingLabel: string;
+  moqLabel: string;
+  quoteLabel: string;
+  specsLabel: string;
   slug: string;
+  onRequestQuote: () => void;
 }) {
+  const hasSpecs = Boolean(season || packing || moq);
+
   return (
-    <Link
-      to="/products/$slug"
-      params={{ slug }}
-      className="group relative block overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-2">
-      <div className="relative aspect-[4/3] overflow-hidden">
+    <article className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all hover:-translate-y-1.5">
+      <Link
+        to="/products/$slug"
+        params={{ slug }}
+        className="relative block aspect-[4/3] overflow-hidden"
+      >
         <img
           src={img}
           alt={name}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-60" />
-        <div className="absolute end-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
-          {premium}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent opacity-55" />
+        {showPremium && (
+          <div className="absolute end-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
+            {premium}
+          </div>
+        )}
+      </Link>
+
+      <div className="flex flex-1 flex-col p-5 sm:p-6">
+        <Link to="/products/$slug" params={{ slug }} className="block">
+          <h4 className="font-display text-xl font-semibold leading-snug text-primary transition-colors hover:text-fresh sm:text-2xl">
+            {name}
+          </h4>
+        </Link>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+
+        {hasSpecs && (
+          <dl className="mt-4 space-y-1.5 rounded-xl border border-border/60 bg-cream/60 px-3.5 py-2.5 text-xs">
+            {season && (
+              <div className="flex items-baseline justify-between gap-2">
+                <dt className="shrink-0 font-semibold text-primary/75">{seasonLabel}:</dt>
+                <dd className="truncate text-end font-medium text-foreground">{season}</dd>
+              </div>
+            )}
+            {packing && (
+              <div className="flex items-baseline justify-between gap-2">
+                <dt className="shrink-0 font-semibold text-primary/75">{packingLabel}:</dt>
+                <dd className="truncate text-end font-medium text-foreground">{packing}</dd>
+              </div>
+            )}
+            {moq && (
+              <div className="flex items-baseline justify-between gap-2">
+                <dt className="shrink-0 font-semibold text-primary/75">{moqLabel}:</dt>
+                <dd className="truncate text-end font-medium text-foreground">{moq}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-5">
+          <button
+            type="button"
+            onClick={onRequestQuote}
+            className="inline-flex items-center gap-1.5 rounded-full gradient-primary px-4 py-2 text-xs font-semibold text-white shadow-md transition-all hover:scale-[1.03] sm:px-5 sm:py-2.5 sm:text-sm"
+          >
+            {quoteLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </button>
+          <Link
+            to="/products/$slug"
+            params={{ slug }}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-primary/80 transition-colors hover:text-fresh sm:text-sm"
+          >
+            {specsLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
         </div>
       </div>
-      <div className="p-6">
-        <h4 className="font-display text-2xl font-semibold text-primary">{name}</h4>
-        <p className="mt-2 text-sm text-muted-foreground">{desc}</p>
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-fresh transition-all group-hover:gap-3">
-          {learnMore} <ArrowRight className="h-4 w-4" />
-        </span>
-      </div>
-    </Link>
+    </article>
   );
 }
 
