@@ -34,8 +34,8 @@ type Section = {
 };
 
 const initial: Record<string, Section> = {
-  home: { title: "BucharestEgyAgro Import and Export", paragraph: "Egyptian fresh fruits & vegetables for regional and European markets.", button: "Get a Quote", image: "/placeholder.svg" },
-  about: { title: "About Us", paragraph: "Egyptian produce exporter serving international importers.", button: "Get a Quote", image: "/placeholder.svg" },
+  home: { title: "BucharestEgyAgro Import and Export", paragraph: "Egyptian fresh fruits & vegetables for regional and European markets.", button: "Request a Quote", image: "/placeholder.svg" },
+  about: { title: "About Us", paragraph: "Egyptian produce exporter serving international importers.", button: "Request a Quote", image: "/placeholder.svg" },
   whyUs: { title: "Why Choose Us", paragraph: "Origin sourcing, grading, and container dispatch.", button: "See Details", image: "/placeholder.svg" },
   process: { title: "Our Export Process", paragraph: "From farm to port of arrival, structured in seven steps.", button: "View Process", image: "/placeholder.svg" },
   contact: { title: "Contact Us", paragraph: "Reach out for FOB / CIF quotations.", button: "Get In Touch", image: "/placeholder.svg" },

@@ -33,7 +33,7 @@ export const defaultFooterConfig: FooterConfig = {
       title: "More",
       links: [
         { label: "Contact", href: "#contact" },
-        { label: "Request Quote", href: "#contact" },
+        { label: "Request a Quote", href: "#contact" },
         { label: "Back to Top", href: "#top" },
       ],
     },
@@ -94,6 +94,7 @@ const FR_TEXT: Record<string, string> = {
   Certifications: "Certifications",
   Contact: "Contact",
   "Request Quote": "Demander un Devis",
+  "Request a Quote": "Demander un Devis",
   "Back to Top": "Retour en haut",
 };
 
@@ -117,6 +118,7 @@ const AR_TEXT: Record<string, string> = {
   Certifications: "الشهادات",
   Contact: "تواصل معنا",
   "Request Quote": "اطلب عرض سعر",
+  "Request a Quote": "اطلب عرض سعر",
   "Back to Top": "العودة للأعلى",
 };
 
@@ -140,6 +142,7 @@ const RU_TEXT: Record<string, string> = {
   Certifications: "Сертификаты",
   Contact: "Контакты",
   "Request Quote": "Запросить цену",
+  "Request a Quote": "Запросить цену",
   "Back to Top": "Наверх",
 };
 

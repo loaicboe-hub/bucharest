@@ -82,7 +82,7 @@ type BaseLocaleInput = {
 const CERT_EN = "Phytosanitary Certificate, Certificate of Origin, Export Health Certificate";
 const CERT_FR = "Certificat Phytosanitaire, Certificat d'Origine, Certificat Sanitaire";
 const CERT_AR = "شهادة الصحة النباتية، شهادة المنشأ، الشهادة الصحية للتصدير";
-const CERT_RU = "Фитосанитарный сертификат, сертификат происхождения, ветеринарно-санитарный сертификат";
+const CERT_RU = "Фитосанитарный сертификат, сертификат происхождения, экспортный сертификат качества";
 
 function build(
   slug: string,
@@ -328,7 +328,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Mangoes",
       intro: "Keitt, Kent & Naomi · Fiberless flesh · 250–900 g · 4/5 kg trays via reefer (11 °C) or air.",
       description:
-        "Egyptian mangoes are famous for their intense aroma, fiberless flesh and exceptional sweetness. We export leading commercial varieties selected for export firmness and shelf life, harvested at the correct dry-matter level and hot-water treated where the destination market requires it. Careful single-layer packing protects the fruit during transit by sea or air.",
+        "Egyptian mangoes offer a rich aroma, fiberless flesh, and balanced natural sweetness. We export commercial varieties selected for transit firmness and shelf life, harvested at the appropriate dry-matter level and hot-water treated where required by destination protocols. Single-layer tray packing protects the fruit by sea or air.",
       specs: {
         scientificName: "Mangifera indica",
         variety: "Keitt, Kent, Naomi, Zebda, Fajr Kelan",
@@ -348,7 +348,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Mangues",
       intro: "Keitt, Kent & Naomi · Chair sans fibres · 250–900 g · Plateaux 4–5 kg mer ou avion.",
       description:
-        "Les mangues égyptiennes sont réputées pour leur parfum envoûtant, leur chair fondante sans fibres et leur douceur naturelle. Nous exportons des variétés commerciales sélectionnées pour leur fermeté et leur excellente tenue au transport, récoltées au degré optimal de maturité et conditionnées en plateaux alvéolés à simple couche.",
+        "Les mangues égyptiennes se distinguent par leur parfum intense, leur chair fondante sans fibres et leur douceur naturelle. Nous exportons des variétés commerciales sélectionnées pour leur fermeté et leur tenue au transport, récoltées à maturité et conditionnées en plateaux alvéolés à simple couche.",
       specs: {
         scientificName: "Mangifera indica",
         variety: "Keitt, Kent, Naomi, Zebda, Fajr Kelan",
@@ -414,7 +414,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Pomegranates",
       intro: "Wonderful & 116 · 300–700 g/fruit (6–12 ct) · 4/5 kg trays · 60–90 days reefer life.",
       description:
-        "Egyptian Wonderful pomegranates offer deep red arils, thin skin and a superb sweet-tart balance. Each fruit is inspected for crown damage and sunburn, brushed, graded and packed in protective trays. With a long natural shelf life, pomegranates travel exceptionally well to Europe, Russia, the Gulf and Far East markets.",
+        "Egyptian Wonderful pomegranates offer deep red arils, thin skin, and a balanced sweet-tart taste. Each fruit is inspected for crown damage and sunburn, brushed, graded, and packed in protective trays. With natural post-harvest longevity, pomegranates travel dependably to Europe, Russia, the Gulf, and Asia.",
       specs: {
         scientificName: "Punica granatum",
         variety: "Wonderful, 116, Early Foreign",
@@ -560,7 +560,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Клубника",
       intro: "Фортуна, Фестиваль, Сенсейшн · свежая авиа (коробки 2 кг) и заморозка IQF (10 кг).",
       description:
-        "Мягкая египетская зима позволяет получать ярко-красную и необыкновенно ароматную клубнику с ноября по апрель. Ягоды фасуются прямо в поле, подвергаются принудительному охлаждению в течение 2 часов и доставляются свежими авиатранспортом или замороженными (IQF) морем для переработки и ритейла.",
+        "Мягкая египетская зима позволяет собирать яркую ароматную клубнику с ноября по апрель. Ягоды фасуются в поле, сразу проходят принудительное охлаждение и доставляются свежими авиатранспортом или замороженными (IQF) морем для переработки и ритейла.",
       specs: {
         scientificName: "Fragaria × ananassa",
         variety: "Фортуна, Фестиваль, Сенсейшн, Винтер Стар",
@@ -672,7 +672,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Potatoes",
       intro: "Spunta, Hermes & Lady Rosetta · 35–80+ mm calibres · Washed/brushed 10/25 kg mesh & big bags.",
       description:
-        "Egyptian potatoes are grown in sandy, virus-free land and are approved for demanding markets including the EU and Russia. We supply table and processing varieties with consistent dry matter, low reducing sugars and excellent frying colour. Every lot is washed or brushed, graded and inspected for brown-rot compliance before shipment.",
+        "Egyptian potatoes are grown in desert sandy soils suited for export to Europe, Russia, and the Gulf. We supply table and processing varieties with consistent dry matter and low reducing sugars. Every lot is washed or brushed, graded, and inspected prior to dispatch.",
       specs: {
         scientificName: "Solanum tuberosum",
         variety: "Spunta, Cara, Hermes, Lady Rosetta, Diamond",
@@ -732,7 +732,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Картофель",
       intro: "Спунта, Гермес, Леди Розетта · калибр 35–80+ мм · сетки 10/25 кг и биг-бэги.",
       description:
-        "Египетский картофель выращивается на чистых песчаных почвах (зоны свободные от бурой гнили — PFA) и подготовлен для поставок в Россию и ЕС. Мы поставляем столовые и чипсовые сорта со стабильным содержанием сухих веществ, отличной очисткой (мытый или щёточный) и точной калибровкой.",
+        "Египетский картофель выращивается на песчаных почвах для поставок в Россию, ЕС и страны Залива. Мы поставляем столовые и чипсовые сорта со стабильным содержанием сухих веществ, мойкой или щёточной очисткой и точной калибровкой перед отгрузкой.",
       specs: {
         scientificName: "Solanum tuberosum",
         variety: "Спунта, Кара, Гермес, Леди Розетта, Даймонд",
@@ -778,7 +778,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Oignons",
       intro: "Giza 6, Doré & Rouge · Calibres 40–90 mm · Séchés, peaux fermes · Sacs filet 10–25 kg.",
       description:
-        "Les oignons égyptiens sont réputés pour leur forte teneur en matière sèche et leur capacité de conservation exceptionnelle. Nous proposons des oignons dorés, rouges et blancs séchés et calibrés avec soin pour garantir une résistance optimale durant le transport.",
+        "Les oignons égyptiens se distinguent par leur forte teneur en matière sèche et leur tenue au stockage prolongé. Nous proposons des oignons dorés, rouges et blancs séchés et calibrés avec soin pour le transport maritime longue distance.",
       specs: {
         scientificName: "Allium cepa",
         variety: "Giza 6, Doré, Rouge, Blanc",
@@ -1142,7 +1142,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "الفلفل الألوان",
       intro: "كاليفورنيا وندر وفلفل حار · مقاسات G/GG (70–100 ملم) · كراتين 5 كجم وعبوات تريو.",
       description:
-        "يتميز الفلفل الألوان المزروع في الصوب الزراعية الحديثة والحقول المكشوفة بجدران سميكة وشكل متناسق وعمر تخزيني طويل بألوان الأحمر والأصفر والبرتقالي والأخضر، كما نوفر أصناف الفلفل الحار للأسواق المتخصصة وسلاسل التجزئة في أوروبا والخليج.",
+        "يتميز الفلفل الألوان المزروع في الصوب الزراعية والحقول المكشوفة بجدران سميكة وشكل متناسق وعمر تخزيني طويل بألوان الأحمر والأصفر والبرتقالي والأخضر، كما نوفر أصناف الفلفل الحار لأسواق التجزئة والمطاعم في أوروبا والخليج.",
       specs: {
         scientificName: "Capsicum annuum",
         variety: "كاليفورنيا وندر، ريد نايت، بلوكي أصفر، فلفل حار",
@@ -1162,7 +1162,7 @@ export const CATALOG: CatalogProduct[] = [
       name: "Болгарский перец",
       intro: "Калифорния Вандер и Чили · калибры G/GG (70–100 мм) · коробки 5 кг и флоу-пак трио.",
       description:
-        "Наш сладкий перец из современных теплиц и открытого грунта отличается толстой стенкой, правильной кубовидной формой и длительной сохранностью в красном, жёлтом, оранжевом и зелёном цветах. Также поставляем острый перец чили для розничных сетей.",
+        "Наш сладкий перец из теплиц и открытого грунта отличается толстой стенкой, ровной кубовидной формой и хорошей лёжкостью в красном, жёлтом, оранжевом и зелёном цветах. Также поставляем острый перец чили для оптовых покупателей и торговых сетей.",
       specs: {
         scientificName: "Capsicum annuum",
         variety: "Калифорния Вандер, Ред Найт, Йеллоу Блоки, Чили",
@@ -1277,7 +1277,7 @@ export const PAGE_UI: Record<
     home: "Home",
     products: "Products",
     premium: "Egyptian Export Produce",
-    requestQuote: "Get a Quote",
+    requestQuote: "Request a Quote",
     gallery: "Product Gallery",
     info: "Product Information",
     description: "Description",

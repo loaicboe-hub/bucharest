@@ -83,7 +83,6 @@ export const Route = createFileRoute("/")({
 
 const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2, Clock, Snowflake, Star];
 const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
-const badgeIcons = [Sprout, BadgeCheck, Globe2];
 const contactIcons = [Mail, Phone, MapPin];
 
 const BLANK_PIXEL =
@@ -310,7 +309,7 @@ function Index() {
               href="#contact"
               className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-semibold text-gold-foreground shadow-md transition-all hover:scale-105 hover:shadow-lg sm:px-5 sm:py-2.5 sm:text-sm"
             >
-              {c.ui.requestQuote} <ArrowRight className="h-3.5 w-3.5" />
+              {c.ui.requestQuote} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
             </a>
             <LanguageSwitcher compact={scrolled} inlineFrom="lg" />
           </div>
@@ -399,12 +398,12 @@ function Index() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
         <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-4 pt-32 pb-16 sm:px-6 sm:pt-40 sm:pb-24 lg:grid-cols-12 lg:px-10 lg:pt-44">
-          <div className="max-w-3xl animate-fade-up lg:col-span-7">
+          <div className="max-w-4xl animate-fade-up lg:col-span-9">
             <div className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full glass-dark px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-white sm:mb-6 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.2em]">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold animate-pulse" />
               <span>{c.ui.heroBadge}</span>
             </div>
-            <h1 className="font-display text-[clamp(1.7rem,7vw,2.35rem)] font-bold leading-[1.15] text-white sm:text-5xl lg:text-[3.75rem]">
+            <h1 className="font-display text-[clamp(1.75rem,6.5vw,2.5rem)] font-bold leading-[1.12] text-white sm:text-5xl lg:text-[3.25rem] xl:text-[3.75rem]">
               {c.ui.heroTitle1}{" "}
               <span className="text-gradient-gold">{c.ui.heroTitleGold}</span>
               <br />
@@ -413,34 +412,19 @@ function Index() {
             <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/85 sm:mt-6 sm:text-xl">
               {c.ui.heroSub}
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3 sm:mt-10 sm:gap-4">
+            <div className="mt-7 flex flex-wrap items-center gap-3.5 sm:mt-10 sm:gap-4">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-gold-foreground shadow-lg transition-all hover:scale-[1.03] hover:brightness-105 sm:px-8 sm:py-4 sm:text-base"
+                className="inline-flex items-center gap-2.5 rounded-full bg-gold px-7 py-3.5 text-base font-bold text-gold-foreground shadow-xl transition-all hover:scale-[1.03] hover:brightness-105 sm:px-10 sm:py-[18px] sm:text-lg"
               >
-                {c.ui.getQuote} <ArrowRight className="h-4 w-4 shrink-0" />
+                {c.ui.requestQuote} <ArrowRight className="h-5 w-5 shrink-0 rtl:rotate-180" />
               </a>
               <a
                 href="#products"
-                className="inline-flex items-center gap-2 rounded-full glass-dark px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20 sm:px-8 sm:py-4 sm:text-base"
+                className="inline-flex items-center gap-2 rounded-full glass-dark border border-white/25 px-5 py-3 text-sm font-medium text-white/90 transition-all hover:bg-white/20 sm:px-6 sm:py-3.5 sm:text-base"
               >
                 {c.ui.exploreProducts}
               </a>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-2 sm:mt-12 sm:grid sm:max-w-2xl sm:grid-cols-3 sm:gap-4">
-              {c.badges.map((label, bi) => {
-                const BIcon = badgeIcons[bi];
-                return (
-                <div
-                  key={label}
-                  className="glass-dark flex items-center gap-2 rounded-xl px-3 py-2 text-white sm:gap-3 sm:rounded-2xl sm:px-4 sm:py-3"
-                >
-                  <BIcon className="h-4 w-4 shrink-0 text-gold sm:h-5 sm:w-5" />
-                  <span className="text-xs font-medium sm:whitespace-nowrap sm:text-sm">{label}</span>
-                </div>
-                );
-              })}
             </div>
           </div>
 
@@ -1289,14 +1273,14 @@ function ProductCard({
             onClick={onRequestQuote}
             className="inline-flex items-center gap-1.5 rounded-full gradient-primary px-4 py-2 text-xs font-semibold text-white shadow-md transition-all hover:scale-[1.03] sm:px-5 sm:py-2.5 sm:text-sm"
           >
-            {quoteLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            {quoteLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0 rtl:rotate-180" />
           </button>
           <Link
             to="/products/$slug"
             params={{ slug }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-primary/80 transition-colors hover:text-fresh sm:text-sm"
           >
-            {specsLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+            {specsLabel} <ArrowRight className="h-3.5 w-3.5 shrink-0 rtl:rotate-180" />
           </Link>
         </div>
       </div>
