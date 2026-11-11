@@ -29,9 +29,9 @@ export const defaultSiteSettings: SiteSettings = {
   instagram: "https://instagram.com/bucharestegyagro",
   linkedin: "https://linkedin.com/company/bucharestegyagro",
   twitter: "",
-  seoTitle: "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter",
+  seoTitle: "BucharestEgyAgro | Fresh Produce Export",
   seoDescription:
-    "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
+    "BucharestEgyAgro supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
   seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Agricultural Export, BucharestEgyAgro",
   seoOgImage: "",
 };
@@ -41,6 +41,19 @@ const GENERIC_PLACEHOLDER_ADDRESSES = new Set([
   "Industrial Zone, Cairo",
   "Cairo, Egypt",
 ]);
+
+const LEGACY_SEO_TITLES = new Set([
+  "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter",
+  "BucharestEgyAgro Import and Export | Fresh Produce Exporter",
+]);
+
+function normalizeSeoTitle(title: string | undefined): string {
+  const clean = (title ?? "").trim();
+  if (!clean || LEGACY_SEO_TITLES.has(clean)) {
+    return defaultSiteSettings.seoTitle;
+  }
+  return clean;
+}
 
 function normalizeAddress(addr: string | undefined): string {
   const clean = (addr ?? "").trim();
@@ -59,7 +72,10 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
       const raw = localStorage.getItem(SETTINGS_KEY);
       if (raw) {
         cached = JSON.parse(raw);
-        if (cached) cached.address = normalizeAddress(cached.address);
+        if (cached) {
+          cached.address = normalizeAddress(cached.address);
+          cached.seoTitle = normalizeSeoTitle(cached.seoTitle);
+        }
       }
     } catch {}
   }
@@ -90,7 +106,7 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
         instagram: remote.instagram || defaultSiteSettings.instagram,
         linkedin: remote.linkedin || defaultSiteSettings.linkedin,
         twitter: remote.twitter || defaultSiteSettings.twitter,
-        seoTitle: remote.seoTitle || remote.seo_title || defaultSiteSettings.seoTitle,
+        seoTitle: normalizeSeoTitle(remote.seoTitle || remote.seo_title),
         seoDescription: remote.seoDescription || remote.seo_description || defaultSiteSettings.seoDescription,
         seoKeywords: remote.seoKeywords || remote.seo_keywords || defaultSiteSettings.seoKeywords,
         seoOgImage: remote.seoOgImage || remote.seo_og_image || "",

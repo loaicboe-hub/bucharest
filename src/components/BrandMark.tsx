@@ -68,8 +68,8 @@ export function BrandMark({
         />
       </span>
       {showName && (
-        <span className="font-display text-xl font-bold leading-tight">
-          <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+        <span className="font-display text-lg font-extrabold leading-tight text-stone-950 sm:text-xl">
+          BucharestEgyAgro
         </span>
       )}
     </span>

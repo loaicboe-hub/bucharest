@@ -356,7 +356,7 @@ VALUES (
   'https://facebook.com/bucharestegyagro',
   'https://instagram.com/bucharestegyagro',
   'https://linkedin.com/company/bucharestegyagro',
-  'BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter',
+  'BucharestEgyAgro | Fresh Produce Export',
   'Egyptian exporter of fresh, carefully selected fruits and vegetables to international markets.'
 ) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`);
 

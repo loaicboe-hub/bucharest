@@ -29,12 +29,12 @@ export const Route = createFileRoute("/products/$slug")({
     if (!loaderData) {
       return {
         meta: [
-          { title: "Product Not Found | BucharestEgyAgro Import and Export" },
+          { title: "Product Not Found | BucharestEgyAgro" },
           { name: "robots", content: "noindex" },
         ],
       };
     }
-    const title = `${loaderData.name} Export from Egypt | BucharestEgyAgro Import and Export`;
+    const title = `${loaderData.name} Export from Egypt | BucharestEgyAgro`;
     const description = `${loaderData.intro} Egyptian ${loaderData.name.toLowerCase()} for international importers — specifications, packaging, sizes and shipping terms.`;
     return {
       meta: [
@@ -154,7 +154,7 @@ function ProductDetail() {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4 lg:px-10">
           <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-1 shadow-md sm:h-14 sm:w-14 sm:rounded-2xl">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-0.5 shadow-md sm:h-12 sm:w-12 sm:rounded-2xl">
               <img
                 data-brand-logo
                 src={logo || "/logo.png"}
@@ -163,10 +163,10 @@ function ProductDetail() {
               />
             </div>
             <div className="min-w-0 leading-tight">
-              <div className="truncate font-display text-[15px] font-bold leading-none sm:text-xl lg:text-2xl">
-                <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+              <div className="truncate font-display text-base font-extrabold leading-none text-stone-950 sm:text-xl">
+                BucharestEgyAgro
               </div>
-              <div className="mt-1 text-[8px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[10px] sm:tracking-[0.2em]">{c.brandSub}</div>
+              <div className="mt-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-primary sm:text-[10px] sm:tracking-[0.18em]">{c.brandSub}</div>
             </div>
           </Link>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">

@@ -11,9 +11,9 @@ import { getSectionImageUrl } from "@/lib/section-image";
 
 export const Route = createFileRoute("/news/")({
   head: () => {
-    const title = "Our News | BucharestEgyAgro Import and Export";
+    const title = "Our News | BucharestEgyAgro";
     const description =
-      "Company news, market updates and stories from BucharestEgyAgro Import and Export — fresh produce trade insights, partnerships and announcements.";
+      "Company news, market updates and stories from BucharestEgyAgro — fresh produce trade insights, partnerships and announcements.";
     return {
       meta: [
         { title },

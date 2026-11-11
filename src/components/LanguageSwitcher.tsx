@@ -14,7 +14,7 @@ export function LanguageSwitcher({
   inlineFrom = "lg",
 }: {
   compact?: boolean;
-  inlineFrom?: "sm" | "lg" | "always";
+  inlineFrom?: "sm" | "lg" | "xl" | "always";
 }) {
   const { lang, setLang, c } = useLang();
   const [open, setOpen] = useState(false);
@@ -43,16 +43,20 @@ export function LanguageSwitcher({
   const pillClasses =
     inlineFrom === "always"
       ? "inline-flex"
-      : inlineFrom === "sm"
-        ? "hidden sm:inline-flex"
-        : "hidden lg:inline-flex";
+      : inlineFrom === "xl"
+        ? "hidden xl:inline-flex"
+        : inlineFrom === "sm"
+          ? "hidden sm:inline-flex"
+          : "hidden lg:inline-flex";
 
   const dropdownClasses =
     inlineFrom === "always"
       ? "hidden"
-      : inlineFrom === "sm"
-        ? "relative inline-block sm:hidden"
-        : "relative inline-block lg:hidden";
+      : inlineFrom === "xl"
+        ? "relative inline-block xl:hidden"
+        : inlineFrom === "sm"
+          ? "relative inline-block sm:hidden"
+          : "relative inline-block lg:hidden";
 
   return (
     <div ref={rootRef} className="relative shrink-0">

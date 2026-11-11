@@ -73,19 +73,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter" },
+      { title: "BucharestEgyAgro | Fresh Produce Export" },
       {
         name: "description",
         content:
-          "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
+          "BucharestEgyAgro supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
       },
       {
         name: "keywords",
         content:
           "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Fruit Supplier, Vegetable Supplier, Agricultural Export, Fresh Produce Export, BucharestEgyAgro",
       },
-      { name: "author", content: "BucharestEgyAgro Import and Export" },
-      { property: "og:title", content: "BucharestEgyAgro Import and Export | Fresh Produce Exporter" },
+      { name: "author", content: "BucharestEgyAgro" },
+      { property: "og:title", content: "BucharestEgyAgro | Fresh Produce Export" },
       {
         property: "og:description",
         content: "Fresh Egyptian fruits & vegetables supplied to importers across Europe, the Gulf, Africa, and Asia.",

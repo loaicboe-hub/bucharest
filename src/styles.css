@@ -139,6 +139,13 @@
   color: transparent;
 }
 
+@utility text-gradient-gold-dark {
+  background: linear-gradient(135deg, oklch(0.46 0.12 76) 0%, oklch(0.32 0.10 70) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 @utility gradient-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--fresh) 100%);
 }

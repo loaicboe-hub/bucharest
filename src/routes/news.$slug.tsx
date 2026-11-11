@@ -31,15 +31,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/news/$slug")({
   head: () => ({
     meta: [
-      { title: "News Article | BucharestEgyAgro Import and Export" },
+      { title: "News Article | BucharestEgyAgro" },
       {
         name: "description",
-        content: "Read the latest company news and market updates from BucharestEgyAgro Import and Export.",
+        content: "Read the latest company news and market updates from BucharestEgyAgro.",
       },
-      { property: "og:title", content: "News Article | BucharestEgyAgro Import and Export" },
+      { property: "og:title", content: "News Article | BucharestEgyAgro" },
       {
         property: "og:description",
-        content: "Read the latest company news and market updates from BucharestEgyAgro Import and Export.",
+        content: "Read the latest company news and market updates from BucharestEgyAgro.",
       },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -145,7 +145,7 @@ function NewsDetail() {
   const category = localized?.category ?? "";
 
   useEffect(() => {
-    if (title) document.title = `${title} | BucharestEgyAgro Import and Export`;
+    if (title) document.title = `${title} | BucharestEgyAgro`;
   }, [title]);
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";

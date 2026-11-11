@@ -251,12 +251,14 @@ function Index() {
       {/* Navbar */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${
-          menuOpen || scrolled ? "glass shadow-md py-2 sm:py-3" : "bg-transparent py-3 sm:py-5"
+          menuOpen || scrolled
+            ? "glass shadow-md py-1.5 sm:py-2"
+            : "bg-gradient-to-b from-black/60 via-black/30 to-transparent py-2 sm:py-2.5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 sm:px-6 lg:px-10">
-          <a href="#top" className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/50 bg-white p-1 shadow-md sm:h-14 sm:w-14 sm:rounded-2xl lg:h-16 lg:w-16">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 sm:px-6 lg:gap-6 lg:px-8">
+          <a href="#top" className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/60 bg-white p-0.5 shadow-md sm:h-11 sm:w-11 lg:h-12 lg:w-12">
               <img
                 data-brand-logo
                 suppressHydrationWarning
@@ -267,12 +269,16 @@ function Index() {
             </div>
 
             <div className="flex min-w-0 flex-col justify-center">
-              <span className="truncate font-display text-[15px] font-bold leading-tight sm:text-xl lg:text-2xl drop-shadow-sm">
-                <span className="text-gradient-gold font-extrabold">BucharestEgyAgro</span>
+              <span
+                className={`truncate font-display text-[15px] font-extrabold leading-tight sm:text-lg lg:text-xl ${
+                  menuOpen || scrolled ? "text-stone-950" : "text-white drop-shadow-sm"
+                }`}
+              >
+                BucharestEgyAgro
               </span>
               <span
-                className={`whitespace-nowrap text-[8px] font-semibold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.22em] ${
-                  menuOpen || scrolled ? "text-muted-foreground" : "text-white/80"
+                className={`whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.14em] sm:text-[10px] sm:tracking-[0.18em] ${
+                  menuOpen || scrolled ? "text-primary" : "text-white/95"
                 }`}
               >
                 {c.ui.importExportLabel}
@@ -280,15 +286,15 @@ function Index() {
             </div>
           </a>
 
-          <nav className="hidden items-center justify-center gap-4 md:flex lg:gap-6 xl:gap-8">
+          <nav className="hidden flex-1 items-center justify-center md:flex md:gap-4 lg:gap-5 xl:gap-7">
             {nav.map((n) => (
               <a
                 key={n.href}
                 href={n.href}
-                className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-sm ${
+                className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-[13px] xl:text-sm ${
                   scrolled
-                    ? "text-foreground hover:text-fresh"
-                    : "text-white/90 hover:text-gold"
+                    ? "text-stone-900 hover:text-fresh"
+                    : "text-white/95 hover:text-gold"
                 }`}
               >
                 {n.label}
@@ -296,26 +302,26 @@ function Index() {
             ))}
             <Link
               to="/news"
-              className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-sm ${
-                scrolled ? "text-foreground hover:text-fresh" : "text-white/90 hover:text-gold"
+              className={`whitespace-nowrap text-xs font-semibold transition-colors lg:text-[13px] xl:text-sm ${
+                scrolled ? "text-stone-900 hover:text-fresh" : "text-white/95 hover:text-gold"
               }`}
             >
               {c.ui.ourNews || "Our News"}
             </Link>
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-3 md:flex lg:gap-4">
+          <div className="hidden shrink-0 items-center gap-2.5 md:flex lg:gap-3">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-semibold text-gold-foreground shadow-md transition-all hover:scale-105 hover:shadow-lg sm:px-5 sm:py-2.5 sm:text-sm"
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-gold px-4 py-2 text-xs font-bold text-gold-foreground shadow-md transition-all hover:scale-105 hover:shadow-lg sm:px-5 sm:py-2 sm:text-sm"
             >
               {c.ui.requestQuote} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
             </a>
-            <LanguageSwitcher compact={scrolled} inlineFrom="lg" />
+            <LanguageSwitcher compact={scrolled} inlineFrom="xl" />
           </div>
 
           <div className="ms-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:hidden">
-            <LanguageSwitcher compact={menuOpen || scrolled} inlineFrom="lg" />
+            <LanguageSwitcher compact={menuOpen || scrolled} inlineFrom="xl" />
             <button
               type="button"
               aria-label={c.ui.toggleMenu}
@@ -437,27 +443,26 @@ function Index() {
       </section>
 
       {/* About */}
-      <section id="about" className="scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36 relative overflow-hidden py-20 lg:py-32">
-        <SectionLeafBg opacity="opacity-[0.22] sm:opacity-[0.28]" />
-        <SectionWave />
+      <section id="about" className="scroll-mt-24 sm:scroll-mt-28 lg:scroll-mt-32 relative overflow-hidden py-20 lg:py-28">
+        <SectionLeafBg opacity="opacity-70" darken />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-10">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-3">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
-              <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
-              <span className="h-px w-8 bg-fresh" />
+          <div className="rounded-3xl border border-gold/45 bg-[#fcfbf7] p-6 shadow-[0_24px_70px_-15px_rgba(0,0,0,0.5)] sm:p-10 lg:p-12">
+            <div className="mx-auto flex max-w-3xl flex-col items-center gap-3">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-fresh">
+                <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
+                <span className="h-px w-8 bg-fresh" />
+              </div>
+              <h2 className="max-w-full font-display text-[clamp(1.5rem,5.8vw,2.5rem)] leading-tight font-bold text-stone-950 sm:text-5xl lg:text-6xl break-words">
+                {c.ui.aboutTitle1} {c.ui.aboutTitleGold}
+              </h2>
+              <PharaonicDivider className="my-2" />
             </div>
-            <h2 className="max-w-full font-display text-[clamp(1.375rem,5.8vw,2.25rem)] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
-              {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
-            </h2>
-            <PharaonicDivider className="my-2" />
-          </div>
 
-          <div className="mt-8 rounded-3xl border border-gold/40 bg-card/95 p-6 shadow-[var(--shadow-soft)] backdrop-blur-md sm:mt-10 sm:p-12">
-            <p className="text-base leading-relaxed text-foreground sm:text-xl font-medium">
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-stone-900 sm:mt-8 sm:text-xl font-medium">
               {c.ui.aboutP1}
             </p>
-            <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-stone-700 sm:mt-5 sm:text-lg">
               {c.ui.aboutP2}
             </p>
 
@@ -465,12 +470,12 @@ function Index() {
               {c.stats.map((s) => (
                 <div
                   key={s.l}
-                  className="rounded-2xl border border-gold/30 bg-cream/70 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-md sm:p-6"
+                  className="rounded-2xl border border-stone-200/90 bg-stone-100/80 p-4 shadow-sm transition-all hover:-translate-y-1 hover:border-gold hover:shadow-md sm:p-6"
                 >
-                  <div className="font-display text-2xl font-bold sm:text-4xl">
-                    <span className="text-gradient-gold font-extrabold">{s.n}</span>
+                  <div className="font-display text-2xl font-extrabold text-stone-950 sm:text-4xl">
+                    {s.n}
                   </div>
-                  <div className="mt-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:mt-2 sm:text-sm">{s.l}</div>
+                  <div className="mt-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 sm:mt-2 sm:text-sm">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -718,7 +723,7 @@ function Index() {
               <span className="h-px w-8 bg-fresh" />
             </div>
             <h2 className="font-display text-[26px] font-bold leading-tight text-primary sm:text-5xl lg:text-6xl break-words">
-              {c.ui.processTitle1} <span className="text-gradient-gold">{c.ui.processTitleGold}</span>
+              {c.ui.processTitle1} <span className="text-gradient-gold-dark">{c.ui.processTitleGold}</span>
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
               {c.ui.processSub}
@@ -830,7 +835,7 @@ function Index() {
                 <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
               <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
+                {c.ui.marketsTitle1} <span className="text-gradient-gold-dark">{c.ui.marketsTitleGold}</span>
               </h2>
               <p className="mt-6 text-lg text-muted-foreground">
                 {c.ui.marketsSub}
@@ -888,7 +893,7 @@ function Index() {
                 <span className="h-px w-8 bg-fresh" /> {c.ui.contactEyebrow}
               </div>
               <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl">
-                {c.ui.contactTitle1} <span className="text-gradient-gold">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
+                {c.ui.contactTitle1} <span className="text-gradient-gold-dark">{c.ui.contactTitleGold}</span> {c.ui.contactTitle2}
               </h2>
               <p className="mt-4 text-stone-700 font-normal leading-relaxed">
                 {c.ui.contactSub}
