@@ -1,17 +1,103 @@
-type Dest = { x: number; y: number; label?: string; delay: number };
+import type { Lang } from "@/lib/i18n";
 
-// Egypt — export hub
-const HUB = { x: 548, y: 232 };
+type Corridor = {
+  id: string;
+  x: number;
+  y: number;
+  labelX: number;
+  labelY: number;
+  delay: number;
+  label: Record<Lang, string>;
+};
 
-const DESTS: Dest[] = [
-  { x: 432, y: 120, delay: 0 },    // UK / North Europe
-  { x: 486, y: 143, delay: 0.6 },  // Central Europe
-  { x: 604, y: 214, delay: 1.2 },  // Gulf / Middle East
-  { x: 664, y: 236, delay: 1.8 },  // India
-  { x: 726, y: 176, delay: 2.4 },  // East Asia
-  { x: 722, y: 288, delay: 3.0 },  // SE Asia
-  { x: 468, y: 282, delay: 3.6 },  // West Africa
-  { x: 522, y: 352, delay: 4.2 },  // Southern Africa
+// Egypt export origin hub (Cairo / Nile Delta / Alexandria port corridor)
+const HUB = { x: 356, y: 266 };
+
+const CORRIDORS: Corridor[] = [
+  {
+    id: "uk-eu",
+    x: 248,
+    y: 138,
+    labelX: 196,
+    labelY: 112,
+    delay: 0,
+    label: {
+      en: "UK & EU",
+      fr: "Royaume-Uni & UE",
+      ar: "أوروبا وبريطانيا",
+      ru: "ЕС и Великобритания",
+    },
+  },
+  {
+    id: "russia",
+    x: 422,
+    y: 102,
+    labelX: 438,
+    labelY: 74,
+    delay: 0.7,
+    label: {
+      en: "Russia",
+      fr: "Russie",
+      ar: "روسيا",
+      ru: "Россия",
+    },
+  },
+  {
+    id: "gulf",
+    x: 454,
+    y: 268,
+    labelX: 512,
+    labelY: 306,
+    delay: 1.4,
+    label: {
+      en: "Saudi Arabia & UAE",
+      fr: "Arabie Saoudite & EAU",
+      ar: "السعودية والإمارات",
+      ru: "Сауд. Аравия и ОАЭ",
+    },
+  },
+  {
+    id: "asia",
+    x: 622,
+    y: 258,
+    labelX: 658,
+    labelY: 230,
+    delay: 2.1,
+    label: {
+      en: "India & Asia",
+      fr: "Inde & Asie",
+      ar: "الهند وآسيا",
+      ru: "Индия и Азия",
+    },
+  },
+  {
+    id: "east-africa",
+    x: 378,
+    y: 392,
+    labelX: 416,
+    labelY: 422,
+    delay: 2.8,
+    label: {
+      en: "East Africa",
+      fr: "Afrique de l'Est",
+      ar: "شرق أفريقيا",
+      ru: "Вост. Африка",
+    },
+  },
+  {
+    id: "west-africa",
+    x: 248,
+    y: 356,
+    labelX: 194,
+    labelY: 386,
+    delay: 3.5,
+    label: {
+      en: "West Africa",
+      fr: "Afrique de l'Ouest",
+      ar: "غرب أفريقيا",
+      ru: "Зап. Африка",
+    },
+  },
 ];
 
 function arcPath(a: { x: number; y: number }, b: { x: number; y: number }) {
@@ -20,177 +106,199 @@ function arcPath(a: { x: number; y: number }, b: { x: number; y: number }) {
   const dx = b.x - a.x;
   const dy = b.y - a.y;
   const dist = Math.hypot(dx, dy);
-  // lift the control point perpendicular to the segment for a flight-path arc
-  const lift = Math.min(120, dist * 0.42);
+  const lift = Math.min(72, dist * 0.28);
   const nx = -dy / (dist || 1);
   const ny = dx / (dist || 1);
-  const sign = b.x < a.x ? -1 : 1;
+  const sign = b.x < a.x ? 1 : -1;
   return `M ${a.x} ${a.y} Q ${mx + nx * lift * sign} ${my + ny * lift * sign} ${b.x} ${b.y}`;
 }
 
 export default function WorldMapRoutes({
-  labels = [] as string[],
   hubLabel = "EGYPT",
+  lang = "en",
 }: {
   labels?: string[];
   hubLabel?: string;
+  lang?: Lang;
 }) {
   return (
     <div
-      className="relative h-full w-full overflow-hidden bg-[oklch(0.24_0.035_170)]"
+      className="relative h-full w-full overflow-hidden bg-[oklch(0.22_0.04_170)]"
       style={{ transform: "translateZ(0)", willChange: "transform" }}
     >
-      <svg viewBox="0 0 900 450" preserveAspectRatio="xMidYMid slice" className="h-full w-full" style={{ transform: "translateZ(0)" }}>
+      <svg
+        viewBox="0 0 800 560"
+        preserveAspectRatio="xMidYMid meet"
+        className="h-full w-full"
+        role="img"
+        aria-label={hubLabel}
+      >
         <defs>
           <linearGradient id="wm-bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="oklch(0.27 0.04 175)" />
-            <stop offset="55%" stopColor="oklch(0.22 0.035 168)" />
-            <stop offset="100%" stopColor="oklch(0.19 0.04 158)" />
+            <stop offset="0%" stopColor="oklch(0.25 0.045 174)" />
+            <stop offset="55%" stopColor="oklch(0.20 0.038 166)" />
+            <stop offset="100%" stopColor="oklch(0.17 0.04 158)" />
           </linearGradient>
 
-          <linearGradient id="wm-arc" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.75 0.13 85)" stopOpacity="0.15" />
-            <stop offset="50%" stopColor="oklch(0.8 0.16 155)" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="oklch(0.75 0.13 85)" stopOpacity="0.35" />
+          <linearGradient id="wm-land" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="oklch(0.36 0.055 162)" stopOpacity="0.92" />
+            <stop offset="100%" stopColor="oklch(0.28 0.048 164)" stopOpacity="0.88" />
           </linearGradient>
 
-          <pattern id="wm-dots" x="0" y="0" width="7" height="7" patternUnits="userSpaceOnUse">
-            <circle cx="1.6" cy="1.6" r="1.35" fill="oklch(0.86 0.09 158)" opacity="0.55" />
-          </pattern>
+          <linearGradient id="wm-route" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="oklch(0.84 0.14 90)" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="oklch(0.76 0.16 155)" stopOpacity="0.95" />
+          </linearGradient>
 
           <radialGradient id="wm-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="oklch(0.82 0.16 155)" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="oklch(0.82 0.16 155)" stopOpacity="0" />
+            <stop offset="0%" stopColor="oklch(0.84 0.14 90)" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="oklch(0.84 0.14 90)" stopOpacity="0" />
           </radialGradient>
-
-          <mask id="wm-continents">
-            <rect width="900" height="450" fill="black" />
-            {/* North America */}
-            <path d="M120,110 Q160,80 220,90 L280,120 L300,180 L260,240 L200,260 L150,220 Z" fill="white" />
-            {/* South America */}
-            <path d="M270,270 Q310,260 320,320 L300,390 L270,410 L245,360 Z" fill="white" />
-            {/* Europe */}
-            <path d="M430,110 Q470,100 510,120 L530,160 L500,190 L450,180 L420,150 Z" fill="white" />
-            {/* Africa */}
-            <path d="M470,200 Q520,190 550,230 L560,310 L520,360 L480,340 L460,270 Z" fill="white" />
-            {/* Middle East */}
-            <path d="M530,180 L570,190 L575,225 L545,235 L525,215 Z" fill="white" />
-            {/* Asia */}
-            <path d="M560,130 Q640,110 720,140 L760,180 L740,240 L680,250 L610,220 L580,180 Z" fill="white" />
-            {/* SE Asia */}
-            <path d="M700,260 L740,270 L735,300 L710,305 Z" fill="white" />
-            {/* Australia */}
-            <path d="M720,340 Q760,330 790,350 L780,380 L740,385 L720,370 Z" fill="white" />
-          </mask>
         </defs>
 
-        <rect width="900" height="450" fill="url(#wm-bg)" />
+        <rect width="800" height="560" fill="url(#wm-bg)" />
 
-        {/* faint latitude/longitude grid */}
-        <g opacity="0.12" stroke="oklch(0.9 0.06 160)" strokeWidth="0.6">
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <line key={`h${i}`} x1="0" y1={i * 56 + 28} x2="900" y2={i * 56 + 28} />
+        {/* Subtle latitude / longitude grid */}
+        <g opacity="0.1" stroke="oklch(0.88 0.05 160)" strokeWidth="0.7">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <line key={`h${i}`} x1="0" y1={i * 80} x2="800" y2={i * 80} />
           ))}
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
-            <line key={`v${i}`} x1={i * 75 + 37} y1="0" x2={i * 75 + 37} y2="450" />
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <line key={`v${i}`} x1={i * 90} y1="0" x2={i * 90} y2="560" />
           ))}
         </g>
 
-        {/* topographic dotted landmasses */}
-        <rect width="900" height="450" fill="url(#wm-dots)" mask="url(#wm-continents)" />
+        {/* Recognizable Eastern Hemisphere landmasses (UK/Europe, Russia/Asia, Middle East, Africa) */}
+        <g fill="url(#wm-land)" stroke="oklch(0.62 0.09 158)" strokeOpacity="0.4" strokeWidth="1.2" strokeLinejoin="round">
+          {/* Great Britain & Ireland */}
+          <path d="M198,116 L214,110 L218,136 L202,148 L192,138 Z" />
+          {/* Iberia & Western/Central/Southern Europe */}
+          <path d="M174,174 L216,154 L268,138 L314,142 L344,166 L338,196 L306,204 L286,216 L256,202 L222,208 L184,202 Z" />
+          {/* Scandinavia */}
+          <path d="M276,84 L322,68 L342,96 L316,126 L278,118 Z" />
+          {/* Russia & Eurasia */}
+          <path d="M336,142 L352,76 L456,54 L592,64 L682,92 L696,158 L628,194 L558,196 L486,182 L416,188 L352,182 Z" />
+          {/* Arabian Peninsula & Levant (Middle East) */}
+          <path d="M368,218 L428,212 L462,248 L478,284 L438,314 L394,296 L364,254 Z" />
+          {/* South & Southeast Asia (India / Asia corridor) */}
+          <path d="M498,198 L586,204 L668,214 L718,248 L692,312 L646,326 L608,292 L582,316 L546,274 L512,244 Z" />
+          {/* Africa continent */}
+          <path d="M204,242 L292,232 L356,246 L386,296 L418,342 L396,422 L356,492 L314,492 L292,418 L244,376 L196,356 L184,298 Z" />
+        </g>
 
-        {/* flight paths */}
-        {DESTS.map((d, i) => {
-          const p = arcPath(HUB, d);
+        {/* Highlight Egypt territory shape cleanly */}
+        <path
+          d="M334,242 L364,244 L368,280 L334,280 Z"
+          fill="oklch(0.76 0.13 85)"
+          fillOpacity="0.28"
+          stroke="oklch(0.86 0.14 90)"
+          strokeWidth="1.5"
+        />
+
+        {/* Concrete Sea & Air Shipping Corridors from Egypt */}
+        {CORRIDORS.map((c) => {
+          const p = arcPath(HUB, c);
+          const text = c.label[lang] || c.label.en;
+          const isRtlText = /[\u0600-\u06FF]/.test(text);
+          const boxW = Math.max(92, text.length * 7.2 + 22);
           return (
-            <g key={i}>
-              <path d={p} fill="none" stroke="oklch(0.8 0.16 155)" strokeWidth="1" opacity="0.3" />
+            <g key={c.id}>
+              {/* Always-visible base route line */}
               <path
                 d={p}
                 fill="none"
-                stroke="url(#wm-arc)"
-                strokeWidth="2.4"
+                stroke="url(#wm-route)"
+                strokeWidth="2.2"
+                strokeDasharray="6 5"
                 strokeLinecap="round"
-                strokeDasharray="10 190"
+                opacity="0.72"
+              />
+              {/* Animated moving shipping pulse */}
+              <path
+                d={p}
+                fill="none"
+                stroke="oklch(0.9 0.14 90)"
+                strokeWidth="2.8"
+                strokeLinecap="round"
+                strokeDasharray="12 180"
               >
                 <animate
                   attributeName="stroke-dashoffset"
-                  from="200"
+                  from="192"
                   to="0"
-                  dur="3.2s"
-                  begin={`${d.delay}s`}
+                  dur="3.4s"
+                  begin={`${c.delay}s`}
                   repeatCount="indefinite"
                 />
               </path>
+              <circle r="3.4" fill="oklch(0.92 0.14 90)">
+                <animateMotion dur="3.4s" begin={`${c.delay}s`} repeatCount="indefinite" path={p} />
+              </circle>
 
-              {/* travelling shipment pulse */}
-              <circle r="3.2" fill="oklch(0.86 0.14 95)">
-                <animateMotion dur="3.2s" begin={`${d.delay}s`} repeatCount="indefinite" path={p} />
-                <animate
-                  attributeName="opacity"
-                  values="0;1;1;0"
-                  dur="3.2s"
-                  begin={`${d.delay}s`}
-                  repeatCount="indefinite"
+              {/* Destination port/market node */}
+              <circle cx={c.x} cy={c.y} r="4.5" fill="oklch(0.86 0.14 90)" />
+              <circle cx={c.x} cy={c.y} r="8" fill="none" stroke="oklch(0.86 0.14 90)" strokeWidth="1.2" opacity="0.65">
+                <animate attributeName="r" values="5;12;5" dur="3.2s" begin={`${c.delay}s`} repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.7;0.1;0.7" dur="3.2s" begin={`${c.delay}s`} repeatCount="indefinite" />
+              </circle>
+
+              {/* Crisp high-contrast destination badge */}
+              <g transform={`translate(${c.labelX}, ${c.labelY})`}>
+                <rect
+                  x={-boxW / 2}
+                  y={-12}
+                  width={boxW}
+                  height={24}
+                  rx={12}
+                  fill="oklch(0.15 0.04 166 / 0.92)"
+                  stroke="oklch(0.82 0.13 85 / 0.55)"
+                  strokeWidth="1"
                 />
-              </circle>
-
-              {/* destination node */}
-              <circle cx={d.x} cy={d.y} r="3" fill="oklch(0.86 0.09 158)" opacity="0.9" />
-              <circle cx={d.x} cy={d.y} r="6" fill="none" stroke="oklch(0.8 0.16 155)" strokeWidth="1" opacity="0.5">
-                <animate attributeName="r" values="4;11;4" dur="3.2s" begin={`${d.delay}s`} repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.6;0;0.6" dur="3.2s" begin={`${d.delay}s`} repeatCount="indefinite" />
-              </circle>
+                <text
+                  x={0}
+                  y={4}
+                  textAnchor="middle"
+                  fill="oklch(0.96 0.02 150)"
+                  style={{
+                    font: "600 11px Cairo, Inter, sans-serif",
+                    letterSpacing: isRtlText ? "0" : "0.02em",
+                  }}
+                >
+                  {text}
+                </text>
+              </g>
             </g>
           );
         })}
 
-        {/* Egypt hub */}
-        <circle cx={HUB.x} cy={HUB.y} r="60" fill="url(#wm-glow)">
-          <animate attributeName="r" values="42;72;42" dur="4s" repeatCount="indefinite" />
+        {/* Egypt origin hub marker */}
+        <circle cx={HUB.x} cy={HUB.y} r="48" fill="url(#wm-glow)">
+          <animate attributeName="r" values="34;52;34" dur="3.8s" repeatCount="indefinite" />
         </circle>
-        <circle cx={HUB.x} cy={HUB.y} r="6" fill="oklch(0.86 0.14 95)" />
-        <circle cx={HUB.x} cy={HUB.y} r="12" fill="none" stroke="oklch(0.86 0.14 95)" strokeWidth="1.4" opacity="0.8" />
-        <text
-          x={HUB.x}
-          y={HUB.y + 30}
-          textAnchor="middle"
-          fill="oklch(0.92 0.05 100)"
-          style={{
-            font: "700 12px Cairo, Inter, sans-serif",
-            letterSpacing: /[\u0600-\u06FF]/.test(hubLabel) ? "0" : "0.12em",
-          }}
-        >
-          {hubLabel}
-        </text>
-
-        {/* region labels */}
-        {labels.slice(0, 4).map((l, i) => {
-          const pos = [
-            { x: 462, y: 92 },
-            { x: 626, y: 178 },
-            { x: 500, y: 392 },
-            { x: 706, y: 128 },
-          ][i];
-          if (!pos) return null;
-          const isAr = /[\u0600-\u06FF]/.test(l);
-          return (
-            <text
-              key={l}
-              x={pos.x}
-              y={pos.y}
-              textAnchor="middle"
-              fill="oklch(0.88 0.06 158)"
-              opacity="0.85"
-              style={{
-                font: "600 11px Cairo, Inter, sans-serif",
-                letterSpacing: isAr ? "0" : "0.1em",
-              }}
-            >
-              {l}
-            </text>
-          );
-        })}
+        <circle cx={HUB.x} cy={HUB.y} r="7" fill="oklch(0.88 0.15 88)" stroke="oklch(0.18 0.04 166)" strokeWidth="2" />
+        <circle cx={HUB.x} cy={HUB.y} r="13" fill="none" stroke="oklch(0.88 0.15 88)" strokeWidth="1.5" opacity="0.85" />
+        <g transform={`translate(${HUB.x}, ${HUB.y + 26})`}>
+          <rect
+            x={-40}
+            y={-11}
+            width={80}
+            height={22}
+            rx={11}
+            fill="oklch(0.82 0.14 88)"
+          />
+          <text
+            x={0}
+            y={4}
+            textAnchor="middle"
+            fill="oklch(0.18 0.04 160)"
+            style={{
+              font: "800 11px Cairo, Inter, sans-serif",
+              letterSpacing: /[\u0600-\u06FF]/.test(hubLabel) ? "0" : "0.1em",
+            }}
+          >
+            {hubLabel}
+          </text>
+        </g>
       </svg>
     </div>
   );

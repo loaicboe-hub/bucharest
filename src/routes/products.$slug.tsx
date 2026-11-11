@@ -35,7 +35,7 @@ export const Route = createFileRoute("/products/$slug")({
       };
     }
     const title = `${loaderData.name} Export from Egypt | BucharestEgyAgro Import and Export`;
-    const description = `${loaderData.intro} Premium Egyptian ${loaderData.name.toLowerCase()} for international buyers — specifications, packaging, sizes and shipping terms.`;
+    const description = `${loaderData.intro} Egyptian ${loaderData.name.toLowerCase()} for international importers — specifications, packaging, sizes and shipping terms.`;
     return {
       meta: [
         { title },
@@ -215,6 +215,11 @@ function ProductDetail() {
             <Link
               to="/"
               hash="contact"
+              onClick={() => {
+                try {
+                  sessionStorage.setItem("bea_quote_product", data.name);
+                } catch {}
+              }}
               className="mt-8 inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-105"
             >
               {t.requestQuote} <Arrow className="h-4 w-4" />

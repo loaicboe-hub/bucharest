@@ -15,6 +15,7 @@ import { SectionLeafBg } from "@/components/SectionLeafBg";
 import WorldMapRoutes from "@/components/WorldMapRoutes";
 
 import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
+import { CATALOG } from "@/lib/products-catalog";
 import {
   categoryName,
   listCategories,
@@ -99,6 +100,7 @@ function Index() {
   const [logo, setLogo] = useState<string | null>(null);
 
   const [site, setSite] = useState<SiteSettings>(defaultSiteSettings);
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [formBusy, setFormBusy] = useState(false);
   const contactFormRef = useRef<HTMLFormElement>(null);
@@ -112,15 +114,15 @@ function Index() {
     const country = String(fd.get("country") ?? "").trim();
     const email = String(fd.get("email") ?? "").trim();
     const phone = String(fd.get("phone") ?? "").trim();
-    const product = String(fd.get("product") ?? "").trim();
+    const product = String(fd.get("product") ?? selectedProduct ?? "").trim();
     const message = String(fd.get("message") ?? "").trim();
 
-    if (mode === "inquiry" && (!name || !email || !message)) {
+    if (mode === "inquiry" && (!name || !email || !phone || !message)) {
       setFormMsg({ type: "error", text: c.ui.errRequired });
       return;
     }
-    if (mode === "quote" && ((!name && !company) || !email)) {
-      setFormMsg({ type: "error", text: c.ui.errRequired });
+    if (mode === "quote" && (!name || !email || !phone)) {
+      setFormMsg({ type: "error", text: c.ui.errQuoteRequired || c.ui.errRequired });
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -132,13 +134,14 @@ function Index() {
     setFormMsg(null);
     try {
       if (mode === "quote") {
+        const details = [message, phone ? `Tel: ${phone}` : ""].filter(Boolean).join(" | ");
         await submitQuoteRequest({
           company: company || name,
           contactPerson: name || company,
           email,
           country,
-          product,
-          quantity: message || "Standard Quote Request",
+          product: product || c.ui.fProductAllOption,
+          quantity: details || "Standard Quote Request",
         });
         setFormMsg({ type: "success", text: c.ui.okQuote });
       } else {
@@ -153,6 +156,7 @@ function Index() {
         setFormMsg({ type: "success", text: c.ui.okSent });
       }
       formEl.reset();
+      setSelectedProduct("");
     } catch (err: any) {
       setFormMsg({
         type: "error",
@@ -164,11 +168,7 @@ function Index() {
   };
 
   const handleSelectProductQuote = (productName: string) => {
-    const formEl = contactFormRef.current;
-    if (formEl) {
-      const productInput = formEl.elements.namedItem("product") as HTMLInputElement | null;
-      if (productInput) productInput.value = productName;
-    }
+    setSelectedProduct(productName);
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
   const [aboutVideo, setAboutVideo] = useState<string | null>(null);
@@ -201,6 +201,13 @@ function Index() {
     getHeroImageUrl().then((u) => { if (u) setHeroBg(u); }).catch(() => undefined);
     listPublishedProducts().then(setDbProducts).catch(() => setDbProducts([]));
     listCategories(true).then(setCategories).catch(() => setCategories([]));
+    try {
+      const queued = sessionStorage.getItem("bea_quote_product");
+      if (queued) {
+        setSelectedProduct(queued);
+        sessionStorage.removeItem("bea_quote_product");
+      }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -448,8 +455,8 @@ function Index() {
       </section>
 
       {/* About */}
-      <section id="about" className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32">
-        <SectionLeafBg opacity="opacity-[0.32] sm:opacity-[0.38]" />
+      <section id="about" className="scroll-mt-24 sm:scroll-mt-32 relative overflow-hidden py-20 lg:py-32">
+        <SectionLeafBg opacity="opacity-[0.28] sm:opacity-[0.35]" />
         <SectionWave />
 
         <div className="relative z-10 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-10">
@@ -458,7 +465,7 @@ function Index() {
               <span className="h-px w-8 bg-fresh" /> {c.ui.aboutEyebrow}{" "}
               <span className="h-px w-8 bg-fresh" />
             </div>
-            <h2 className="font-display text-[26px] xs:text-[28px] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
+            <h2 className="font-display text-[24px] xs:text-[28px] leading-tight font-bold text-primary sm:text-5xl lg:text-6xl break-words">
               {c.ui.aboutTitle1} <span className="text-gradient-gold">{c.ui.aboutTitleGold}</span>
             </h2>
             <PharaonicDivider className="my-2" />
@@ -511,7 +518,7 @@ function Index() {
         {!sectionImages.products && (
           <BrandWatermark
             position={dir === "rtl" ? "left" : "right"}
-            className="bottom-8 top-auto opacity-[0.02]"
+            className="bottom-8 top-auto opacity-[0.015]"
           />
         )}
 
@@ -650,7 +657,7 @@ function Index() {
       {/* Why Us */}
       <section
         id="why"
-        className="scroll-mt-24 sm:scroll-mt-28 relative overflow-hidden py-20 lg:py-32"
+        className="scroll-mt-24 sm:scroll-mt-32 relative overflow-hidden py-20 lg:py-32"
         style={
           sectionImages.whyUs
             ? {
@@ -667,12 +674,12 @@ function Index() {
         {!sectionImages.whyUs && <SectionLeafBg />}
         <SectionWave />
         {!sectionImages.whyUs && (
-          <BrandWatermark position="center" className="w-[46rem] opacity-[0.025]" />
+          <BrandWatermark position="center" className="w-[46rem] opacity-[0.018]" />
         )}
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center sm:gap-6">
-            <BrandMark showName={false} markClassName="h-24 w-24 shadow-lg sm:h-28 sm:w-28 md:h-32 md:w-32" />
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center sm:gap-5">
+            <BrandMark showName={false} markClassName="h-20 w-20 shadow-lg sm:h-28 sm:w-28" />
             <div>
               <div className="mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh sm:mb-4">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.whyEyebrow}{" "}
@@ -851,12 +858,9 @@ function Index() {
               <div className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-fresh">
                 <span className="h-px w-8 bg-fresh" /> {c.ui.marketsEyebrow}
               </div>
-              <div className="flex items-center gap-4">
-                <BrandMark showName={false} className="shrink-0" markClassName="h-20 w-20 sm:h-28 sm:w-28" />
-                <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
-                  {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
-                </h2>
-              </div>
+              <h2 className="font-display text-3xl font-bold text-primary sm:text-5xl lg:text-6xl">
+                {c.ui.marketsTitle1} <span className="text-gradient-gold">{c.ui.marketsTitleGold}</span>
+              </h2>
               <p className="mt-6 text-lg text-muted-foreground">
                 {c.ui.marketsSub}
               </p>
@@ -875,8 +879,8 @@ function Index() {
 
             <div className="relative">
               <div className="absolute inset-0 rounded-3xl gradient-primary opacity-20 blur-3xl" />
-              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-fresh/20 shadow-[var(--shadow-soft)]">
-                <WorldMapRoutes labels={c.regions} hubLabel={c.ui.mapHub} />
+              <div className="relative aspect-[10/7] overflow-hidden rounded-3xl border border-fresh/20 shadow-[var(--shadow-soft)]">
+                <WorldMapRoutes labels={c.regions} hubLabel={c.ui.mapHub} lang={lang} />
               </div>
             </div>
           </div>
@@ -935,48 +939,76 @@ function Index() {
                   </a>
                 )}
 
-                {site.phone && (
-                  <a
-                    href={`tel:${site.phone.replace(/\s+/g, "")}`}
-                    className="flex items-center gap-4 group transition-colors"
-                    dir="ltr"
-                  >
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md group-hover:scale-105 transition-transform">
-                      <Phone className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words">
-                      {site.phone}
-                    </div>
-                  </a>
-                )}
+                {(() => {
+                  const phoneDigits = (site.phone || "").replace(/[^0-9]/g, "");
+                  const waRaw = site.whatsapp || site.phone;
+                  const waDigits = (waRaw || "").replace(/[^0-9]/g, "");
+                  const sameNumber = Boolean(phoneDigits && (!waDigits || waDigits === phoneDigits));
+                  return (
+                    <>
+                      {site.phone && (
+                        <div className="flex flex-wrap items-center gap-3">
+                          <a
+                            href={`tel:${site.phone.replace(/\s+/g, "")}`}
+                            className="flex items-center gap-4 group transition-colors"
+                            dir="ltr"
+                          >
+                            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md group-hover:scale-105 transition-transform">
+                              <Phone className="h-5 w-5" />
+                            </div>
+                            <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words">
+                              {site.phone}
+                            </div>
+                          </a>
+                          {sameNumber && waDigits && (
+                            <a
+                              href={`https://wa.me/${waDigits}?text=${encodeURIComponent(
+                                c.ui.whatsappGreeting || "Hello BucharestEgyAgro, I would like to request a quote for Egyptian produce export."
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/15 px-3 py-1 text-xs font-semibold text-emerald-800 transition-colors hover:bg-[#25D366] hover:text-white"
+                              dir="ltr"
+                            >
+                              <WhatsAppIcon className="h-3.5 w-3.5" />
+                              <span>WhatsApp</span>
+                            </a>
+                          )}
+                        </div>
+                      )}
 
-                {(site.whatsapp || site.phone) && (
-                  <a
-                    href={`https://wa.me/${(site.whatsapp || site.phone).replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                      c.ui.whatsappGreeting || "Hello BucharestEgyAgro, I would like to inquire about your produce export programs."
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-4 group transition-colors"
-                    dir="ltr"
-                  >
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#25D366] text-white shadow-md group-hover:scale-105 transition-transform">
-                      <WhatsAppIcon className="h-5 w-5" />
-                    </div>
-                    <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words flex items-center gap-2">
-                      <span>{site.whatsapp || site.phone}</span>
-                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">WhatsApp</span>
-                    </div>
-                  </a>
-                )}
+                      {!sameNumber && waDigits && (
+                        <a
+                          href={`https://wa.me/${waDigits}?text=${encodeURIComponent(
+                            c.ui.whatsappGreeting || "Hello BucharestEgyAgro, I would like to request a quote for Egyptian produce export."
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-4 group transition-colors"
+                          dir="ltr"
+                        >
+                          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#25D366] text-white shadow-md group-hover:scale-105 transition-transform">
+                            <WhatsAppIcon className="h-5 w-5" />
+                          </div>
+                          <div className="min-w-0 font-medium text-stone-900 group-hover:text-emerald-700 break-words flex items-center gap-2">
+                            <span>{waRaw}</span>
+                            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">WhatsApp</span>
+                          </div>
+                        </a>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {site.address && (
-                  <div className="flex items-center gap-4" dir="ltr">
+                  <div className="flex items-center gap-4">
                     <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl gradient-primary text-white shadow-md">
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div className="min-w-0 font-medium text-stone-900 break-words">
-                      {site.address}
+                      {site.address === "Industrial Zone, Cairo, Egypt" || site.address === "Cairo, Egypt"
+                        ? c.ui.addressFallback
+                        : site.address}
                     </div>
                   </div>
                 )}
@@ -992,12 +1024,49 @@ function Index() {
               className="lg:col-span-3 rounded-3xl border border-gold/40 bg-white/95 backdrop-blur-xl p-6 shadow-2xl sm:p-8 lg:p-10"
             >
               <div className="grid gap-5 sm:grid-cols-2">
-                <Field label={c.ui.fName} type="text" name="name" />
+                <Field label={c.ui.fName} type="text" name="name" required />
                 <Field label={c.ui.fCompany} type="text" name="company" />
                 <Field label={c.ui.fCountry} type="text" name="country" />
-                <Field label={c.ui.fEmail} type="email" name="email" />
-                <Field label={c.ui.fPhone} type="tel" name="phone" />
-                <Field label={c.ui.fProduct} type="text" name="product" />
+                <Field label={c.ui.fEmail} type="email" name="email" required />
+                <Field label={c.ui.fPhone} type="tel" name="phone" required />
+                <div>
+                  <label htmlFor="contact-product" className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950">
+                    {c.ui.fProduct}
+                  </label>
+                  <select
+                    id="contact-product"
+                    name="product"
+                    value={selectedProduct}
+                    onChange={(e) => setSelectedProduct(e.target.value)}
+                    className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 font-medium outline-none transition-all focus:border-fresh focus:bg-white focus:ring-4 focus:ring-fresh/20 shadow-sm"
+                  >
+                    <option value="">{c.ui.fProductSelectDefault}</option>
+                    <option value={c.ui.fProductAllOption}>{c.ui.fProductAllOption}</option>
+                    {(() => {
+                      const exportDb = dbProducts.filter((p) => p.trade === "export");
+                      const opts =
+                        exportDb.length > 0
+                          ? exportDb.map((p) => ({ id: p.id, label: localized(p, lang).name }))
+                          : CATALOG.map((item) => ({ id: item.slug, label: item[lang].name }));
+                      const hasSelected =
+                        !selectedProduct ||
+                        selectedProduct === c.ui.fProductAllOption ||
+                        opts.some((o) => o.label === selectedProduct);
+                      return (
+                        <>
+                          {opts.map((opt) => (
+                            <option key={opt.id} value={opt.label}>
+                              {opt.label}
+                            </option>
+                          ))}
+                          {!hasSelected && selectedProduct && (
+                            <option value={selectedProduct}>{selectedProduct}</option>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </select>
+                </div>
               </div>
               <div className="mt-5">
                 <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950">
@@ -1207,21 +1276,21 @@ function ProductCard({
         {hasSpecs && (
           <dl className="mt-4 space-y-1.5 rounded-xl border border-border/60 bg-cream/60 px-3.5 py-2.5 text-xs">
             {season && (
-              <div className="flex items-baseline justify-between gap-2">
+              <div className="flex items-start justify-between gap-3">
                 <dt className="shrink-0 font-semibold text-primary/75">{seasonLabel}:</dt>
-                <dd className="truncate text-end font-medium text-foreground">{season}</dd>
+                <dd className="text-end font-medium text-foreground break-words">{season}</dd>
               </div>
             )}
             {packing && (
-              <div className="flex items-baseline justify-between gap-2">
+              <div className="flex items-start justify-between gap-3">
                 <dt className="shrink-0 font-semibold text-primary/75">{packingLabel}:</dt>
-                <dd className="truncate text-end font-medium text-foreground">{packing}</dd>
+                <dd className="text-end font-medium text-foreground break-words">{packing}</dd>
               </div>
             )}
             {moq && (
-              <div className="flex items-baseline justify-between gap-2">
+              <div className="flex items-start justify-between gap-3">
                 <dt className="shrink-0 font-semibold text-primary/75">{moqLabel}:</dt>
-                <dd className="truncate text-end font-medium text-foreground">{moq}</dd>
+                <dd className="text-end font-medium text-foreground break-words">{moq}</dd>
               </div>
             )}
           </dl>
@@ -1252,19 +1321,31 @@ function Field({
   label,
   type,
   name,
+  required = false,
 }: {
   label: string;
   type: string;
   name: string;
+  required?: boolean;
 }) {
   return (
     <div>
-      <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950">
+      <label
+        htmlFor={`contact-${name}`}
+        className="mb-2 block text-xs font-bold uppercase tracking-wider text-emerald-950"
+      >
         {label}
+        {required && (
+          <span className="ms-1 text-destructive" aria-hidden="true">
+            *
+          </span>
+        )}
       </label>
       <input
+        id={`contact-${name}`}
         type={type}
         name={name}
+        required={required}
         className="w-full rounded-xl border border-stone-300 bg-white px-4 py-3 text-stone-900 font-medium placeholder:text-stone-400 outline-none transition-all focus:border-fresh focus:bg-white focus:ring-4 focus:ring-fresh/20 shadow-sm"
       />
     </div>

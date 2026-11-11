@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to international markets with strict quality control and cold-chain logistics.",
+          "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
       },
       {
         name: "keywords",
@@ -88,7 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "BucharestEgyAgro Import and Export | Fresh Produce Exporter" },
       {
         property: "og:description",
-        content: "Fresh Egyptian fruits & vegetables exported worldwide with strict quality control.",
+        content: "Fresh Egyptian fruits & vegetables supplied to importers across Europe, the Gulf, Africa, and Asia.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

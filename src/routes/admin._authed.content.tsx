@@ -34,14 +34,14 @@ type Section = {
 };
 
 const initial: Record<string, Section> = {
-  home: { title: "BucharestEgyAgro Import and Export", paragraph: "Premium Egyptian fresh fruits & vegetables for global markets.", button: "Get a Quote", image: "/placeholder.svg" },
-  about: { title: "About Us", paragraph: "Reliable Egyptian produce exporter serving global markets.", button: "Learn More", image: "/placeholder.svg" },
-  whyUs: { title: "Why Choose Us", paragraph: "Quality, reliability, and worldwide reach.", button: "See Reasons", image: "/placeholder.svg" },
-  process: { title: "Our Export Process", paragraph: "From farm to global markets, seamlessly.", button: "View Process", image: "/placeholder.svg" },
-  contact: { title: "Contact Us", paragraph: "Reach out for inquiries and quotations.", button: "Get In Touch", image: "/placeholder.svg" },
-  products: { title: "Products", paragraph: "Explore our export and import products.", button: "View Products", image: "/placeholder.svg" },
-  markets: { title: "Global Markets", paragraph: "Markets we serve worldwide.", button: "Learn More", image: "/placeholder.svg" },
-  certificate: { title: "Certifications", paragraph: "Our quality standards and certifications.", button: "View Certificates", image: "/placeholder.svg" },
+  home: { title: "BucharestEgyAgro Import and Export", paragraph: "Egyptian fresh fruits & vegetables for regional and European markets.", button: "Get a Quote", image: "/placeholder.svg" },
+  about: { title: "About Us", paragraph: "Egyptian produce exporter serving international importers.", button: "Get a Quote", image: "/placeholder.svg" },
+  whyUs: { title: "Why Choose Us", paragraph: "Origin sourcing, grading, and container dispatch.", button: "See Details", image: "/placeholder.svg" },
+  process: { title: "Our Export Process", paragraph: "From farm to port of arrival, structured in seven steps.", button: "View Process", image: "/placeholder.svg" },
+  contact: { title: "Contact Us", paragraph: "Reach out for FOB / CIF quotations.", button: "Get In Touch", image: "/placeholder.svg" },
+  products: { title: "Products", paragraph: "Explore our seasonal export products.", button: "View Products", image: "/placeholder.svg" },
+  markets: { title: "Target Export Regions", paragraph: "Markets we serve across Europe, the Gulf, Africa, and Asia.", button: "View Corridors", image: "/placeholder.svg" },
+  certificate: { title: "Export Documentation", paragraph: "Customs clearance and packhouse dispatch paperwork.", button: "View Paperwork", image: "/placeholder.svg" },
   news: { title: "Our News", paragraph: "Latest company news and announcements.", button: "Read More", image: "/placeholder.svg" },
 };
 

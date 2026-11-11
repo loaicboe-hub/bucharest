@@ -101,7 +101,7 @@ export function BrandWatermark({
       aria-hidden
       suppressHydrationWarning
       className={cn(
-        "pointer-events-none absolute z-0 w-[34rem] max-w-none select-none object-contain opacity-[0.025] mix-blend-multiply",
+        "pointer-events-none absolute z-0 hidden w-[34rem] max-w-none select-none object-contain opacity-[0.018] mix-blend-multiply md:block",
         place,
         className,
       )}

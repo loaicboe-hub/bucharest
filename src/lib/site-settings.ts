@@ -23,7 +23,7 @@ export const defaultSiteSettings: SiteSettings = {
   phone: "+20 107 003 3892",
   email: "info@bucharestegyagro.com",
   whatsapp: "+20 107 003 3892",
-  address: "Cairo, Egypt",
+  address: "Cairo, Egypt — Export Head Office & Dispatch Desk",
   maps: "https://maps.google.com/?q=Cairo",
   facebook: "https://facebook.com/bucharestegyagro",
   instagram: "https://instagram.com/bucharestegyagro",
@@ -31,10 +31,24 @@ export const defaultSiteSettings: SiteSettings = {
   twitter: "",
   seoTitle: "BucharestEgyAgro Import and Export | Fresh Fruits & Vegetables Exporter",
   seoDescription:
-    "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to international markets.",
-  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Premium Produce, BucharestEgyAgro",
+    "BucharestEgyAgro Import and Export supplies fresh, carefully selected Egyptian fruits and vegetables to importers across Europe, the Gulf, Africa, and Asia.",
+  seoKeywords: "Fresh Fruits Export, Fresh Vegetables Export, Egypt Export, Agricultural Export, BucharestEgyAgro",
   seoOgImage: "",
 };
+
+const GENERIC_PLACEHOLDER_ADDRESSES = new Set([
+  "Industrial Zone, Cairo, Egypt",
+  "Industrial Zone, Cairo",
+  "Cairo, Egypt",
+]);
+
+function normalizeAddress(addr: string | undefined): string {
+  const clean = (addr ?? "").trim();
+  if (!clean || GENERIC_PLACEHOLDER_ADDRESSES.has(clean)) {
+    return defaultSiteSettings.address;
+  }
+  return clean;
+}
 
 const SETTINGS_KEY = "app_site_settings";
 
@@ -43,7 +57,10 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
   if (typeof window !== "undefined") {
     try {
       const raw = localStorage.getItem(SETTINGS_KEY);
-      if (raw) cached = JSON.parse(raw);
+      if (raw) {
+        cached = JSON.parse(raw);
+        if (cached) cached.address = normalizeAddress(cached.address);
+      }
     } catch {}
   }
 
@@ -67,7 +84,7 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
         phone: remote.phone !== undefined && remote.phone !== "" ? remote.phone : defaultSiteSettings.phone,
         email: remote.email !== undefined && remote.email !== "" ? remote.email : defaultSiteSettings.email,
         whatsapp: remote.whatsapp !== undefined && remote.whatsapp !== "" ? remote.whatsapp : defaultSiteSettings.whatsapp,
-        address: remote.address !== undefined && remote.address !== "" ? remote.address : defaultSiteSettings.address,
+        address: normalizeAddress(remote.address),
         maps: remote.maps || remote.maps_url || defaultSiteSettings.maps,
         facebook: remote.facebook || defaultSiteSettings.facebook,
         instagram: remote.instagram || defaultSiteSettings.instagram,

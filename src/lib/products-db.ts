@@ -148,10 +148,44 @@ const LEGACY_SEED_TITLES = new Set([
   "فلفل ألوان وفلفل حار",
 ]);
 
+const LEGACY_SEED_INTROS = new Set([
+  "World-renowned Egyptian citrus, perfectly balanced between sweetness and acidity.",
+  "برتقال مصري فائق الجودة يجمع بين العصير الغزير والنكهة المنعشة واللون البرتقالي الزاهي.",
+  "Crisp, sweet seedless grapes harvested early for prime European and Gulf arrivals.",
+  "عنب مصري بدون بذور يتميز بحبات مقرمشة وسكر متوازن وجاذبية تجارية عالية.",
+  "Intensely fragrant and smooth, featuring famous varieties like Keitt, Kent and Naomi.",
+  "أفخر أصناف المانجو المصرية بطعمها العطري الغني وقوامها المخملي الخالي من الألياف.",
+  "Deep crimson arils packed with sweet-tart juice and high antioxidant power.",
+  "رمان مصري من صنف وندرفل بألوانه الحمراء الداكنة وحباته العصيرية الغنية بمضادات الأكسدة.",
+  "Conical, intensely aromatic berries shipped fresh by air or frozen IQF for industry.",
+  "فراولة مصرية حمراء ناصعة تشحن طازجة بالجو أو مجمدة بأحدث تقنيات الـ IQF.",
+  "Juicy, bright yellow lemons packed with natural citric acidity and protective oils.",
+  "ليمون مصري عالي النقاوة غني بالعصير والزيوت العطرية الطبيعية بفترة صلاحية ممتدة.",
+  "Grown in pest-free certified soils, offering superior skin finish and low sugar content.",
+  "بطاطس مصرية معتمدة من المناطق الخالية من العفن البني، ممتازة للطبخ والقلي الصناعي.",
+  "Firm, dry-skinned onions celebrated worldwide for pungent flavor and exceptional shelf life.",
+  "بصل مصري أصفر وأحمر عالي الجفاف والصلابة، يتميز بقدرته الفائقة على التخزين والشحن الطويل.",
+  "White and purple garlic heads featuring tight cloves, intense aroma and high allicin content.",
+  "ثوم مصري أبيض وبنفسجي برائحة عطرية قوية ونكهة حادة وفترة صلاحية ممتازة.",
+  "Vibrant orange-fleshed sweet potatoes, carefully cured for high brix sweetness and silky texture.",
+  "بطاطا حلوة مصرية صنف بورجارد بلونها البرتقالي الجذاب ونعومة قوامها بعد الطهي.",
+  "Slender, stringless green pods picked daily and hydro-cooled to lock in field freshness.",
+  "فاصوليا خضراء طازجة مقرمشة بدون خيوط، يتم جمعها وفرزها يومياً وتبريدها بالماء فور الحصاد.",
+  "Thick-walled, crunchy bell peppers in red, yellow, orange and green, plus spicy chilies.",
+  "فلفل رومي ألوان وفلفل حار سميك الجدران ومقرمش، مزروع بأحدث تقنيات الصوب الزراعية.",
+]);
+
 function pickTitle(raw: string | undefined, fallback: string | undefined): string {
   const clean = (raw ?? "").trim();
   if (!clean) return fallback ?? "";
   if (fallback && LEGACY_SEED_TITLES.has(clean)) return fallback;
+  return clean;
+}
+
+function pickIntro(raw: string | undefined, fallback: string | undefined): string {
+  const clean = (raw ?? "").trim();
+  if (!clean) return fallback ?? "";
+  if (fallback && LEGACY_SEED_INTROS.has(clean)) return fallback;
   return clean;
 }
 
@@ -166,12 +200,12 @@ export function localized(p: ProductRow, lang: Lang) {
 
   if (lang === "en") {
     const rawSpecsEn = { ...(p.specs_en ?? {}) };
-    if (cat?.en.specs.certifications && rawSpecsEn.certifications && /GLOBALG\.A\.P\.|ISO 9001|ISO 22000|BRC|SMETA|Sedex/i.test(rawSpecsEn.certifications)) {
+    if (cat?.en.specs.certifications && rawSpecsEn.certifications && /GLOBALG\.A\.P\.|ISO 9001|ISO 22000|BRC|SMETA|Sedex|FDA|PFA Certified/i.test(rawSpecsEn.certifications)) {
       rawSpecsEn.certifications = cat.en.specs.certifications;
     }
     return {
       name: pickTitle(p.name_en, cat?.en.name),
-      intro: p.intro_en || cat?.en.intro || "",
+      intro: pickIntro(p.intro_en, cat?.en.intro),
       description: p.description_en || cat?.en.description || "",
       specs: {
         ...EMPTY_SPECS,
@@ -186,12 +220,12 @@ export function localized(p: ProductRow, lang: Lang) {
     const specsIsAr = HAS_ARABIC.test(specsArStr);
     if (nameIsAr || introIsAr || descIsAr) {
       const rawSpecsAr = specsIsAr ? { ...(p.specs_ar ?? {}) } : {};
-      if (cat?.ar.specs.certifications && rawSpecsAr.certifications && /GLOBALG\.A\.P\.|ISO|BRC/i.test(rawSpecsAr.certifications)) {
+      if (cat?.ar.specs.certifications && rawSpecsAr.certifications && /GLOBALG\.A\.P\.|ISO|BRC|معتمدة/i.test(rawSpecsAr.certifications)) {
         rawSpecsAr.certifications = cat.ar.specs.certifications;
       }
       return {
         name: pickTitle(nameIsAr ? p.name_ar : "", cat?.ar.name) || p.name_ar || p.name_en,
-        intro: (introIsAr ? p.intro_ar : "") || cat?.ar.intro || p.intro_ar || p.intro_en,
+        intro: pickIntro(introIsAr ? p.intro_ar : "", cat?.ar.intro) || p.intro_ar || p.intro_en,
         description: (descIsAr ? p.description_ar : "") || cat?.ar.description || p.description_ar || p.description_en,
         specs: {
           ...EMPTY_SPECS,
