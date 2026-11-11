@@ -35,6 +35,11 @@ import { BrandMark } from "@/components/BrandMark";
 import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
 import { WhatsAppButton, WhatsAppIcon } from "@/components/WhatsAppButton";
+import {
+  SOCIAL_BRAND_CONFIG,
+  SocialBrandMark,
+  type SocialPlatform,
+} from "@/components/SocialBrandIcons";
 import { useLang, initLang } from "@/lib/i18n";
 import { LanguageSwitcher, LANG_OPTIONS } from "@/components/LanguageSwitcher";
 import { sanitizeUrl } from "@/lib/sanitize";
@@ -55,9 +60,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Facebook,
-  Instagram,
-  Linkedin,
   Star,
   Leaf,
 } from "lucide-react";
@@ -945,10 +947,10 @@ function Index() {
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366]/15 px-3 py-1 text-xs font-semibold text-emerald-800 transition-colors hover:bg-[#25D366] hover:text-white"
+                              className="inline-flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#20bd5a]"
                               dir="ltr"
                             >
-                              <WhatsAppIcon className="h-3.5 w-3.5" />
+                              <WhatsAppIcon className="h-3.5 w-3.5 text-white" />
                               <span>WhatsApp</span>
                             </a>
                           )}
@@ -1143,25 +1145,38 @@ function Index() {
               <div className="mt-6 flex gap-3">
                 {(
                   [
-                    [Facebook, sanitizeUrl(site.facebook || footer.social.facebook, false)],
-                    [Instagram, sanitizeUrl(site.instagram || footer.social.instagram, false)],
-                    [Linkedin, sanitizeUrl(site.linkedin || footer.social.linkedin, false)],
-                    ...(site.whatsapp || site.phone
-                      ? [[WhatsAppIcon, ('https://wa.me/' + (site.whatsapp || site.phone).replace(/[^0-9]/g, ''))] as const]
+                    ["facebook", sanitizeUrl(site.facebook || footer.social.facebook, false)],
+                    ["instagram", sanitizeUrl(site.instagram || footer.social.instagram, false)],
+                    ["linkedin", sanitizeUrl(site.linkedin || footer.social.linkedin, false)],
+                    ...(sanitizeUrl(site.twitter, false)
+                      ? ([["x", sanitizeUrl(site.twitter, false)]] as const)
                       : []),
-                  ] as const
-                ).map(([I, href], i) => (
-                  <a
-                    key={i}
-                    href={href || "#top"}
-                    target={href?.startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    aria-label="Social"
-                    className="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-primary-foreground/80 transition-all hover:border-gold hover:bg-gold hover:text-gold-foreground"
-                  >
-                    <I className="h-4 w-4" />
-                  </a>
-                ))}
+                    ...(site.whatsapp || site.phone
+                      ? ([
+                          [
+                            "whatsapp",
+                            "https://wa.me/" + (site.whatsapp || site.phone).replace(/[^0-9]/g, ""),
+                          ],
+                        ] as const)
+                      : []),
+                  ] as ReadonlyArray<readonly [SocialPlatform, string | undefined]>
+                ).map(([platform, href]) => {
+                  const brand = SOCIAL_BRAND_CONFIG[platform];
+                  return (
+                    <a
+                      key={platform}
+                      href={href || "#top"}
+                      target={href?.startsWith("http") ? "_blank" : undefined}
+                      rel="noreferrer"
+                      aria-label={brand.label}
+                      title={brand.label}
+                      style={brand.style}
+                      className="grid h-10 w-10 place-items-center overflow-hidden rounded-full shadow-md ring-1 ring-white/25 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110 hover:ring-2 hover:ring-gold hover:shadow-lg"
+                    >
+                      <SocialBrandMark platform={platform} size="md" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
 

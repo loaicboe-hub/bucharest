@@ -560,16 +560,18 @@ function scanUploadForMalware(string $tmpPath, string $mimeType): ?string {
         return 'Blocked suspicious executable or script payload.';
     }
 
-    // Deep signature scan across the full file for images (and first 2MB + tail for videos)
+    // Deep signature scan across the full file for images (and first 2MB + tail for videos).
+    // Tightened against random 3-byte binary collisions (e.g. accidental 0x3C3F3D "<?=" in compressed JPEG/PNG/WebP entropy).
     $isVideo = strpos($mimeType, 'video/') === 0;
     $patterns = [
-        '/<\?php\b/i',
-        '/<\?=/i',
-        '/<script\b[^>]*>/i',
-        '/<\/script>/i',
-        '/(?:shell_exec|passthru|proc_open|base64_decode|gzinflate)\s*\(/i',
-        '/\beval\s*\(\s*\$_(?:GET|POST|REQUEST|COOKIE)\b/i',
-        '/__halt_compiler\s*\(/i',
+        '/<\?php(?:\s|\/\*|\/\/|#|;|@|\$|[a-z_][a-z0-9_]*\s*\()/i',
+        '/<\?=[ \t\r\n]*[\x20-\x7E\r\n\t]{1,256}\?>/',
+        '/<\?=[ \t\r\n]*(?:`|\$_|\$\{?[a-z_][a-z0-9_]*\}?|(?:eval|assert|system|exec|shell_exec|passthru|proc_open|popen|base64_decode|gzinflate|str_rot13|include|require|include_once|require_once|phpinfo|echo|print)\b)/i',
+        '/<script(?:[ \t\r\n]+[\x20-\x7E\r\n\t]{0,256}|[ \t\r\n]*)>/i',
+        '/<\/script\s*>/i',
+        '/\b(?:shell_exec|passthru|proc_open|base64_decode|gzinflate)\s*\(/i',
+        '/\beval\s*\(\s*\$_(?:GET|POST|REQUEST|COOKIE|SERVER|FILES|ENV)\b/i',
+        '/\b__halt_compiler\s*\(/i',
     ];
 
     rewind($fp);
@@ -591,7 +593,7 @@ function scanUploadForMalware(string $tmpPath, string $mimeType): ?string {
                 return 'Malware or embedded script signature detected in uploaded file.';
             }
         }
-        $overlap = substr($chunk, -128);
+        $overlap = substr($chunk, -512);
     }
 
     // For video files, also inspect the final 512 KB tail for appended PHP/script stubs

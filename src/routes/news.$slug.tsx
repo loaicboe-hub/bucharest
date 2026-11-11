@@ -11,11 +11,9 @@ import {
   RefreshCw,
   User,
   Tag,
-  Facebook,
-  Linkedin,
-  Twitter,
   Link2,
 } from "lucide-react";
+import { SOCIAL_BRAND_CONFIG, SocialBrandMark } from "@/components/SocialBrandIcons";
 import { useLang, initLang, type Lang } from "@/lib/i18n";
 import { sanitizeRichHtml, sanitizeUrl } from "@/lib/sanitize";
 import {
@@ -281,27 +279,33 @@ function NewsDetail() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share on Facebook"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-fresh hover:text-fresh"
+            title="Facebook"
+            style={SOCIAL_BRAND_CONFIG.facebook.style}
+            className="grid h-9 w-9 place-items-center overflow-hidden rounded-full shadow-sm ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110 hover:shadow-md"
           >
-            <Facebook className="h-4 w-4" />
+            <SocialBrandMark platform="facebook" size="sm" />
           </a>
           <a
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(title)}`}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share on X"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-fresh hover:text-fresh"
+            title="X"
+            style={SOCIAL_BRAND_CONFIG.x.style}
+            className="grid h-9 w-9 place-items-center overflow-hidden rounded-full shadow-sm ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110 hover:shadow-md"
           >
-            <Twitter className="h-4 w-4" />
+            <SocialBrandMark platform="x" size="sm" />
           </a>
           <a
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Share on LinkedIn"
-            className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:border-fresh hover:text-fresh"
+            title="LinkedIn"
+            style={SOCIAL_BRAND_CONFIG.linkedin.style}
+            className="grid h-9 w-9 place-items-center overflow-hidden rounded-full shadow-sm ring-1 ring-black/10 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110 hover:shadow-md"
           >
-            <Linkedin className="h-4 w-4" />
+            <SocialBrandMark platform="linkedin" size="sm" />
           </a>
           <button
             type="button"

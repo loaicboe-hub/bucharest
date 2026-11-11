@@ -61,7 +61,7 @@ export function ProductDialog({
     const { url, error } = await uploadProductImage(file);
     setBusy(false);
     if (error || !url) return toast.error(error ?? "Upload failed");
-    setDraft({ ...draft, main_image: url });
+    setDraft((prev) => (prev ? { ...prev, main_image: url } : prev));
     toast.success("Image uploaded");
   };
 
@@ -76,7 +76,7 @@ export function ProductDialog({
     const err = results.find((r) => r.error)?.error;
     if (!urls.length) return toast.error(err ?? "Upload failed");
     if (err) toast.warning(err);
-    setDraft({ ...draft, gallery: [...draft.gallery, ...urls] });
+    setDraft((prev) => (prev ? { ...prev, gallery: [...prev.gallery, ...urls] } : prev));
     toast.success("Gallery image uploaded");
   };
 
