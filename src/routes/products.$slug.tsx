@@ -12,6 +12,7 @@ import {
   getProductBySlug,
   listPublishedProducts,
   localized,
+  productFallbackImage,
   productGallery,
   productImage,
   type ProductRow,
@@ -22,7 +23,12 @@ export const Route = createFileRoute("/products/$slug")({
     const product = getProduct(params.slug);
     // Admin-created products live in browser storage, so a missing static entry
     // is resolved on the client instead of 404-ing during SSR.
-    if (!product) return { slug: params.slug, name: params.slug, intro: "" };
+    if (!product) {
+      const pretty = params.slug
+        .replace(/[-_]+/g, " ")
+        .replace(/\b\w/g, (ch) => ch.toUpperCase());
+      return { slug: params.slug, name: pretty || params.slug, intro: "" };
+    }
     return { slug: product.slug, name: product.en.name, intro: product.en.intro };
   },
   head: ({ loaderData }) => {
@@ -145,6 +151,14 @@ function ProductDetail() {
     (key) => !product.hidden_specs.includes(key) && !!data.specs[key],
   );
   const gallery = productGallery(product);
+  const fallbackSrc = productFallbackImage(product);
+  const handleImgError = (fallback: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.currentTarget;
+    if (fallback && !target.dataset.fbApplied) {
+      target.dataset.fbApplied = "1";
+      target.src = fallback;
+    }
+  };
 
   const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
@@ -225,12 +239,13 @@ function ProductDetail() {
               {t.requestQuote} <Arrow className="h-4 w-4" />
             </Link>
           </div>
-          <div className="relative overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-muted/20 shadow-[var(--shadow-soft)]">
             <img
               src={productImage(product)}
               alt={data.name}
               width={1024}
               height={768}
+              onError={handleImgError(fallbackSrc)}
               className="h-full w-full object-cover"
             />
           </div>
@@ -244,7 +259,7 @@ function ProductDetail() {
           <button
             type="button"
             onClick={() => setLightbox(true)}
-            className="block w-full overflow-hidden rounded-3xl border border-border shadow-[var(--shadow-soft)]"
+            className="block w-full overflow-hidden rounded-3xl border border-border bg-muted/20 shadow-[var(--shadow-soft)]"
           >
             <img
               src={gallery[active]}
@@ -252,6 +267,7 @@ function ProductDetail() {
               loading="lazy"
               width={1024}
               height={768}
+              onError={handleImgError(fallbackSrc)}
               className="aspect-[16/10] w-full object-cover transition-transform duration-700 hover:scale-105"
             />
           </button>
@@ -269,6 +285,7 @@ function ProductDetail() {
                   src={img}
                   alt={`${data.name} thumbnail ${i + 1}`}
                   loading="lazy"
+                  onError={handleImgError(fallbackSrc)}
                   className="aspect-square w-full object-cover"
                 />
               </button>
@@ -335,6 +352,7 @@ function ProductDetail() {
                   src={productImage(p)}
                   alt={localized(p, lang).name}
                   loading="lazy"
+                  onError={handleImgError(productFallbackImage(p))}
                   className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="p-4">
@@ -365,6 +383,7 @@ function ProductDetail() {
           <img
             src={gallery[active]}
             alt={data.name}
+            onError={handleImgError(fallbackSrc)}
             className="max-h-[85vh] max-w-full rounded-2xl object-contain"
             onClick={(e) => e.stopPropagation()}
           />

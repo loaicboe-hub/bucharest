@@ -21,6 +21,7 @@ import {
   listCategories,
   listPublishedProducts,
   localized,
+  productFallbackImage,
   productImage,
   type ProductCategory,
   type ProductRow,
@@ -611,6 +612,7 @@ function Index() {
                           name={l.name}
                           desc={l.intro}
                           img={productImage(p)}
+                          fallbackImg={productFallbackImage(p)}
                           slug={p.slug}
                           showPremium={false}
                           premium={c.ui.premium}
@@ -1189,6 +1191,7 @@ function ProductCard({
   name,
   desc,
   img,
+  fallbackImg,
   showPremium,
   premium,
   season,
@@ -1205,6 +1208,7 @@ function ProductCard({
   name: string;
   desc: string;
   img: string;
+  fallbackImg?: string;
   showPremium: boolean;
   premium: string;
   season?: string;
@@ -1225,12 +1229,19 @@ function ProductCard({
       <Link
         to="/products/$slug"
         params={{ slug }}
-        className="relative block aspect-[4/3] overflow-hidden"
+        className="relative block aspect-[4/3] overflow-hidden bg-muted/20"
       >
         <img
           src={img}
           alt={name}
           loading="lazy"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (fallbackImg && !target.dataset.fbApplied) {
+              target.dataset.fbApplied = "1";
+              target.src = fallbackImg;
+            }
+          }}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent opacity-55" />

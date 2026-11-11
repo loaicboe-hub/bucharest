@@ -56,7 +56,7 @@ export const quoteRequests: QuoteRequest[] = [
 ];
 
 export const products: Product[] = [
-  { id: "p1", name: "Oranges", category: "Fruits", trade: "Export Products", description: "Premium Valencia oranges", image: "/placeholder.svg", order: 1, published: true },
+  { id: "p1", name: "Oranges", category: "Fruits", trade: "Export Products", description: "Export-grade Valencia oranges", image: "/assets/oranges.jpg", order: 1, published: true },
   { id: "p2", name: "Grapes", category: "Fruits", trade: "Export Products", description: "Fresh table grapes", image: "/placeholder.svg", order: 2, published: true },
   { id: "p3", name: "Mangoes", category: "Fruits", trade: "Export Products", description: "Sweet Egyptian mangoes", image: "/placeholder.svg", order: 3, published: true },
   { id: "p4", name: "Pomegranates", category: "Fruits", trade: "Export Products", description: "Ruby-red pomegranates", image: "/placeholder.svg", order: 4, published: true },

@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `site_settings` (
   `instagram` VARCHAR(255) NOT NULL DEFAULT '',
   `linkedin` VARCHAR(255) NOT NULL DEFAULT '',
   `twitter` VARCHAR(255) NOT NULL DEFAULT '',
-  `seo_title` VARCHAR(255) NOT NULL DEFAULT 'BucharestEgyAgro | Fresh Egyptian Fruits & Vegetables Exporter',
+  `seo_title` VARCHAR(255) NOT NULL DEFAULT 'BucharestEgyAgro | Fresh Produce Export',
   `seo_description` TEXT,
   `seo_keywords` TEXT,
   `seo_og_image` VARCHAR(500) NOT NULL DEFAULT '',

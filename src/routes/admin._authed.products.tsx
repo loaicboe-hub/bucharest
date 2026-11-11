@@ -17,6 +17,7 @@ import {
   deleteProduct,
   listAllProducts,
   listCategories,
+  productFallbackImage,
   productImage,
   saveOrder,
   setProductPublished,
@@ -151,7 +152,18 @@ function ProductsPage() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <img src={productImage(p)} alt={p.name_en} className="h-12 w-12 rounded-md border object-cover" />
+                    <img
+                      src={productImage(p)}
+                      alt={p.name_en}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.dataset.fbApplied) {
+                          target.dataset.fbApplied = "1";
+                          target.src = productFallbackImage(p);
+                        }
+                      }}
+                      className="h-12 w-12 rounded-md border object-cover"
+                    />
                   </TableCell>
                   <TableCell className="font-medium">{p.name_en}</TableCell>
                   <TableCell><Badge variant="secondary">{catName(p.category_id)}</Badge></TableCell>

@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { SPEC_LABELS, type ProductSpecs } from "@/lib/products-catalog";
 import {
   EMPTY_SPECS,
+  productFallbackImage,
   productImage,
   saveProduct,
   slugify,
@@ -173,7 +174,18 @@ export function ProductDialog({
           <div className="space-y-2">
             <Label>Main image</Label>
             <div className="flex items-center gap-3">
-              <img src={productImage(draft)} alt="" className="h-16 w-16 rounded-md border object-cover" />
+              <img
+                src={productImage(draft)}
+                alt=""
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.dataset.fbApplied) {
+                    target.dataset.fbApplied = "1";
+                    target.src = productFallbackImage(draft);
+                  }
+                }}
+                className="h-16 w-16 rounded-md border object-cover"
+              />
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-input px-3 py-2 text-sm hover:bg-accent">
                 <Upload className="h-4 w-4" /> Upload
                 <input type="file" accept="image/*" className="hidden" onChange={onMainImage} />
@@ -191,7 +203,18 @@ export function ProductDialog({
                   onClick={() => setDraft({ ...draft, gallery: draft.gallery.filter((_, x) => x !== i) })}
                   className="relative h-10 w-10 overflow-hidden rounded border"
                 >
-                  <img src={g} alt="" className="h-full w-full object-cover" />
+                  <img
+                    src={g}
+                    alt=""
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.dataset.fbApplied) {
+                        target.dataset.fbApplied = "1";
+                        target.src = productFallbackImage(draft);
+                      }
+                    }}
+                    className="h-full w-full object-cover"
+                  />
                   <X className="absolute right-0 top-0 h-3 w-3 bg-background/80 text-destructive" />
                 </button>
               ))}
