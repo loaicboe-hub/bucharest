@@ -1,3 +1,5 @@
+import type { Lang } from "./i18n";
+
 export type FooterLink = { label: string; href: string };
 export type FooterColumn = { title: string; links: FooterLink[] };
 export type FooterConfig = {
@@ -95,9 +97,62 @@ const FR_TEXT: Record<string, string> = {
   "Back to Top": "Retour en haut",
 };
 
-export function localizeFooterConfig(cfg: FooterConfig, lang: "en" | "fr"): FooterConfig {
-  if (lang !== "fr") return cfg;
-  const t = (s: string) => FR_TEXT[s] ?? s;
+const AR_TEXT: Record<string, string> = {
+  // tagline
+  [defaultFooterConfig.tagline]:
+    "فواكه وخضروات طازجة فاخرة تُصدّر إلى جميع أنحاء العالم منذ عام 2026. جودة معتمدة وموثوقة.",
+  // column titles
+  Company: "الشركة",
+  Products: "المنتجات",
+  More: "المزيد",
+  // links
+  About: "من نحن",
+  "Why Us": "لماذا نحن",
+  "Export Process": "آلية التصدير",
+  "Global Markets": "الأسواق العالمية",
+  "Fresh Fruits": "فواكه طازجة",
+  Vegetables: "خضروات طازجة",
+  Seasonal: "المنتجات الموسمية",
+  Packaging: "التعبئة والتغليف",
+  Certifications: "الشهادات",
+  Contact: "تواصل معنا",
+  "Request Quote": "اطلب عرض سعر",
+  "Back to Top": "العودة للأعلى",
+};
+
+const RU_TEXT: Record<string, string> = {
+  // tagline
+  [defaultFooterConfig.tagline]:
+    "Свежие фрукты и овощи премиум-класса с экспортом по всему миру с 2026 года. Сертифицированное качество, на которое можно положиться.",
+  // column titles
+  Company: "Компания",
+  Products: "Продукция",
+  More: "Дополнительно",
+  // links
+  About: "О нас",
+  "Why Us": "Преимущества",
+  "Export Process": "Экспортный процесс",
+  "Global Markets": "Глобальные рынки",
+  "Fresh Fruits": "Свежие фрукты",
+  Vegetables: "Свежие овощи",
+  Seasonal: "Сезонная продукция",
+  Packaging: "Упаковка",
+  Certifications: "Сертификаты",
+  Contact: "Контакты",
+  "Request Quote": "Запросить цену",
+  "Back to Top": "Наверх",
+};
+
+const MAPS: Partial<Record<Lang, Record<string, string>>> = {
+  fr: FR_TEXT,
+  ar: AR_TEXT,
+  ru: RU_TEXT,
+};
+
+export function localizeFooterConfig(cfg: FooterConfig, lang: Lang): FooterConfig {
+  const dict = MAPS[lang];
+  if (!dict) return cfg;
+  const t = (s: string) => dict[s] ?? s;
   return {
     ...cfg,
     tagline: t(cfg.tagline),

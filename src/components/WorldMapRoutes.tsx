@@ -28,7 +28,13 @@ function arcPath(a: { x: number; y: number }, b: { x: number; y: number }) {
   return `M ${a.x} ${a.y} Q ${mx + nx * lift * sign} ${my + ny * lift * sign} ${b.x} ${b.y}`;
 }
 
-export default function WorldMapRoutes({ labels = [] as string[] }) {
+export default function WorldMapRoutes({
+  labels = [] as string[],
+  hubLabel = "EGYPT",
+}: {
+  labels?: string[];
+  hubLabel?: string;
+}) {
   return (
     <div
       className="relative h-full w-full overflow-hidden bg-[oklch(0.24_0.035_170)]"
@@ -150,9 +156,12 @@ export default function WorldMapRoutes({ labels = [] as string[] }) {
           y={HUB.y + 30}
           textAnchor="middle"
           fill="oklch(0.92 0.05 100)"
-          style={{ font: "700 12px Inter, sans-serif", letterSpacing: "0.12em" }}
+          style={{
+            font: "700 12px Cairo, Inter, sans-serif",
+            letterSpacing: /[\u0600-\u06FF]/.test(hubLabel) ? "0" : "0.12em",
+          }}
         >
-          EGYPT
+          {hubLabel}
         </text>
 
         {/* region labels */}
@@ -164,6 +173,7 @@ export default function WorldMapRoutes({ labels = [] as string[] }) {
             { x: 706, y: 128 },
           ][i];
           if (!pos) return null;
+          const isAr = /[\u0600-\u06FF]/.test(l);
           return (
             <text
               key={l}
@@ -172,7 +182,10 @@ export default function WorldMapRoutes({ labels = [] as string[] }) {
               textAnchor="middle"
               fill="oklch(0.88 0.06 158)"
               opacity="0.85"
-              style={{ font: "600 11px Inter, sans-serif", letterSpacing: "0.1em" }}
+              style={{
+                font: "600 11px Cairo, Inter, sans-serif",
+                letterSpacing: isAr ? "0" : "0.1em",
+              }}
             >
               {l}
             </text>

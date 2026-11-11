@@ -2,10 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
 import { SectionLeafBg } from "@/components/SectionLeafBg";
 import { BrandMark } from "@/components/BrandMark";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowLeft, CalendarDays, User, Newspaper } from "lucide-react";
-import { useLang, initLang } from "@/lib/i18n";
-import { listPublishedNews, formatDate, type NewsArticle } from "@/lib/news";
+import { useLang, initLang, type Lang } from "@/lib/i18n";
+import { listPublishedNews, localizedArticle, formatDate, type NewsArticle } from "@/lib/news";
 import { getSectionImageUrl } from "@/lib/section-image";
 
 export const Route = createFileRoute("/news/")({
@@ -29,7 +30,19 @@ export const Route = createFileRoute("/news/")({
 
 const PAGE_SIZE = 6;
 
-const UI = {
+const UI: Record<
+  Lang,
+  {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    readMore: string;
+    loadMore: string;
+    empty: string;
+    back: string;
+    all: string;
+  }
+> = {
   en: {
     eyebrow: "Newsroom",
     title: "Our News",
@@ -50,7 +63,27 @@ const UI = {
     back: "Retour à l'Accueil",
     all: "Tous",
   },
-} as const;
+  ar: {
+    eyebrow: "المركز الإعلامي",
+    title: "أخبارنا",
+    sub: "إعلانات الشركة، وتحديثات الأسواق العالمية، وأحدث أخبار فريقنا.",
+    readMore: "اقرأ المزيد",
+    loadMore: "تحميل المزيد",
+    empty: "لا توجد أخبار منشورة حتى الآن.",
+    back: "العودة للرئيسية",
+    all: "الكل",
+  },
+  ru: {
+    eyebrow: "Пресс-центр",
+    title: "Наши новости",
+    sub: "Объявления компании, обзоры рынков и события нашей команды.",
+    readMore: "Читать далее",
+    loadMore: "Загрузить ещё",
+    empty: "Пока нет опубликованных новостей.",
+    back: "На главную",
+    all: "Все",
+  },
+};
 
 function NewsList() {
   const { lang, dir } = useLang();
@@ -85,13 +118,16 @@ function NewsList() {
   return (
     <div className="min-h-screen bg-background" dir={dir}>
       <header className="border-b border-border bg-cream">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" aria-label="BucharestEgyAgro home">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:px-6 sm:py-5 lg:px-10">
+          <Link to="/" aria-label="BucharestEgyAgro home" className="min-w-0">
             <BrandMark />
           </Link>
-          <Link to="/" className="text-sm font-semibold text-fresh hover:underline">
-            {t.back}
-          </Link>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <LanguageSwitcher compact inlineFrom="sm" />
+            <Link to="/" className="whitespace-nowrap text-xs font-semibold text-fresh hover:underline sm:text-sm">
+              {t.back}
+            </Link>
+          </div>
         </div>
       </header>
       <div className="relative h-[60px] overflow-hidden md:h-[90px]">
@@ -157,8 +193,7 @@ function NewsList() {
           <>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.slice(0, visible).map((item) => {
-                const title = (lang === "fr" && item.title_ar) || item.title;
-                const excerpt = (lang === "fr" && item.excerpt_ar) || item.excerpt;
+                const { title, excerpt, category: catLabel } = localizedArticle(item, lang);
                 return (
                   <article
                     key={item.id}
@@ -173,9 +208,9 @@ function NewsList() {
                       />
                     </Link>
                     <div className="flex flex-1 flex-col p-6">
-                      {item.category && (
+                      {catLabel && (
                         <span className="mb-3 w-fit rounded-full bg-fresh/10 px-3 py-1 text-xs font-semibold text-fresh">
-                          {item.category}
+                          {catLabel}
                         </span>
                       )}
                       <h2 className="font-display text-xl font-bold leading-snug text-primary">

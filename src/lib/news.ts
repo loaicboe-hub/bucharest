@@ -1,4 +1,5 @@
 import { apiNews, uploadToHostinger } from "./hostinger-api";
+import type { Lang } from "./i18n";
 
 const NEWS_STORAGE_KEY = "app_news_articles";
 
@@ -175,10 +176,99 @@ export function toEmbedUrl(url: string): string | null {
   return null;
 }
 
-export function formatDate(value: string, lang: "en" | "fr") {
+const HAS_ARABIC = /[\u0600-\u06FF]/;
+const HAS_CYRILLIC = /[\u0400-\u04FF]/;
+
+const SEEDED_NEWS_TRANSLATIONS: Record<
+  string,
+  Partial<Record<"fr" | "ru" | "ar", { title: string; excerpt: string; content: string; category?: string }>>
+> = {
+  "bucharestegyagro-expands-citrus-exports-2026": {
+    fr: {
+      title: "BucharestEgyAgro développe ses programmes d'exportation d'agrumes pour 2026",
+      excerpt:
+        "Grâce à des lignes de calibrage de pointe et une logistique frigorifique renforcée, nous lançons une saison record d'exportation d'agrumes.",
+      content:
+        "BucharestEgyAgro est fière d'annoncer le lancement officiel de son programme d'exportation d'agrumes d'hiver pour 2026, avec des oranges Valencia et Navel de première qualité expédiées directement des vergers égyptiens vers l'Europe et le monde entier.",
+      category: "Actualités de l'entreprise",
+    },
+    ru: {
+      title: "BucharestEgyAgro расширяет экспортные программы по цитрусовым на 2026 год",
+      excerpt:
+        "Благодаря современным линиям сортировки и расширенной рефрижераторной логистике мы готовы к рекордным отгрузкам цитрусовых.",
+      content:
+        "Компания BucharestEgyAgro с гордостью объявляет об официальном запуске расширенного сезона экспорта зимних цитрусовых 2026 года — отборных апельсинов сортов Валенсия и Навел, поставляемых напрямую из египетских садов в порты Европы и мира.",
+      category: "Новости компании",
+    },
+    ar: {
+      title: "بوخارست إيجي أجرو توسع برامج تصدير الموالح لموسم 2026",
+      excerpt:
+        "بخطوط فرز حديثة وشبكة لوجستية مبردة متطورة، نبدأ شحن أضخم كميات موالح للأسواق الأوروبية والعربية.",
+      content:
+        "تفخر شركة بوخارست إيجي أجرو بالإعلان عن انطلاق موسم تصدير الموالح لعام 2026 بأعلى معايير الجودة العالمية وشهادات التصدير المعتمدة.",
+      category: "أخبار الشركة",
+    },
+  },
+};
+
+export function localizedArticle(item: NewsArticle, lang: Lang) {
+  const seeded = SEEDED_NEWS_TRANSLATIONS[item.slug];
+  const tIsAr = HAS_ARABIC.test(item.title_ar || "");
+  const eIsAr = HAS_ARABIC.test(item.excerpt_ar || "");
+  const cIsAr = HAS_ARABIC.test(item.content_ar || "");
+  const tIsRu = HAS_CYRILLIC.test(item.title_ar || "");
+  const eIsRu = HAS_CYRILLIC.test(item.excerpt_ar || "");
+  const cIsRu = HAS_CYRILLIC.test(item.content_ar || "");
+
+  if (lang === "ar") {
+    const s = seeded?.ar;
+    return {
+      title: (tIsAr ? item.title_ar : "") || s?.title || item.title_ar || item.title,
+      excerpt: (eIsAr ? item.excerpt_ar : "") || s?.excerpt || item.excerpt_ar || item.excerpt,
+      content: (cIsAr ? item.content_ar : "") || s?.content || item.content_ar || item.content,
+      category: (item.category === "Company News" && s?.category) || item.category,
+    };
+  }
+
+  if (lang === "fr") {
+    const s = seeded?.fr;
+    return {
+      title: (!tIsAr && !tIsRu && item.title_ar) || s?.title || item.title,
+      excerpt: (!eIsAr && !eIsRu && item.excerpt_ar) || s?.excerpt || item.excerpt,
+      content: (!cIsAr && !cIsRu && item.content_ar) || s?.content || item.content,
+      category: (item.category === "Company News" && s?.category) || item.category,
+    };
+  }
+
+  if (lang === "ru") {
+    const s = seeded?.ru;
+    return {
+      title: (tIsRu ? item.title_ar : "") || s?.title || item.title,
+      excerpt: (eIsRu ? item.excerpt_ar : "") || s?.excerpt || item.excerpt,
+      content: (cIsRu ? item.content_ar : "") || s?.content || item.content,
+      category: (item.category === "Company News" && s?.category) || item.category,
+    };
+  }
+
+  return {
+    title: item.title,
+    excerpt: item.excerpt,
+    content: item.content,
+    category: item.category,
+  };
+}
+
+const DATE_LOCALES: Record<Lang, string> = {
+  en: "en-US",
+  fr: "fr-FR",
+  ar: "ar-EG",
+  ru: "ru-RU",
+};
+
+export function formatDate(value: string, lang: Lang) {
   try {
     const d = new Date(value);
-    return d.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
+    return d.toLocaleDateString(DATE_LOCALES[lang] ?? "en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",

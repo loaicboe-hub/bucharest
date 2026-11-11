@@ -34,6 +34,7 @@ import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { PharaonicSplashScreen } from "@/components/PharaonicSplashScreen";
 import { WhatsAppButton, WhatsAppIcon } from "@/components/WhatsAppButton";
 import { useLang, initLang } from "@/lib/i18n";
+import { LanguageSwitcher, LANG_OPTIONS } from "@/components/LanguageSwitcher";
 import { sanitizeUrl } from "@/lib/sanitize";
 import {
   Award,
@@ -83,38 +84,6 @@ const whyIcons = [Award, BadgeCheck, Sprout, ShieldCheck, HeartHandshake, Globe2
 const certIcons = [BadgeCheck, ShieldCheck, Globe2, Award];
 const badgeIcons = [Award, BadgeCheck, Globe2];
 const contactIcons = [Mail, Phone, MapPin];
-
-function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
-  const { lang, setLang, c } = useLang();
-  return (
-    <div
-      aria-label={c.ui.language}
-      className={`inline-flex shrink-0 items-center gap-0.5 sm:gap-1 rounded-full border p-0.5 sm:p-1 ${
-        compact
-          ? "border-border bg-white"
-          : "border-white/25 bg-white/10 backdrop-blur-md"
-      }`}
-    >
-      {(["en", "fr"] as const).map((l) => (
-        <button
-          key={l}
-          type="button"
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
-          className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-semibold transition-all ${
-            lang === l
-              ? "bg-gold text-gold-foreground shadow"
-              : compact
-                ? "text-muted-foreground hover:text-primary"
-                : "text-white/80 hover:text-white"
-          }`}
-        >
-          {l === "en" ? "EN" : "FR"}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 const BLANK_PIXEL =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -188,7 +157,7 @@ function Index() {
     } catch (err: any) {
       setFormMsg({
         type: "error",
-        text: err?.message || "Unable to submit request right now. Please try again later.",
+        text: err?.message || c.ui.errSubmit || "Unable to submit request right now. Please try again later.",
       });
     } finally {
       setFormBusy(false);
@@ -200,7 +169,7 @@ function Index() {
   const [dbProducts, setDbProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<ProductCategory[]>([]);
   const heroLogo = useTransparentLogo(logo);
-  const { lang, c } = useLang();
+  const { lang, setLang, dir, c } = useLang();
   const footer = localizeFooterConfig(footerRaw, lang);
 
   useLayoutEffect(() => {
@@ -261,7 +230,7 @@ function Index() {
 
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden w-full">
+    <div dir={dir} className="min-h-screen bg-background text-foreground overflow-x-hidden w-full">
       {/* Majestic Cinematic Pharaonic Intro Splash Screen */}
       <PharaonicSplashScreen duration={8500} />
 
@@ -295,7 +264,7 @@ function Index() {
                   menuOpen || scrolled ? "text-muted-foreground" : "text-white/80"
                 }`}
               >
-                Import & Export
+                {c.ui.importExportLabel}
               </span>
             </div>
           </a>
@@ -331,11 +300,11 @@ function Index() {
             >
               {c.ui.requestQuote} <ArrowRight className="h-3.5 w-3.5" />
             </a>
-            <LanguageSwitcher compact={scrolled} />
+            <LanguageSwitcher compact={scrolled} inlineFrom="lg" />
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:hidden">
-            <LanguageSwitcher compact={menuOpen || scrolled} />
+          <div className="ms-auto flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:hidden">
+            <LanguageSwitcher compact={menuOpen || scrolled} inlineFrom="lg" />
             <button
               type="button"
               aria-label={c.ui.toggleMenu}
@@ -378,6 +347,25 @@ function Index() {
               >
                 {c.ui.requestQuote}
               </a>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border/50 pt-3 px-2" dir="ltr">
+                {LANG_OPTIONS.map((o) => (
+                  <button
+                    key={o.code}
+                    type="button"
+                    onClick={() => {
+                      setLang(o.code);
+                      setMenuOpen(false);
+                    }}
+                    className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      lang === o.code
+                        ? "bg-gold text-gold-foreground shadow-sm"
+                        : "border border-border bg-white text-foreground hover:border-fresh"
+                    }`}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
             </nav>
           </div>
         )}
@@ -395,7 +383,7 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover object-center md:object-top"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-black/15" />
+        <div className={`absolute inset-0 ${dir === "rtl" ? "bg-gradient-to-l" : "bg-gradient-to-r"} from-black/75 via-black/35 to-black/15`} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
         <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-36 pb-20 sm:px-6 sm:pt-40 sm:pb-24 lg:grid-cols-12 lg:px-10 lg:pt-44">
@@ -507,7 +495,7 @@ function Index() {
       >
         {!sectionImages.products && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.products && <BrandWatermark position="right" />}
+        {!sectionImages.products && <BrandWatermark position={dir === "rtl" ? "left" : "right"} />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="mx-auto max-w-2xl text-center">
@@ -573,11 +561,11 @@ function Index() {
             }
             const ungrouped = list.filter((p) => !tradeCats.some((cat) => cat.id === p.category_id));
             if (ungrouped.length)
-              tabs.push({ id: "other", label: lang === "fr" ? "Autres" : "Other", items: ungrouped });
+              tabs.push({ id: "other", label: c.ui.other, items: ungrouped });
 
             const allTabs =
               tabs.length > 1
-                ? [{ id: "all", label: lang === "fr" ? "Tout" : "All", items: list }, ...tabs]
+                ? [{ id: "all", label: c.ui.all, items: list }, ...tabs]
                 : tabs;
             const current = allTabs.find((t) => t.id === activeCat) ?? allTabs[0];
             const currentItems = current?.items ?? [];
@@ -605,7 +593,7 @@ function Index() {
                 {currentItems.length === 0 ? (
                   <div className="mt-12 rounded-3xl border border-dashed border-border bg-card p-10 text-center">
                     <p className="text-muted-foreground">
-                      {lang === "fr" ? "Aucun produit dans cette catégorie pour le moment." : "No products available in this category yet."}
+                      {c.ui.noCategoryProducts}
                     </p>
                   </div>
                 ) : (
@@ -681,7 +669,7 @@ function Index() {
                 key={w.title}
                 className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all hover:-translate-y-1 hover:border-fresh/60 hover:shadow-[var(--shadow-soft)]"
               >
-                <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
+                <div className="absolute -end-6 -top-6 h-24 w-24 rounded-full bg-fresh/5 transition-all group-hover:scale-150 group-hover:bg-fresh/10" />
                 <div className="relative">
                   <div className="grid h-12 w-12 place-items-center rounded-xl gradient-primary text-white shadow-lg">
                     <WIcon className="h-6 w-6" />
@@ -741,7 +729,7 @@ function Index() {
                 key={step.title}
                 className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-fresh/40 hover:shadow-[var(--shadow-soft)]"
               >
-                <span className="absolute right-5 top-3 font-display text-6xl font-bold text-fresh/10 transition-colors group-hover:text-gold/20">
+                <span className="absolute end-5 top-3 font-display text-6xl font-bold text-fresh/10 transition-colors group-hover:text-gold/20">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="grid h-12 w-12 place-items-center rounded-xl bg-fresh/10 font-display text-lg font-bold text-fresh transition-colors group-hover:bg-fresh group-hover:text-white">
@@ -753,7 +741,7 @@ function Index() {
                 <p className="relative mt-2 text-sm leading-relaxed text-muted-foreground">
                   {step.desc}
                 </p>
-                <span className="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-fresh to-gold transition-transform duration-300 group-hover:scale-x-100" />
+                <span className="absolute inset-x-0 bottom-0 h-1 origin-left rtl:origin-right scale-x-0 bg-gradient-to-r from-fresh to-gold transition-transform duration-300 group-hover:scale-x-100" />
               </div>
             ))}
           </div>
@@ -832,7 +820,7 @@ function Index() {
       >
         {!sectionImages.markets && <SectionLeafBg />}
         <SectionWave />
-        {!sectionImages.markets && <BrandWatermark position="right" />}
+        {!sectionImages.markets && <BrandWatermark position={dir === "rtl" ? "left" : "right"} />}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
@@ -865,7 +853,7 @@ function Index() {
             <div className="relative">
               <div className="absolute inset-0 rounded-3xl gradient-primary opacity-20 blur-3xl" />
               <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-fresh/20 shadow-[var(--shadow-soft)]">
-                <WorldMapRoutes labels={c.regions} />
+                <WorldMapRoutes labels={c.regions} hubLabel={c.ui.mapHub} />
               </div>
             </div>
           </div>
@@ -942,9 +930,7 @@ function Index() {
                 {(site.whatsapp || site.phone) && (
                   <a
                     href={`https://wa.me/${(site.whatsapp || site.phone).replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-                      lang === "ar"
-                        ? "مرحباً بوخارست إيجي أجرو، أرغب في الاستفسار عن برامج التصدير."
-                        : "Hello BucharestEgyAgro, I would like to inquire about your produce export programs."
+                      c.ui.whatsappGreeting || "Hello BucharestEgyAgro, I would like to inquire about your produce export programs."
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -1007,7 +993,7 @@ function Index() {
                   disabled={formBusy}
                   className="group inline-flex items-center gap-2 rounded-full gradient-primary px-7 py-3.5 font-semibold text-white shadow-lg transition-all hover:scale-[1.03] hover:shadow-xl disabled:opacity-60"
                 >
-                  {c.ui.sendInquiry} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  {c.ui.sendInquiry} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
                 </button>
                 <button
                   type="button"
@@ -1036,12 +1022,8 @@ function Index() {
       </section>
 
       <PartnersCarousel
-        title={lang === "ar" ? "شركاؤنا" : "Our Partners"}
-        subtitle={
-          lang === "ar"
-            ? "نفخر بالتعاون مع شركاء موثوقين حول العالم"
-            : "Proudly working with trusted partners around the world"
-        }
+        title={c.ui.partnersTitle}
+        subtitle={c.ui.partnersSub}
       />
 
       {/* Soft mint wave leading into the footer */}
@@ -1164,7 +1146,7 @@ function ProductCard({
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-60" />
-        <div className="absolute right-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
+        <div className="absolute end-4 top-4 rounded-full glass px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary">
           {premium}
         </div>
       </div>

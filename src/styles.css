@@ -247,3 +247,18 @@ html[dir="rtl"] .lucide-arrow-right {
   filter: none !important;
   opacity: 1 !important;
 }
+
+/* Additional Arabic RTL & Russian Cyrillic typography polish */
+html[dir="rtl"] .tracking-\[0\.16em\],
+html[dir="rtl"] .tracking-\[0\.22em\],
+html[dir="rtl"] .tracking-wider,
+html[dir="rtl"] .tracking-widest {
+  letter-spacing: 0;
+}
+
+html[lang="ru"] .tracking-\[0\.2em\],
+html[lang="ru"] .tracking-\[0\.22em\],
+html[lang="ru"] .tracking-\[0\.25em\],
+html[lang="ru"] .tracking-\[0\.3em\] {
+  letter-spacing: 0.1em;
+}

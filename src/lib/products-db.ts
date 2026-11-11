@@ -1,5 +1,6 @@
 // Hostinger-only product catalog and media storage.
 import { CATALOG, type ProductSpecs } from "@/lib/products-catalog";
+import type { Lang } from "./i18n";
 import { apiProducts, apiCategories, uploadToHostinger } from "./hostinger-api";
 
 export type Trade = "export" | "import";
@@ -89,25 +90,149 @@ export function isSpecVisible(p: Pick<ProductRow, "hidden_specs">, key: keyof Pr
   return !p.hidden_specs || !p.hidden_specs.includes(key);
 }
 
-export function localized(p: ProductRow, lang: "en" | "fr") {
-  return lang === "fr"
-    ? {
-        name: p.name_ar || p.name_en,
-        intro: p.intro_ar || p.intro_en,
-        description: p.description_ar || p.description_en,
-        specs: { ...EMPTY_SPECS, ...(p.specs_ar ?? {}) },
-      }
-    : {
-        name: p.name_en,
-        intro: p.intro_en,
-        description: p.description_en,
-        specs: { ...EMPTY_SPECS, ...(p.specs_en ?? {}) },
+const HAS_ARABIC = /[\u0600-\u06FF]/;
+const HAS_CYRILLIC = /[\u0400-\u04FF]/;
+const CATALOG_BY_SLUG = new Map(CATALOG.map((item) => [item.slug, item]));
+
+const STD_CATEGORIES: Record<string, Record<Lang, string>> = {
+  fruits: {
+    en: "Fresh Fruits",
+    fr: "Fruits Frais",
+    ar: "فواكه طازجة",
+    ru: "Свежие фрукты",
+  },
+  "fresh fruits": {
+    en: "Fresh Fruits",
+    fr: "Fruits Frais",
+    ar: "فواكه طازجة",
+    ru: "Свежие фрукты",
+  },
+  vegetables: {
+    en: "Fresh Vegetables",
+    fr: "Légumes Frais",
+    ar: "خضروات طازجة",
+    ru: "Свежие овощи",
+  },
+  "fresh vegetables": {
+    en: "Fresh Vegetables",
+    fr: "Légumes Frais",
+    ar: "خضروات طازجة",
+    ru: "Свежие овощи",
+  },
+};
+
+export function localized(p: ProductRow, lang: Lang) {
+  const cat = CATALOG_BY_SLUG.get(p.slug);
+  const nameIsAr = HAS_ARABIC.test(p.name_ar || "");
+  const introIsAr = HAS_ARABIC.test(p.intro_ar || "");
+  const descIsAr = HAS_ARABIC.test(p.description_ar || "");
+  const nameIsRu = HAS_CYRILLIC.test(p.name_ar || "");
+  const introIsRu = HAS_CYRILLIC.test(p.intro_ar || "");
+  const descIsRu = HAS_CYRILLIC.test(p.description_ar || "");
+
+  if (lang === "en") {
+    return {
+      name: p.name_en || cat?.en.name || "",
+      intro: p.intro_en || cat?.en.intro || "",
+      description: p.description_en || cat?.en.description || "",
+      specs: {
+        ...EMPTY_SPECS,
+        ...(cat?.en.specs.origin ? { origin: cat.en.specs.origin } : {}),
+        ...(cat?.en.specs.category ? { category: cat.en.specs.category } : {}),
+        ...(p.specs_en ?? {}),
+      },
+    };
+  }
+
+  if (lang === "ar") {
+    if (nameIsAr || introIsAr || descIsAr) {
+      return {
+        name: (nameIsAr ? p.name_ar : "") || cat?.ar.name || p.name_ar || p.name_en,
+        intro: (introIsAr ? p.intro_ar : "") || cat?.ar.intro || p.intro_ar || p.intro_en,
+        description: (descIsAr ? p.description_ar : "") || cat?.ar.description || p.description_ar || p.description_en,
+        specs: {
+          ...EMPTY_SPECS,
+          ...(cat?.ar.specs ?? {}),
+          ...(p.specs_ar ?? {}),
+        },
       };
+    }
+    if (cat?.ar) return cat.ar;
+    return {
+      name: p.name_ar || p.name_en,
+      intro: p.intro_ar || p.intro_en,
+      description: p.description_ar || p.description_en,
+      specs: { ...EMPTY_SPECS, ...(p.specs_ar ?? {}), ...(p.specs_en ?? {}) },
+    };
+  }
+
+  if (lang === "fr") {
+    const frName = !nameIsAr && !nameIsRu && p.name_ar?.trim() ? p.name_ar : "";
+    const frIntro = !introIsAr && !introIsRu && p.intro_ar?.trim() ? p.intro_ar : "";
+    const frDesc = !descIsAr && !descIsRu && p.description_ar?.trim() ? p.description_ar : "";
+    const specsArStr = JSON.stringify(p.specs_ar ?? {});
+    const specsSafeFr = !HAS_ARABIC.test(specsArStr) && !HAS_CYRILLIC.test(specsArStr);
+
+    if (frName || frIntro || frDesc) {
+      return {
+        name: frName || cat?.fr.name || p.name_en,
+        intro: frIntro || cat?.fr.intro || p.intro_en,
+        description: frDesc || cat?.fr.description || p.description_en,
+        specs: {
+          ...EMPTY_SPECS,
+          ...(cat?.fr.specs ?? {}),
+          ...(specsSafeFr ? (p.specs_ar ?? {}) : (p.specs_en ?? {})),
+        },
+      };
+    }
+    if (cat?.fr) return cat.fr;
+    return {
+      name: p.name_en,
+      intro: p.intro_en,
+      description: p.description_en,
+      specs: { ...EMPTY_SPECS, ...(p.specs_en ?? {}) },
+    };
+  }
+
+  // Russian ("ru")
+  if (nameIsRu || introIsRu || descIsRu) {
+    return {
+      name: (nameIsRu ? p.name_ar : "") || cat?.ru.name || p.name_en,
+      intro: (introIsRu ? p.intro_ar : "") || cat?.ru.intro || p.intro_en,
+      description: (descIsRu ? p.description_ar : "") || cat?.ru.description || p.description_en,
+      specs: { ...EMPTY_SPECS, ...(cat?.ru.specs ?? {}), ...(p.specs_ar ?? {}), ...(p.specs_en ?? {}) },
+    };
+  }
+  if (cat?.ru) return cat.ru;
+  const baseEn = { ...EMPTY_SPECS, ...(p.specs_en ?? {}) };
+  return {
+    name: p.name_en,
+    intro: p.intro_en,
+    description: p.description_en,
+    specs: {
+      ...baseEn,
+      origin: baseEn.origin === "Egypt" ? "Египет" : baseEn.origin,
+      category:
+        baseEn.category === "Fresh Fruits"
+          ? "Свежие фрукты"
+          : baseEn.category === "Fresh Vegetables"
+            ? "Свежие овощи"
+            : baseEn.category,
+    },
+  };
 }
 
-export function categoryName(c: ProductCategory | undefined, lang: "en" | "fr") {
+export function categoryName(c: ProductCategory | undefined, lang: Lang) {
   if (!c) return "";
-  return lang === "fr" ? c.name_ar || c.name_en : c.name_en;
+  const std = STD_CATEGORIES[c.slug?.toLowerCase()] ?? STD_CATEGORIES[c.name_en?.toLowerCase()];
+  const hasAr = HAS_ARABIC.test(c.name_ar || "");
+  const hasRu = HAS_CYRILLIC.test(c.name_ar || "");
+
+  if (lang === "en") return c.name_en || std?.en || "";
+  if (lang === "ar") return (hasAr ? c.name_ar : "") || std?.ar || c.name_ar || c.name_en;
+  if (lang === "fr") return (!hasAr && !hasRu && c.name_ar ? c.name_ar : "") || std?.fr || c.name_en;
+  if (lang === "ru") return (hasRu ? c.name_ar : "") || std?.ru || c.name_en;
+  return c.name_en;
 }
 
 export function blankProduct(trade: Trade, categoryId: string | null): ProductRow {

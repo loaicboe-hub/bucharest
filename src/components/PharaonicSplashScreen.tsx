@@ -12,7 +12,7 @@ export function PharaonicSplashScreen({
   const [elapsed, setElapsed] = useState(0);
   const [isOpening, setIsOpening] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const { lang } = useLang();
+  const { lang, dir, c } = useLang();
 
   useEffect(() => {
     const startTime = Date.now();
@@ -54,6 +54,18 @@ export function PharaonicSplashScreen({
 
   // Status text based on language & unlock progress
   const getStatusText = () => {
+    if (lang === "ar") {
+      if (coreUnlocked) return "تم فتح الختم الملكي — جاري فتح بوابات المعبد...";
+      if (ring2Locked) return "محاذاة حلقات النيل المقدسة...";
+      if (ring1Locked) return "مزامنة الرموز الفرعونية القديمة...";
+      return "فك شفرة القفل الفرعوني الملكي...";
+    }
+    if (lang === "ru") {
+      if (coreUnlocked) return "Печать снята — открываются врата храма...";
+      if (ring2Locked) return "Выравнивание священных колец Нила...";
+      if (ring1Locked) return "Синхронизация древних глифов...";
+      return "Расшифровка механизма печати фараонов...";
+    }
     if (lang === "fr") {
       if (coreUnlocked) return "Sceau Déverrouillé — Ouverture des Portes du Sanctuaire...";
       if (ring2Locked) return "Alignement de l'Anneau Sacré du Nil...";
@@ -66,10 +78,27 @@ export function PharaonicSplashScreen({
     return "Decoding Pharaonic Lock Mechanism...";
   };
 
-  const skipLabel = lang === "fr" ? "Ouvrir Directement" : "Skip to Site";
+  const skipLabel =
+    lang === "ar"
+      ? "تخطي إلى الموقع"
+      : lang === "ru"
+        ? "Перейти на сайт"
+        : lang === "fr"
+          ? "Ouvrir Directement"
+          : "Skip to Site";
+
+  const sealLabel =
+    lang === "ar"
+      ? "ختم البوابة الملكية"
+      : lang === "ru"
+        ? "Царская печать"
+        : lang === "fr"
+          ? "Sceau du Sanctuaire"
+          : "Tomb Chamber Seal";
 
   return (
     <div
+      dir={dir}
       aria-label="Ancient Egyptian Tomb Lock"
       className={`fixed inset-0 z-[99999] overflow-hidden select-none ${
         isOpening ? "pointer-events-none" : "bg-[#050806]"
@@ -104,7 +133,7 @@ export function PharaonicSplashScreen({
       {/* Skip Button */}
       <button
         onClick={handleFinish}
-        className={`absolute top-6 right-6 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-black/80 px-4 py-2 text-xs font-semibold text-gold-foreground/90 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-gold hover:bg-gold hover:text-black sm:top-8 sm:right-8 sm:px-5 sm:py-2.5 sm:text-sm ${
+        className={`absolute top-6 end-6 z-40 flex items-center gap-2 rounded-full border border-gold/40 bg-black/80 px-4 py-2 text-xs font-semibold text-gold-foreground/90 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-gold hover:bg-gold hover:text-black sm:top-8 sm:end-8 sm:px-5 sm:py-2.5 sm:text-sm ${
           isOpening ? "opacity-0 pointer-events-none" : "opacity-100"
         }`}
       >
@@ -266,7 +295,7 @@ export function PharaonicSplashScreen({
         <div className="mt-8 text-center space-y-2 max-w-md">
           <div className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-gold/90">
             <Sparkles className="h-3 w-3 text-gold animate-spin" style={{ animationDuration: "5s" }} />
-            <span>BUCHARESTEGYAGRO • IMPORT & EXPORT</span>
+            <span>BUCHARESTEGYAGRO • {c.ui.importExportLabel}</span>
             <Sparkles className="h-3 w-3 text-gold animate-spin" style={{ animationDuration: "5s" }} />
           </div>
 
@@ -288,7 +317,7 @@ export function PharaonicSplashScreen({
             />
           </div>
           <div className="mt-2 flex items-center justify-between text-[10px] font-semibold text-gold/70 tracking-widest uppercase">
-            <span>Tomb Chamber Seal</span>
+            <span>{sealLabel}</span>
             <span>{Math.round(progress)}%</span>
           </div>
         </div>

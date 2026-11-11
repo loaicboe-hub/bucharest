@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SectionWave } from "@/components/SectionWave";
 import { SectionLeafBg } from "@/components/SectionLeafBg";
 import { BrandMark } from "@/components/BrandMark";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -15,11 +16,12 @@ import {
   Twitter,
   Link2,
 } from "lucide-react";
-import { useLang, initLang } from "@/lib/i18n";
+import { useLang, initLang, type Lang } from "@/lib/i18n";
 import { sanitizeRichHtml, sanitizeUrl } from "@/lib/sanitize";
 import {
   getNewsBySlug,
   listPublishedNews,
+  localizedArticle,
   formatDate,
   toEmbedUrl,
   type NewsArticle,
@@ -46,7 +48,20 @@ export const Route = createFileRoute("/news/$slug")({
   component: NewsDetail,
 });
 
-const UI = {
+const UI: Record<
+  Lang,
+  {
+    back: string;
+    published: string;
+    updated: string;
+    share: string;
+    related: string;
+    gallery: string;
+    notFound: string;
+    copied: string;
+    readMore: string;
+  }
+> = {
   en: {
     back: "Back to News",
     published: "Published",
@@ -69,7 +84,29 @@ const UI = {
     copied: "Lien copié !",
     readMore: "Lire la suite",
   },
-} as const;
+  ar: {
+    back: "العودة للأخبار",
+    published: "تاريخ النشر",
+    updated: "آخر تحديث",
+    share: "مشاركة",
+    related: "أخبار ذات صلة",
+    gallery: "معرض الصور",
+    notFound: "المقال غير موجود",
+    copied: "تم نسخ الرابط",
+    readMore: "اقرأ المزيد",
+  },
+  ru: {
+    back: "К новостям",
+    published: "Опубликовано",
+    updated: "Обновлено",
+    share: "Поделиться",
+    related: "Похожие новости",
+    gallery: "Фотогалерея",
+    notFound: "Статья не найдена",
+    copied: "Ссылка скопирована",
+    readMore: "Читать далее",
+  },
+};
 
 function NewsDetail() {
   const { slug } = Route.useParams();
@@ -102,8 +139,10 @@ function NewsDetail() {
     };
   }, [slug]);
 
-  const title = article ? (lang === "fr" && article.title_ar) || article.title : "";
-  const content = article ? sanitizeRichHtml((lang === "fr" && article.content_ar) || article.content) : "";
+  const localized = article ? localizedArticle(article, lang) : null;
+  const title = localized?.title ?? "";
+  const content = localized ? sanitizeRichHtml(localized.content) : "";
+  const category = localized?.category ?? "";
 
   useEffect(() => {
     if (title) document.title = `${title} | BucharestEgyAgro Import and Export`;
@@ -126,7 +165,7 @@ function NewsDetail() {
 
   if (!article) {
     return (
-      <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
+      <div dir={dir} className="grid min-h-screen place-items-center bg-background p-6 text-center">
         <div>
           <h1 className="font-display text-2xl font-bold text-primary">{t.notFound}</h1>
           <Link to="/news" className="mt-4 inline-block text-sm font-semibold text-fresh underline">
@@ -140,13 +179,16 @@ function NewsDetail() {
   return (
     <div className="min-h-screen bg-background" dir={dir}>
       <header className="border-b border-border bg-cream">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" aria-label="BucharestEgyAgro home">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:px-6 sm:py-5 lg:px-10">
+          <Link to="/" aria-label="BucharestEgyAgro home" className="min-w-0">
             <BrandMark />
           </Link>
-          <Link to="/news" className="text-sm font-semibold text-fresh hover:underline">
-            {t.back}
-          </Link>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <LanguageSwitcher compact inlineFrom="sm" />
+            <Link to="/news" className="whitespace-nowrap text-xs font-semibold text-fresh hover:underline sm:text-sm">
+              {t.back}
+            </Link>
+          </div>
         </div>
       </header>
       <div className="relative h-[60px] overflow-hidden md:h-[90px]">
@@ -156,9 +198,9 @@ function NewsDetail() {
       <div className="relative overflow-hidden">
         <SectionLeafBg opacity="opacity-[0.06]" />
         <article className="relative z-10 mx-auto max-w-4xl px-6 py-12 lg:px-10 lg:py-16">
-        {article.category && (
+        {category && (
           <span className="rounded-full bg-fresh/10 px-3 py-1 text-xs font-semibold text-fresh">
-            {article.category}
+            {category}
           </span>
         )}
         <h1 className="mt-4 font-display text-3xl font-bold leading-tight text-primary lg:text-4xl">
@@ -188,7 +230,7 @@ function NewsDetail() {
         )}
 
         <div
-          className="prose mt-8 max-w-none text-base leading-relaxed text-foreground [&_a]:text-fresh [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-fresh [&_blockquote]:pl-4 [&_blockquote]:italic [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-primary [&_img]:rounded-xl [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6"
+          className="prose mt-8 max-w-none text-base leading-relaxed text-foreground [&_a]:text-fresh [&_a]:underline [&_blockquote]:border-s-4 [&_blockquote]:border-fresh [&_blockquote]:ps-4 [&_blockquote]:italic [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-primary [&_img]:rounded-xl [&_ol]:my-3 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-4 [&_ul]:my-3 [&_ul]:list-disc [&_ul]:ps-6"
           dangerouslySetInnerHTML={{ __html: content }}
         />
 
@@ -282,7 +324,7 @@ function NewsDetail() {
             <h2 className="font-display text-2xl font-bold text-primary">{t.related}</h2>
             <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((item) => {
-                const rTitle = (lang === "fr" && item.title_ar) || item.title;
+                const { title: rTitle } = localizedArticle(item, lang);
                 return (
                   <article
                     key={item.id}

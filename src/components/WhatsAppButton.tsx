@@ -20,29 +20,29 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
-  const { lang } = useLang();
+  const { c, dir } = useLang();
   const rawNumber = whatsapp || phone || "+20 107 003 3892";
   const cleanNumber = rawNumber.replace(/[^0-9]/g, "");
 
   if (!cleanNumber) return null;
 
   const defaultMsg =
-    lang === "ar"
-      ? "مرحباً بوخارست إيجي أجرو، أرغب في الاستفسار عن برامج تصدير الحاصلات الزراعية."
-      : "Hello BucharestEgyAgro, I would like to inquire about your fresh produce export programs.";
+    c.ui.whatsappGreeting ||
+    "Hello BucharestEgyAgro, I would like to inquire about your fresh produce export programs.";
 
   const href = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(defaultMsg)}`;
 
   return (
     <aside
       aria-label="WhatsApp Contact"
+      dir={dir}
       className="fixed bottom-6 left-6 z-50 flex items-center group pointer-events-auto"
     >
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
+        aria-label={c.ui.whatsappLabel || "Chat on WhatsApp"}
         className="relative flex items-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 sm:px-5 sm:py-3.5 rounded-full shadow-2xl hover:shadow-[#25D366]/40 transition-all duration-300 transform hover:scale-105 active:scale-95"
       >
         {/* Pulsing halo */}
@@ -51,7 +51,7 @@ export function WhatsAppButton({ whatsapp, phone }: WhatsAppButtonProps) {
         <WhatsAppIcon className="h-6 w-6 text-white shrink-0" />
 
         <span className="hidden sm:inline-block font-semibold text-sm tracking-wide">
-          {lang === "ar" ? "تواصل عبر واتساب" : "WhatsApp Chat"}
+          {c.ui.whatsappLabel || "WhatsApp Chat"}
         </span>
       </a>
     </aside>

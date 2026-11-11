@@ -5,6 +5,7 @@ import { PharaonicDivider } from "@/components/PharaonicDivider";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, X, ShieldCheck } from "lucide-react";
 import { useLang, initLang } from "@/lib/i18n";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getProduct, SPEC_LABELS, PAGE_UI, type ProductSpecs } from "@/lib/products-catalog";
 import { getCachedLogoUrl, getLogoUrl } from "@/lib/admin-branding";
 import {
@@ -120,16 +121,20 @@ function ProductDetail() {
   }, [lightbox]);
 
   if (loading) {
-    return <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">Loading…</div>;
+    return (
+      <div dir={dir} className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+        {t.loading}
+      </div>
+    );
   }
 
   if (!product || !data) {
     return (
-      <div className="grid min-h-screen place-items-center bg-background p-6 text-center">
+      <div dir={dir} className="grid min-h-screen place-items-center bg-background p-6 text-center">
         <div>
-          <h1 className="font-display text-2xl font-bold text-primary">Product not found</h1>
+          <h1 className="font-display text-2xl font-bold text-primary">{t.notFound}</h1>
           <Link to="/" hash="products" className="mt-4 inline-block text-sm font-semibold text-fresh underline">
-            Back to products
+            {t.back}
           </Link>
         </div>
       </div>
@@ -164,13 +169,16 @@ function ProductDetail() {
               <div className="mt-1 text-[8px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[10px] sm:tracking-[0.2em]">{c.brandSub}</div>
             </div>
           </Link>
-          <Link
-            to="/"
-            hash="products"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-secondary sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
-          >
-            {t.back}
-          </Link>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+            <LanguageSwitcher compact inlineFrom="sm" />
+            <Link
+              to="/"
+              hash="products"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-2.5 py-1.5 text-[11px] font-semibold text-primary transition-colors hover:bg-secondary sm:gap-2 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              {t.back}
+            </Link>
+          </div>
         </div>
       </header>
       <div className="relative h-[60px] overflow-hidden md:h-[90px]">
@@ -339,7 +347,7 @@ function ProductDetail() {
           <button
             type="button"
             aria-label="Close"
-            className="absolute right-6 top-6 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
+            className="absolute end-6 top-6 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white hover:bg-white/20"
             onClick={() => setLightbox(false)}
           >
             <X className="h-5 w-5" />

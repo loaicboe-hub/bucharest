@@ -36,7 +36,10 @@ export function PartnersCarousel({ title, subtitle }: { title: string; subtitle?
         </div>
       </div>
 
-      <div className="group relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] sm:mt-10">
+      <div
+        dir="ltr"
+        className="group relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] sm:mt-10"
+      >
         <div
           className="flex w-max items-center gap-4 sm:gap-8 md:gap-12 group-hover:[animation-play-state:paused] motion-reduce:animate-none"
           style={{
