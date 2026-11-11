@@ -16,7 +16,9 @@ export type ProductCategory = {
   id: string;
   slug: string;
   name_en: string;
+  name_fr?: string;
   name_ar: string;
+  name_ru?: string;
   trade: Trade;
   sort_order: number;
   active: boolean;
@@ -28,13 +30,21 @@ export type ProductRow = {
   trade: Trade;
   category_id: string | null;
   name_en: string;
+  name_fr?: string;
   name_ar: string;
+  name_ru?: string;
   intro_en: string;
+  intro_fr?: string;
   intro_ar: string;
+  intro_ru?: string;
   description_en: string;
+  description_fr?: string;
   description_ar: string;
+  description_ru?: string;
   specs_en: Partial<ProductSpecs>;
+  specs_fr?: Partial<ProductSpecs>;
   specs_ar: Partial<ProductSpecs>;
+  specs_ru?: Partial<ProductSpecs>;
   hidden_specs: string[];
   main_image: string;
   gallery: string[];
@@ -590,15 +600,117 @@ function pickDescription(raw: string | undefined, fallback: string | undefined):
   return sanitizeProductText(clean);
 }
 
+export function hydrateCategoryForEditor(c: ProductCategory): ProductCategory {
+  const std = STD_CATEGORIES[c.slug?.toLowerCase()] ?? STD_CATEGORIES[c.name_en?.toLowerCase()];
+  const hasExplicitSchema = c.name_fr != null || c.name_ru != null;
+  const rawAr = (c.name_ar ?? "").trim();
+  const isAr = HAS_ARABIC.test(rawAr);
+  const isRu = HAS_CYRILLIC.test(rawAr);
+
+  const rescuedFr = !hasExplicitSchema && !isAr && !isRu ? rawAr : "";
+  const rescuedRu = isRu ? rawAr : "";
+  const cleanAr = hasExplicitSchema ? rawAr : isAr ? rawAr : "";
+
+  return {
+    ...c,
+    name_fr: (c.name_fr ?? "").trim() || rescuedFr || (c.id ? std?.fr ?? "" : ""),
+    name_ar: cleanAr || (c.id ? std?.ar ?? "" : ""),
+    name_ru: (c.name_ru ?? "").trim() || rescuedRu || (c.id ? std?.ru ?? "" : ""),
+  };
+}
+
+export function hydrateProductForEditor(p: ProductRow): ProductRow {
+  const cat = CATALOG_BY_SLUG.get(p.slug);
+  const custom = CUSTOM_LOCALE_OVERRIDES[p.slug];
+  const hasExplicitSchema =
+    p.name_fr != null || p.intro_fr != null || p.description_fr != null || p.specs_fr != null;
+
+  const rawNameAr = (p.name_ar ?? "").trim();
+  const rawIntroAr = (p.intro_ar ?? "").trim();
+  const rawDescAr = (p.description_ar ?? "").trim();
+
+  const nameIsAr = HAS_ARABIC.test(rawNameAr);
+  const introIsAr = HAS_ARABIC.test(rawIntroAr);
+  const descIsAr = HAS_ARABIC.test(rawDescAr);
+  const nameIsRu = HAS_CYRILLIC.test(rawNameAr);
+  const introIsRu = HAS_CYRILLIC.test(rawIntroAr);
+  const descIsRu = HAS_CYRILLIC.test(rawDescAr);
+
+  const specsArStr = JSON.stringify(p.specs_ar ?? {});
+  const specsIsAr = HAS_ARABIC.test(specsArStr);
+  const specsIsRu = HAS_CYRILLIC.test(specsArStr);
+  const specsSafeFr = !hasExplicitSchema && !specsIsAr && !specsIsRu;
+
+  const rescuedFrName = !hasExplicitSchema && !nameIsAr && !nameIsRu ? rawNameAr : "";
+  const rescuedFrIntro = !hasExplicitSchema && !introIsAr && !introIsRu ? rawIntroAr : "";
+  const rescuedFrDesc = !hasExplicitSchema && !descIsAr && !descIsRu ? rawDescAr : "";
+  const rescuedFrSpecs = specsSafeFr ? cleanSpecs(p.specs_ar) : {};
+
+  const rescuedRuName = nameIsRu ? rawNameAr : "";
+  const rescuedRuIntro = introIsRu ? rawIntroAr : "";
+  const rescuedRuDesc = descIsRu ? rawDescAr : "";
+  const rescuedRuSpecs = specsIsRu ? cleanSpecs(p.specs_ar) : {};
+
+  const cleanNameAr = hasExplicitSchema ? rawNameAr : nameIsAr ? rawNameAr : "";
+  const cleanIntroAr = hasExplicitSchema ? rawIntroAr : introIsAr ? rawIntroAr : "";
+  const cleanDescAr = hasExplicitSchema ? rawDescAr : descIsAr ? rawDescAr : "";
+  const cleanSpecsAr = hasExplicitSchema || specsIsAr ? cleanSpecs(p.specs_ar) : {};
+
+  const enBaseSpecs = p.id ? custom?.en?.specs ?? cat?.en.specs ?? {} : {};
+  const frBaseSpecs = p.id ? custom?.fr?.specs ?? cat?.fr.specs ?? {} : {};
+  const arBaseSpecs = p.id ? custom?.ar?.specs ?? cat?.ar.specs ?? {} : {};
+  const ruBaseSpecs = p.id ? custom?.ru?.specs ?? cat?.ru.specs ?? {} : {};
+
+  return {
+    ...p,
+    name_en: p.name_en || (p.id ? cat?.en.name ?? "" : ""),
+    intro_en: p.intro_en || (p.id ? cat?.en.intro ?? "" : ""),
+    description_en: p.description_en || (p.id ? cat?.en.description ?? "" : ""),
+    specs_en: { ...EMPTY_SPECS, ...enBaseSpecs, ...cleanSpecs(p.specs_en) },
+
+    name_fr: (p.name_fr ?? "").trim() || rescuedFrName || (p.id ? custom?.fr?.name || cat?.fr.name || "" : ""),
+    intro_fr: (p.intro_fr ?? "").trim() || rescuedFrIntro || (p.id ? custom?.fr?.intro || cat?.fr.intro || "" : ""),
+    description_fr:
+      (p.description_fr ?? "").trim() || rescuedFrDesc || (p.id ? custom?.fr?.description || cat?.fr.description || "" : ""),
+    specs_fr: {
+      ...EMPTY_SPECS,
+      ...frBaseSpecs,
+      ...(Object.keys(cleanSpecs(p.specs_fr)).length > 0 ? cleanSpecs(p.specs_fr) : rescuedFrSpecs),
+    },
+
+    name_ar: pickTitle(cleanNameAr, p.id ? custom?.ar?.name || cat?.ar.name : "") || (p.id ? custom?.ar?.name || cat?.ar.name || "" : ""),
+    intro_ar: pickIntro(cleanIntroAr, p.id ? custom?.ar?.intro || cat?.ar.intro : "") || (p.id ? custom?.ar?.intro || cat?.ar.intro || "" : ""),
+    description_ar: cleanDescAr || (p.id ? custom?.ar?.description || cat?.ar.description || "" : ""),
+    specs_ar: { ...EMPTY_SPECS, ...arBaseSpecs, ...cleanSpecsAr },
+
+    name_ru: (p.name_ru ?? "").trim() || rescuedRuName || (p.id ? custom?.ru?.name || cat?.ru.name || "" : ""),
+    intro_ru: (p.intro_ru ?? "").trim() || rescuedRuIntro || (p.id ? custom?.ru?.intro || cat?.ru.intro || "" : ""),
+    description_ru:
+      (p.description_ru ?? "").trim() || rescuedRuDesc || (p.id ? custom?.ru?.description || cat?.ru.description || "" : ""),
+    specs_ru: {
+      ...EMPTY_SPECS,
+      ...ruBaseSpecs,
+      ...(Object.keys(cleanSpecs(p.specs_ru)).length > 0 ? cleanSpecs(p.specs_ru) : rescuedRuSpecs),
+    },
+  };
+}
+
 export function localized(p: ProductRow, lang: Lang) {
   const cat = CATALOG_BY_SLUG.get(p.slug);
   const custom = CUSTOM_LOCALE_OVERRIDES[p.slug];
-  const nameIsAr = HAS_ARABIC.test(p.name_ar || "");
-  const introIsAr = HAS_ARABIC.test(p.intro_ar || "");
-  const descIsAr = HAS_ARABIC.test(p.description_ar || "");
-  const nameIsRu = HAS_CYRILLIC.test(p.name_ar || "");
-  const introIsRu = HAS_CYRILLIC.test(p.intro_ar || "");
-  const descIsRu = HAS_CYRILLIC.test(p.description_ar || "");
+  const hasExplicitSchema =
+    p.name_fr != null || p.intro_fr != null || p.description_fr != null || p.specs_fr != null;
+
+  const rawNameAr = (p.name_ar ?? "").trim();
+  const rawIntroAr = (p.intro_ar ?? "").trim();
+  const rawDescAr = (p.description_ar ?? "").trim();
+
+  const nameIsAr = HAS_ARABIC.test(rawNameAr);
+  const introIsAr = HAS_ARABIC.test(rawIntroAr);
+  const descIsAr = HAS_ARABIC.test(rawDescAr);
+  const nameIsRu = HAS_CYRILLIC.test(rawNameAr);
+  const introIsRu = HAS_CYRILLIC.test(rawIntroAr);
+  const descIsRu = HAS_CYRILLIC.test(rawDescAr);
 
   if (lang === "en") {
     const cleanedSpecs = fixCustomEnglishSpecs(p.slug, cleanSpecs(p.specs_en));
@@ -625,24 +737,30 @@ export function localized(p: ProductRow, lang: Lang) {
   if (lang === "ar") {
     const specsArStr = JSON.stringify(p.specs_ar ?? {});
     const specsIsAr = HAS_ARABIC.test(specsArStr);
-    if (nameIsAr || introIsAr || descIsAr) {
-      const cleanedArSpecs = specsIsAr ? cleanSpecs(p.specs_ar) : {};
-      if (cat?.ar.specs.certifications && cleanedArSpecs.certifications && /GLOBALG\.A\.P\.|ISO|BRC|معتمدة/i.test(cleanedArSpecs.certifications)) {
-        cleanedArSpecs.certifications = cat.ar.specs.certifications;
-      }
+    const cleanedArSpecs = hasExplicitSchema || specsIsAr ? cleanSpecs(p.specs_ar) : {};
+    if (cat?.ar.specs.certifications && cleanedArSpecs.certifications && /GLOBALG\.A\.P\.|ISO|BRC|معتمدة/i.test(cleanedArSpecs.certifications)) {
+      cleanedArSpecs.certifications = cat.ar.specs.certifications;
+    }
+
+    const explicitArName = hasExplicitSchema ? rawNameAr : nameIsAr ? rawNameAr : "";
+    const explicitArIntro = hasExplicitSchema ? rawIntroAr : introIsAr ? rawIntroAr : "";
+    const explicitArDesc = hasExplicitSchema ? rawDescAr : descIsAr ? rawDescAr : "";
+
+    if (explicitArName || explicitArIntro || explicitArDesc || Object.keys(cleanedArSpecs).length > 0) {
       return {
-        name: pickTitle(nameIsAr ? p.name_ar : "", cat?.ar.name || custom?.ar?.name) || p.name_ar || enNameClean,
-        intro: pickIntro(introIsAr ? p.intro_ar : "", cat?.ar.intro || custom?.ar?.intro) || p.intro_ar || enIntroClean,
+        name: pickTitle(explicitArName, cat?.ar.name || custom?.ar?.name) || (!nameIsRu && rawNameAr) || enNameClean,
+        intro: pickIntro(explicitArIntro, cat?.ar.intro || custom?.ar?.intro) || (!introIsRu && rawIntroAr) || enIntroClean,
         description:
-          (descIsAr ? sanitizeProductText(p.description_ar) : "") ||
+          sanitizeProductText(explicitArDesc) ||
           cat?.ar.description ||
           custom?.ar?.description ||
-          p.description_ar ||
+          (!descIsRu && rawDescAr) ||
           enDescClean,
         specs: {
           ...EMPTY_SPECS,
           ...(custom?.ar?.specs ?? {}),
           ...(cat?.ar.specs ?? {}),
+          ...(!cat && !custom ? cleanSpecs(p.specs_en) : {}),
           ...cleanedArSpecs,
         },
       };
@@ -657,21 +775,31 @@ export function localized(p: ProductRow, lang: Lang) {
       };
     }
     return {
-      name: p.name_ar || enNameClean,
-      intro: p.intro_ar || enIntroClean,
-      description: p.description_ar || enDescClean,
-      specs: { ...EMPTY_SPECS, ...cleanSpecs(p.specs_ar), ...cleanSpecs(p.specs_en) },
+      name: (!nameIsRu && rawNameAr) || enNameClean,
+      intro: (!introIsRu && rawIntroAr) || enIntroClean,
+      description: (!descIsRu && rawDescAr) || enDescClean,
+      specs: { ...EMPTY_SPECS, ...cleanSpecs(p.specs_en), ...cleanedArSpecs },
     };
   }
 
   if (lang === "fr") {
-    const frName = !nameIsAr && !nameIsRu && p.name_ar?.trim() ? normalizeTitleText(p.name_ar.trim()) : "";
-    const frIntro = !introIsAr && !introIsRu && p.intro_ar?.trim() ? sanitizeProductText(p.intro_ar.trim()) : "";
-    const frDesc = !descIsAr && !descIsRu && p.description_ar?.trim() ? sanitizeProductText(p.description_ar.trim()) : "";
-    const specsArStr = JSON.stringify(p.specs_ar ?? {});
-    const specsSafeFr = !HAS_ARABIC.test(specsArStr) && !HAS_CYRILLIC.test(specsArStr);
+    const explicitFrName = p.name_fr?.trim() ? normalizeTitleText(p.name_fr.trim()) : "";
+    const explicitFrIntro = p.intro_fr?.trim() ? sanitizeProductText(p.intro_fr.trim()) : "";
+    const explicitFrDesc = p.description_fr?.trim() ? sanitizeProductText(p.description_fr.trim()) : "";
+    const cleanedExplicitFrSpecs = cleanSpecs(p.specs_fr);
 
-    if (frName || frIntro || frDesc) {
+    const legacyFrName = !hasExplicitSchema && !nameIsAr && !nameIsRu && rawNameAr ? normalizeTitleText(rawNameAr) : "";
+    const legacyFrIntro = !hasExplicitSchema && !introIsAr && !introIsRu && rawIntroAr ? sanitizeProductText(rawIntroAr) : "";
+    const legacyFrDesc = !hasExplicitSchema && !descIsAr && !descIsRu && rawDescAr ? sanitizeProductText(rawDescAr) : "";
+    const specsArStr = JSON.stringify(p.specs_ar ?? {});
+    const specsSafeFr = !hasExplicitSchema && !HAS_ARABIC.test(specsArStr) && !HAS_CYRILLIC.test(specsArStr);
+
+    const frName = explicitFrName || legacyFrName;
+    const frIntro = explicitFrIntro || legacyFrIntro;
+    const frDesc = explicitFrDesc || legacyFrDesc;
+    const hasFrSpecs = Object.keys(cleanedExplicitFrSpecs).length > 0;
+
+    if (frName || frIntro || frDesc || hasFrSpecs) {
       return {
         name: frName || cat?.fr.name || custom?.fr?.name || enNameClean,
         intro: frIntro || cat?.fr.intro || custom?.fr?.intro || enIntroClean,
@@ -680,7 +808,8 @@ export function localized(p: ProductRow, lang: Lang) {
           ...EMPTY_SPECS,
           ...(custom?.fr?.specs ?? {}),
           ...(cat?.fr.specs ?? {}),
-          ...(specsSafeFr ? cleanSpecs(p.specs_ar) : cat ? {} : cleanSpecs(p.specs_en)),
+          ...(!cat && !custom ? cleanSpecs(p.specs_en) : {}),
+          ...(hasFrSpecs ? cleanedExplicitFrSpecs : specsSafeFr ? cleanSpecs(p.specs_ar) : {}),
         },
       };
     }
@@ -702,18 +831,29 @@ export function localized(p: ProductRow, lang: Lang) {
   }
 
   // Russian ("ru")
-  if (nameIsRu || introIsRu || descIsRu) {
-    const specsArStr = JSON.stringify(p.specs_ar ?? {});
-    const specsIsRu = HAS_CYRILLIC.test(specsArStr);
+  const explicitRuName = p.name_ru?.trim() ? normalizeTitleText(p.name_ru.trim()) : "";
+  const explicitRuIntro = p.intro_ru?.trim() ? sanitizeProductText(p.intro_ru.trim()) : "";
+  const explicitRuDesc = p.description_ru?.trim() ? sanitizeProductText(p.description_ru.trim()) : "";
+  const cleanedExplicitRuSpecs = cleanSpecs(p.specs_ru);
+
+  const ruName = explicitRuName || (nameIsRu ? rawNameAr : "");
+  const ruIntro = explicitRuIntro || (introIsRu ? rawIntroAr : "");
+  const ruDesc = explicitRuDesc || (descIsRu ? rawDescAr : "");
+  const specsArStr = JSON.stringify(p.specs_ar ?? {});
+  const specsIsRu = HAS_CYRILLIC.test(specsArStr);
+  const hasRuSpecs = Object.keys(cleanedExplicitRuSpecs).length > 0;
+
+  if (ruName || ruIntro || ruDesc || hasRuSpecs || specsIsRu) {
     return {
-      name: (nameIsRu ? p.name_ar : "") || cat?.ru.name || custom?.ru?.name || enNameClean,
-      intro: (introIsRu ? p.intro_ar : "") || cat?.ru.intro || custom?.ru?.intro || enIntroClean,
-      description: (descIsRu ? p.description_ar : "") || cat?.ru.description || custom?.ru?.description || enDescClean,
+      name: ruName || cat?.ru.name || custom?.ru?.name || enNameClean,
+      intro: ruIntro || cat?.ru.intro || custom?.ru?.intro || enIntroClean,
+      description: ruDesc || cat?.ru.description || custom?.ru?.description || enDescClean,
       specs: {
         ...EMPTY_SPECS,
         ...(custom?.ru?.specs ?? {}),
         ...(cat?.ru.specs ?? {}),
-        ...(specsIsRu ? cleanSpecs(p.specs_ar) : cat ? {} : cleanSpecs(p.specs_en)),
+        ...(!cat && !custom ? cleanSpecs(p.specs_en) : {}),
+        ...(hasRuSpecs ? cleanedExplicitRuSpecs : specsIsRu ? cleanSpecs(p.specs_ar) : {}),
       },
     };
   }
@@ -749,13 +889,17 @@ export function localized(p: ProductRow, lang: Lang) {
 export function categoryName(c: ProductCategory | undefined, lang: Lang) {
   if (!c) return "";
   const std = STD_CATEGORIES[c.slug?.toLowerCase()] ?? STD_CATEGORIES[c.name_en?.toLowerCase()];
-  const hasAr = HAS_ARABIC.test(c.name_ar || "");
-  const hasRu = HAS_CYRILLIC.test(c.name_ar || "");
+  const hasExplicitSchema = c.name_fr != null || c.name_ru != null;
+  const rawAr = (c.name_ar ?? "").trim();
+  const hasAr = HAS_ARABIC.test(rawAr);
+  const hasRu = HAS_CYRILLIC.test(rawAr);
+  const explicitFr = (c.name_fr ?? "").trim();
+  const explicitRu = (c.name_ru ?? "").trim();
 
   if (lang === "en") return c.name_en || std?.en || "";
-  if (lang === "ar") return (hasAr ? c.name_ar : "") || std?.ar || c.name_ar || c.name_en;
-  if (lang === "fr") return (!hasAr && !hasRu && c.name_ar ? c.name_ar : "") || std?.fr || c.name_en;
-  if (lang === "ru") return (hasRu ? c.name_ar : "") || std?.ru || c.name_en;
+  if (lang === "ar") return (hasAr || hasExplicitSchema ? rawAr : "") || std?.ar || (!hasRu && rawAr) || c.name_en;
+  if (lang === "fr") return explicitFr || (!hasExplicitSchema && !hasAr && !hasRu ? rawAr : "") || std?.fr || c.name_en;
+  if (lang === "ru") return explicitRu || (hasRu ? rawAr : "") || std?.ru || c.name_en;
   return c.name_en;
 }
 
@@ -766,13 +910,21 @@ export function blankProduct(trade: Trade, categoryId: string | null): ProductRo
     trade,
     category_id: categoryId,
     name_en: "",
+    name_fr: "",
     name_ar: "",
+    name_ru: "",
     intro_en: "",
+    intro_fr: "",
     intro_ar: "",
+    intro_ru: "",
     description_en: "",
+    description_fr: "",
     description_ar: "",
+    description_ru: "",
     specs_en: { ...EMPTY_SPECS },
+    specs_fr: { ...EMPTY_SPECS },
     specs_ar: { ...EMPTY_SPECS },
+    specs_ru: { ...EMPTY_SPECS },
     hidden_specs: [],
     main_image: "",
     gallery: [],
@@ -785,8 +937,28 @@ const CAT_STORAGE_KEY = "app_product_categories";
 const PROD_STORAGE_KEY = "app_products";
 
 const DEFAULT_CATEGORIES: ProductCategory[] = [
-  { id: "cat-fruits", slug: "fruits", name_en: "Fresh Fruits", name_ar: "Fruits Frais", trade: "export", sort_order: 1, active: true },
-  { id: "cat-vegetables", slug: "vegetables", name_en: "Fresh Vegetables", name_ar: "Légumes Frais", trade: "export", sort_order: 2, active: true },
+  {
+    id: "cat-fruits",
+    slug: "fruits",
+    name_en: "Fresh Fruits",
+    name_fr: "Fruits Frais",
+    name_ar: "فواكه طازجة",
+    name_ru: "Свежие фрукты",
+    trade: "export",
+    sort_order: 1,
+    active: true,
+  },
+  {
+    id: "cat-vegetables",
+    slug: "vegetables",
+    name_en: "Fresh Vegetables",
+    name_fr: "Légumes Frais",
+    name_ar: "خضروات طازجة",
+    name_ru: "Свежие овощи",
+    trade: "export",
+    sort_order: 2,
+    active: true,
+  },
 ];
 
 function getLocalCategories(): ProductCategory[] {
@@ -823,9 +995,14 @@ export async function saveCategory(c: Partial<ProductCategory>): Promise<string 
   const id = c.id || makeShortId("cat");
   const category: ProductCategory = {
     id,
-    slug: c.slug || slugify(c.name_en || "") || makeShortId("cat"),
+    slug:
+      c.slug ||
+      slugify(c.name_en || c.name_fr || c.name_ar || c.name_ru || "") ||
+      makeShortId("cat"),
     name_en: c.name_en ?? "",
+    name_fr: c.name_fr ?? "",
     name_ar: c.name_ar ?? "",
+    name_ru: c.name_ru ?? "",
     sort_order: c.sort_order ?? cats.length + 1,
     active: c.active ?? true,
     trade: c.trade ?? "export",
@@ -872,13 +1049,21 @@ function defaultProducts(): ProductRow[] {
     trade: "export",
     category_id: p.group === "fruits" ? "cat-fruits" : "cat-vegetables",
     name_en: p.en.name,
-    name_ar: (p as any).fr?.name || p.en.name,
+    name_fr: p.fr.name,
+    name_ar: p.ar.name,
+    name_ru: p.ru.name,
     intro_en: p.en.intro,
-    intro_ar: (p as any).fr?.intro || p.en.intro,
+    intro_fr: p.fr.intro,
+    intro_ar: p.ar.intro,
+    intro_ru: p.ru.intro,
     description_en: p.en.description,
-    description_ar: (p as any).fr?.description || p.en.description,
+    description_fr: p.fr.description,
+    description_ar: p.ar.description,
+    description_ru: p.ru.description,
     specs_en: p.en.specs,
-    specs_ar: (p as any).fr?.specs || p.en.specs,
+    specs_fr: p.fr.specs,
+    specs_ar: p.ar.specs,
+    specs_ru: p.ru.specs,
     hidden_specs: [],
     main_image: p.main,
     gallery: p.gallery,
@@ -943,7 +1128,10 @@ export async function saveProduct(p: ProductRow): Promise<string | null> {
   const product: ProductRow = {
     ...p,
     id,
-    slug: p.slug || slugify(p.name_en) || makeShortId("item"),
+    slug:
+      p.slug ||
+      slugify(p.name_en || p.name_fr || p.name_ar || p.name_ru || "") ||
+      makeShortId("item"),
   };
 
   try {

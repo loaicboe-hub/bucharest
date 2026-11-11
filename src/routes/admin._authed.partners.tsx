@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/admin/PageHeader";
-import { useAdminLang } from "@/lib/admin-i18n";
+import { useAdminLang, type AdminLang } from "@/lib/admin-i18n";
 import {
   blankPartner,
   deletePartner,
@@ -26,14 +26,114 @@ export const Route = createFileRoute("/admin/_authed/partners")({
   component: PartnersPage,
 });
 
+const PARTNERS_UI: Record<
+  AdminLang,
+  {
+    addPartner: string;
+    editPartner: string;
+    logo: string;
+    name: string;
+    website: string;
+    websiteOpt: string;
+    enabled: string;
+    actions: string;
+    empty: string;
+    noLogo: string;
+    upload: string;
+    cancel: string;
+    save: string;
+    needLogo: string;
+    saved: string;
+    deleted: string;
+    uploadFailed: string;
+  }
+> = {
+  en: {
+    addPartner: "Add Partner",
+    editPartner: "Edit Partner",
+    logo: "Logo",
+    name: "Name",
+    website: "Website",
+    websiteOpt: "Website URL (optional)",
+    enabled: "Enabled",
+    actions: "Actions",
+    empty: "No partners yet",
+    noLogo: "No logo",
+    upload: "Upload",
+    cancel: "Cancel",
+    save: "Save",
+    needLogo: "Please upload a logo",
+    saved: "Partner saved",
+    deleted: "Deleted",
+    uploadFailed: "Upload failed",
+  },
+  fr: {
+    addPartner: "Ajouter un partenaire",
+    editPartner: "Modifier le partenaire",
+    logo: "Logo",
+    name: "Nom",
+    website: "Site web",
+    websiteOpt: "URL du site (optionnel)",
+    enabled: "Activé",
+    actions: "Actions",
+    empty: "Aucun partenaire pour le moment",
+    noLogo: "Aucun logo",
+    upload: "Télécharger",
+    cancel: "Annuler",
+    save: "Enregistrer",
+    needLogo: "Veuillez télécharger un logo",
+    saved: "Partenaire enregistré",
+    deleted: "Supprimé",
+    uploadFailed: "Échec du téléchargement",
+  },
+  ar: {
+    addPartner: "إضافة شريك",
+    editPartner: "تعديل الشريك",
+    logo: "الشعار",
+    name: "الاسم",
+    website: "الرابط",
+    websiteOpt: "رابط الموقع (اختياري)",
+    enabled: "مفعّل",
+    actions: "إجراءات",
+    empty: "لا يوجد شركاء بعد",
+    noLogo: "لا يوجد شعار",
+    upload: "رفع",
+    cancel: "إلغاء",
+    save: "حفظ",
+    needLogo: "الرجاء رفع شعار",
+    saved: "تم حفظ الشريك",
+    deleted: "تم الحذف",
+    uploadFailed: "فشل الرفع",
+  },
+  ru: {
+    addPartner: "Добавить партнёра",
+    editPartner: "Редактировать партнёра",
+    logo: "Логотип",
+    name: "Название",
+    website: "Сайт",
+    websiteOpt: "URL сайта (необязательно)",
+    enabled: "Включён",
+    actions: "Действия",
+    empty: "Партнёров пока нет",
+    noLogo: "Нет логотипа",
+    upload: "Загрузить",
+    cancel: "Отмена",
+    save: "Сохранить",
+    needLogo: "Пожалуйста, загрузите логотип",
+    saved: "Партнёр сохранён",
+    deleted: "Удалено",
+    uploadFailed: "Ошибка загрузки",
+  },
+};
+
 function PartnersPage() {
   const { t, lang } = useAdminLang();
+  const ui = PARTNERS_UI[lang];
   const [rows, setRows] = useState<Partner[]>([]);
   const [editing, setEditing] = useState<Partner | null>(null);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const ar = lang === "ar";
 
   const refresh = () => listPartners().then(setRows).catch(() => undefined);
 
@@ -53,7 +153,7 @@ function PartnersPage() {
   const save = async () => {
     if (!editing) return;
     if (!editing.logo) {
-      toast.error(ar ? "الرجاء رفع شعار" : "Please upload a logo");
+      toast.error(ui.needLogo);
       return;
     }
     setBusy(true);
@@ -65,14 +165,14 @@ function PartnersPage() {
     }
     setOpen(false);
     await refresh();
-    toast.success(ar ? "تم حفظ الشريك" : "Partner saved");
+    toast.success(ui.saved);
   };
 
   const remove = async (id: string) => {
     const err = await deletePartner(id);
     if (err) return toast.error(err);
     await refresh();
-    toast.success(ar ? "تم الحذف" : "Deleted");
+    toast.success(ui.deleted);
   };
 
   const toggle = async (id: string, enabled: boolean) => {
@@ -101,7 +201,7 @@ function PartnersPage() {
     const res = await uploadPartnerLogo(file);
     setBusy(false);
     if (res.error || !res.url) {
-      toast.error(res.error ?? "Upload failed");
+      toast.error(res.error ?? ui.uploadFailed);
       return;
     }
     setEditing((e) => (e ? { ...e, logo: res.url!, logoPath: res.path ?? "" } : e));
@@ -114,7 +214,7 @@ function PartnersPage() {
         description={t("partners.desc")}
         actions={
           <Button onClick={openNew} className="gap-2">
-            <Plus className="h-4 w-4" /> {ar ? "إضافة شريك" : "Add Partner"}
+            <Plus className="h-4 w-4" /> {ui.addPartner}
           </Button>
         }
       />
@@ -122,18 +222,18 @@ function PartnersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-32">{ar ? "الشعار" : "Logo"}</TableHead>
-              <TableHead>{ar ? "الاسم" : "Name"}</TableHead>
-              <TableHead>{ar ? "الرابط" : "Website"}</TableHead>
-              <TableHead>{ar ? "مفعّل" : "Enabled"}</TableHead>
-              <TableHead className="text-right">{ar ? "إجراءات" : "Actions"}</TableHead>
+              <TableHead className="w-32">{ui.logo}</TableHead>
+              <TableHead>{ui.name}</TableHead>
+              <TableHead>{ui.website}</TableHead>
+              <TableHead>{ui.enabled}</TableHead>
+              <TableHead className="text-right">{ui.actions}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="py-10 text-center text-muted-foreground">
-                  {ar ? "لا يوجد شركاء بعد" : "No partners yet"}
+                  {ui.empty}
                 </TableCell>
               </TableRow>
             )}
@@ -172,18 +272,16 @@ function PartnersPage() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editing?.id ? (ar ? "تعديل شريك" : "Edit Partner") : ar ? "إضافة شريك" : "Add Partner"}
-            </DialogTitle>
+            <DialogTitle>{editing?.id ? ui.editPartner : ui.addPartner}</DialogTitle>
           </DialogHeader>
           {editing && (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>{ar ? "الاسم" : "Name"}</Label>
+                <Label>{ui.name}</Label>
                 <Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>{ar ? "رابط الموقع (اختياري)" : "Website URL (optional)"}</Label>
+                <Label>{ui.websiteOpt}</Label>
                 <Input
                   value={editing.url ?? ""}
                   placeholder="https://"
@@ -191,17 +289,17 @@ function PartnersPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>{ar ? "الشعار" : "Logo"}</Label>
+                <Label>{ui.logo}</Label>
                 <div className="flex items-center gap-3">
                   <div className="flex h-16 w-32 items-center justify-center rounded-lg border border-border/60 bg-muted/30">
                     {editing.logo ? (
                       <img src={editing.logo} alt="" className="h-full w-full object-contain p-1" />
                     ) : (
-                      <span className="text-xs text-muted-foreground">{ar ? "لا يوجد" : "No logo"}</span>
+                      <span className="text-xs text-muted-foreground">{ui.noLogo}</span>
                     )}
                   </div>
                   <Button variant="outline" className="gap-2" disabled={busy} onClick={() => fileRef.current?.click()}>
-                    <Upload className="h-4 w-4" /> {ar ? "رفع" : "Upload"}
+                    <Upload className="h-4 w-4" /> {ui.upload}
                   </Button>
                   <input
                     ref={fileRef}
@@ -214,16 +312,16 @@ function PartnersPage() {
               </div>
               <div className="flex items-center gap-3">
                 <Switch checked={editing.enabled} onCheckedChange={(v) => setEditing({ ...editing, enabled: v })} />
-                <Label>{ar ? "مفعّل" : "Enabled"}</Label>
+                <Label>{ui.enabled}</Label>
               </div>
             </div>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>
-              {ar ? "إلغاء" : "Cancel"}
+              {ui.cancel}
             </Button>
             <Button onClick={save} disabled={busy}>
-              {ar ? "حفظ" : "Save"}
+              {ui.save}
             </Button>
           </DialogFooter>
         </DialogContent>

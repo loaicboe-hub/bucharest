@@ -7,11 +7,17 @@ export type NewsArticle = {
   id: string;
   slug: string;
   title: string;
+  title_fr?: string;
   title_ar: string;
+  title_ru?: string;
   excerpt: string;
+  excerpt_fr?: string;
   excerpt_ar: string;
+  excerpt_ru?: string;
   content: string;
+  content_fr?: string;
   content_ar: string;
+  content_ru?: string;
   featured_image: string;
   gallery: string[];
   category: string;
@@ -28,7 +34,7 @@ export function slugifyNews(value: string) {
   return value
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9\u0600-\u06FF]+/g, "-")
+    .replace(/[^a-z0-9\u0400-\u04FF\u0600-\u06FF]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 
@@ -38,11 +44,17 @@ export function blankArticle(): NewsArticle {
     id: "",
     slug: "",
     title: "",
+    title_fr: "",
     title_ar: "",
+    title_ru: "",
     excerpt: "",
+    excerpt_fr: "",
     excerpt_ar: "",
+    excerpt_ru: "",
     content: "",
+    content_fr: "",
     content_ar: "",
+    content_ru: "",
     featured_image: "",
     gallery: [],
     category: "",
@@ -108,7 +120,10 @@ export async function saveNews(article: NewsArticle): Promise<string | null> {
   const item: NewsArticle = {
     ...article,
     id,
-    slug: article.slug || slugifyNews(article.title) || id,
+    slug:
+      article.slug ||
+      slugifyNews(article.title || article.title_fr || article.title_ar || article.title_ru || "") ||
+      id,
     updated_at: new Date().toISOString(),
   };
 
@@ -211,41 +226,96 @@ const SEEDED_NEWS_TRANSLATIONS: Record<
   },
 };
 
+export function hydrateArticleForEditor(item: NewsArticle): NewsArticle {
+  const seeded = SEEDED_NEWS_TRANSLATIONS[item.slug];
+  const hasExplicitFrCols =
+    item.title_fr != null || item.excerpt_fr != null || item.content_fr != null;
+
+  const rawTitleAr = item.title_ar ?? "";
+  const rawExcerptAr = item.excerpt_ar ?? "";
+  const rawContentAr = item.content_ar ?? "";
+
+  const tIsAr = HAS_ARABIC.test(rawTitleAr);
+  const eIsAr = HAS_ARABIC.test(rawExcerptAr);
+  const cIsAr = HAS_ARABIC.test(rawContentAr);
+  const tIsRu = HAS_CYRILLIC.test(rawTitleAr);
+  const eIsRu = HAS_CYRILLIC.test(rawExcerptAr);
+  const cIsRu = HAS_CYRILLIC.test(rawContentAr);
+
+  const rescuedFrTitle = !hasExplicitFrCols && !tIsAr && !tIsRu ? rawTitleAr : "";
+  const rescuedFrExcerpt = !hasExplicitFrCols && !eIsAr && !eIsRu ? rawExcerptAr : "";
+  const rescuedFrContent = !hasExplicitFrCols && !cIsAr && !cIsRu ? rawContentAr : "";
+
+  const rescuedRuTitle = tIsRu ? rawTitleAr : "";
+  const rescuedRuExcerpt = eIsRu ? rawExcerptAr : "";
+  const rescuedRuContent = cIsRu ? rawContentAr : "";
+
+  const cleanTitleAr = hasExplicitFrCols ? rawTitleAr : tIsAr ? rawTitleAr : "";
+  const cleanExcerptAr = hasExplicitFrCols ? rawExcerptAr : eIsAr ? rawExcerptAr : "";
+  const cleanContentAr = hasExplicitFrCols ? rawContentAr : cIsAr ? rawContentAr : "";
+
+  return {
+    ...item,
+    title_fr: (item.title_fr ?? "") || rescuedFrTitle || (item.id ? seeded?.fr?.title ?? "" : ""),
+    excerpt_fr: (item.excerpt_fr ?? "") || rescuedFrExcerpt || (item.id ? seeded?.fr?.excerpt ?? "" : ""),
+    content_fr: (item.content_fr ?? "") || rescuedFrContent || (item.id ? seeded?.fr?.content ?? "" : ""),
+    title_ar: cleanTitleAr || (item.id ? seeded?.ar?.title ?? "" : ""),
+    excerpt_ar: cleanExcerptAr || (item.id ? seeded?.ar?.excerpt ?? "" : ""),
+    content_ar: cleanContentAr || (item.id ? seeded?.ar?.content ?? "" : ""),
+    title_ru: (item.title_ru ?? "") || rescuedRuTitle || (item.id ? seeded?.ru?.title ?? "" : ""),
+    excerpt_ru: (item.excerpt_ru ?? "") || rescuedRuExcerpt || (item.id ? seeded?.ru?.excerpt ?? "" : ""),
+    content_ru: (item.content_ru ?? "") || rescuedRuContent || (item.id ? seeded?.ru?.content ?? "" : ""),
+  };
+}
+
 export function localizedArticle(item: NewsArticle, lang: Lang) {
   const seeded = SEEDED_NEWS_TRANSLATIONS[item.slug];
-  const tIsAr = HAS_ARABIC.test(item.title_ar || "");
-  const eIsAr = HAS_ARABIC.test(item.excerpt_ar || "");
-  const cIsAr = HAS_ARABIC.test(item.content_ar || "");
-  const tIsRu = HAS_CYRILLIC.test(item.title_ar || "");
-  const eIsRu = HAS_CYRILLIC.test(item.excerpt_ar || "");
-  const cIsRu = HAS_CYRILLIC.test(item.content_ar || "");
+  const hasExplicitFrCols =
+    item.title_fr != null || item.excerpt_fr != null || item.content_fr != null;
+
+  const rawTitleAr = (item.title_ar ?? "").trim();
+  const rawExcerptAr = (item.excerpt_ar ?? "").trim();
+  const rawContentAr = (item.content_ar ?? "").trim();
+
+  const tIsAr = HAS_ARABIC.test(rawTitleAr);
+  const eIsAr = HAS_ARABIC.test(rawExcerptAr);
+  const cIsAr = HAS_ARABIC.test(rawContentAr);
+  const tIsRu = HAS_CYRILLIC.test(rawTitleAr);
+  const eIsRu = HAS_CYRILLIC.test(rawExcerptAr);
+  const cIsRu = HAS_CYRILLIC.test(rawContentAr);
 
   if (lang === "ar") {
     const s = seeded?.ar;
     return {
-      title: (tIsAr ? item.title_ar : "") || s?.title || item.title_ar || item.title,
-      excerpt: (eIsAr ? item.excerpt_ar : "") || s?.excerpt || item.excerpt_ar || item.excerpt,
-      content: (cIsAr ? item.content_ar : "") || s?.content || item.content_ar || item.content,
+      title: (tIsAr || hasExplicitFrCols ? rawTitleAr : "") || s?.title || (!tIsRu ? rawTitleAr : "") || item.title,
+      excerpt: (eIsAr || hasExplicitFrCols ? rawExcerptAr : "") || s?.excerpt || (!eIsRu ? rawExcerptAr : "") || item.excerpt,
+      content: (cIsAr || hasExplicitFrCols ? rawContentAr : "") || s?.content || (!cIsRu ? rawContentAr : "") || item.content,
       category: (item.category === "Company News" && s?.category) || item.category,
     };
   }
 
   if (lang === "fr") {
     const s = seeded?.fr;
+    const tFr = (item.title_fr ?? "").trim() || (!hasExplicitFrCols && !tIsAr && !tIsRu ? rawTitleAr : "");
+    const eFr = (item.excerpt_fr ?? "").trim() || (!hasExplicitFrCols && !eIsAr && !eIsRu ? rawExcerptAr : "");
+    const cFr = (item.content_fr ?? "").trim() || (!hasExplicitFrCols && !cIsAr && !cIsRu ? rawContentAr : "");
     return {
-      title: (!tIsAr && !tIsRu && item.title_ar) || s?.title || item.title,
-      excerpt: (!eIsAr && !eIsRu && item.excerpt_ar) || s?.excerpt || item.excerpt,
-      content: (!cIsAr && !cIsRu && item.content_ar) || s?.content || item.content,
+      title: tFr || s?.title || item.title,
+      excerpt: eFr || s?.excerpt || item.excerpt,
+      content: cFr || s?.content || item.content,
       category: (item.category === "Company News" && s?.category) || item.category,
     };
   }
 
   if (lang === "ru") {
     const s = seeded?.ru;
+    const tRu = (item.title_ru ?? "").trim() || (tIsRu ? rawTitleAr : "");
+    const eRu = (item.excerpt_ru ?? "").trim() || (eIsRu ? rawExcerptAr : "");
+    const cRu = (item.content_ru ?? "").trim() || (cIsRu ? rawContentAr : "");
     return {
-      title: (tIsRu ? item.title_ar : "") || s?.title || item.title,
-      excerpt: (eIsRu ? item.excerpt_ar : "") || s?.excerpt || item.excerpt,
-      content: (cIsRu ? item.content_ar : "") || s?.content || item.content,
+      title: tRu || s?.title || item.title,
+      excerpt: eRu || s?.excerpt || item.excerpt,
+      content: cRu || s?.content || item.content,
       category: (item.category === "Company News" && s?.category) || item.category,
     };
   }

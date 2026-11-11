@@ -4,9 +4,50 @@ require_once __DIR__ . '/config.php';
 $db = getDB();
 $method = $_SERVER['REQUEST_METHOD'];
 
+function ensureCategoryLocaleColumns(PDO $db): array {
+    static $cols = null;
+    if ($cols !== null) {
+        return $cols;
+    }
+
+    $cols = [];
+    try {
+        $stmt = $db->query("SHOW COLUMNS FROM product_categories");
+        foreach ($stmt->fetchAll() as $col) {
+            $cols[$col['Field']] = true;
+        }
+
+        $missing = [];
+        if (empty($cols['name_fr'])) {
+            $missing[] = "ADD COLUMN `name_fr` VARCHAR(191) NULL DEFAULT NULL AFTER `name_en`";
+        }
+        if (empty($cols['name_ru'])) {
+            $missing[] = "ADD COLUMN `name_ru` VARCHAR(191) NULL DEFAULT NULL AFTER `name_ar`";
+        }
+
+        if (!empty($missing)) {
+            try {
+                $db->exec("ALTER TABLE `product_categories` " . implode(', ', $missing));
+                $stmt = $db->query("SHOW COLUMNS FROM product_categories");
+                $cols = [];
+                foreach ($stmt->fetchAll() as $col) {
+                    $cols[$col['Field']] = true;
+                }
+            } catch (PDOException $e) {
+                error_log('Categories schema migration skipped: ' . $e->getMessage());
+            }
+        }
+    } catch (PDOException $e) {
+        error_log('Categories SHOW COLUMNS error: ' . $e->getMessage());
+    }
+
+    return $cols;
+}
+
 // 1. GET - List categories
 if ($method === 'GET') {
     try {
+        ensureCategoryLocaleColumns($db);
         $onlyActive = isset($_GET['onlyActive']) && $_GET['onlyActive'] === 'true';
         $sql = "SELECT * FROM product_categories " . ($onlyActive ? "WHERE active = 1 " : "") . "ORDER BY sort_order ASC, created_at ASC";
         $stmt = $db->query($sql);
@@ -29,6 +70,8 @@ if ($method === 'POST' || $method === 'PUT') {
     $input = getJsonInput();
 
     try {
+        $cols = ensureCategoryLocaleColumns($db);
+
         $rawId = trim((string)($input['id'] ?? $_GET['id'] ?? ''));
         if ($rawId === '') {
             $id = 'cat-' . bin2hex(random_bytes(6));
@@ -38,9 +81,18 @@ if ($method === 'POST' || $method === 'PUT') {
             $id = $rawId;
         }
 
+        $nameEn = substr(trim((string)($input['name_en'] ?? '')), 0, 191);
+        $nameFr = substr(trim((string)($input['name_fr'] ?? '')), 0, 191);
+        $nameAr = substr(trim((string)($input['name_ar'] ?? '')), 0, 191);
+        $nameRu = substr(trim((string)($input['name_ru'] ?? '')), 0, 191);
+
+        if ($nameEn === '' && $nameFr === '' && $nameAr === '' && $nameRu === '') {
+            sendError('Category name is required', 400);
+        }
+
         $rawSlug = trim((string)($input['slug'] ?? ''));
         if ($rawSlug === '') {
-            $rawSlug = trim((string)($input['name_en'] ?? ''));
+            $rawSlug = $nameEn !== '' ? $nameEn : ($nameFr !== '' ? $nameFr : ($nameAr !== '' ? $nameAr : $nameRu));
         }
         $slug = trim(preg_replace('/[^a-z0-9]+/i', '-', strtolower($rawSlug)), '-');
         if ($slug === '') {
@@ -48,14 +100,8 @@ if ($method === 'POST' || $method === 'PUT') {
         }
 
         $trade = ($input['trade'] ?? 'export') === 'import' ? 'import' : 'export';
-        $nameEn = substr(trim((string)($input['name_en'] ?? '')), 0, 191);
-        $nameAr = substr(trim((string)($input['name_ar'] ?? '')), 0, 191);
         $sortOrder = intval($input['sort_order'] ?? 1);
         $active = isset($input['active']) ? ($input['active'] ? 1 : 0) : 1;
-
-        if ($nameEn === '' && $nameAr === '') {
-            sendError('Category name is required', 400);
-        }
 
         // Check if updating an existing category or creating a new one
         $checkIdStmt = $db->prepare("SELECT id FROM product_categories WHERE id = ? LIMIT 1");
@@ -69,24 +115,38 @@ if ($method === 'POST' || $method === 'PUT') {
             $slug = substr($slug, 0, 175) . '-' . bin2hex(random_bytes(2));
         }
 
+        $fields = [
+            'slug' => $slug,
+            'name_en' => $nameEn,
+            'name_ar' => $nameAr,
+            'sort_order' => $sortOrder,
+            'active' => $active,
+            'trade' => $trade,
+        ];
+        if (!empty($cols['name_fr'])) {
+            $fields['name_fr'] = $nameFr;
+        }
+        if (!empty($cols['name_ru'])) {
+            $fields['name_ru'] = $nameRu;
+        }
+
         if ($exists) {
-            $stmt = $db->prepare("
-                UPDATE product_categories SET
-                    slug = ?,
-                    name_en = ?,
-                    name_ar = ?,
-                    sort_order = ?,
-                    active = ?,
-                    trade = ?
-                WHERE id = ?
-            ");
-            $stmt->execute([$slug, $nameEn, $nameAr, $sortOrder, $active, $trade, $id]);
+            $setParts = [];
+            $params = [];
+            foreach ($fields as $col => $val) {
+                $setParts[] = "`$col` = ?";
+                $params[] = $val;
+            }
+            $params[] = $id;
+            $stmt = $db->prepare("UPDATE product_categories SET " . implode(', ', $setParts) . " WHERE id = ?");
+            $stmt->execute($params);
         } else {
-            $stmt = $db->prepare("
-                INSERT INTO product_categories (id, slug, name_en, name_ar, sort_order, active, trade)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([$id, $slug, $nameEn, $nameAr, $sortOrder, $active, $trade]);
+            $insertCols = array_merge(['id'], array_keys($fields));
+            $placeholders = array_fill(0, count($insertCols), '?');
+            $params = array_merge([$id], array_values($fields));
+            $colSql = implode(', ', array_map(function($col) { return "`$col`"; }, $insertCols));
+            $stmt = $db->prepare("INSERT INTO product_categories ($colSql) VALUES (" . implode(', ', $placeholders) . ")");
+            $stmt->execute($params);
         }
 
         sendJson([
@@ -97,7 +157,9 @@ if ($method === 'POST' || $method === 'PUT') {
                 'id' => $id,
                 'slug' => $slug,
                 'name_en' => $nameEn,
+                'name_fr' => $nameFr,
                 'name_ar' => $nameAr,
+                'name_ru' => $nameRu,
                 'sort_order' => $sortOrder,
                 'active' => (bool)$active,
                 'trade' => $trade,

@@ -41,12 +41,12 @@ function Dashboard() {
   const recentFeed = [
     ...quoteRows.slice(0, 4).map((q) => ({
       id: `q-${q.id}`,
-      text: `Quote request from ${q.company || q.contactPerson || q.email}${q.product ? ` (${q.product})` : ""}`,
+      text: `${t("dashboard.quoteFrom")} ${q.company || q.contactPerson || q.email}${q.product ? ` (${q.product})` : ""}`,
       time: q.date,
     })),
     ...contactRows.slice(0, 4).map((c) => ({
       id: `c-${c.id}`,
-      text: `Inquiry from ${c.company || c.name || c.email}`,
+      text: `${t("dashboard.inquiryFrom")} ${c.company || c.name || c.email}`,
       time: c.date,
     })),
   ]
@@ -94,7 +94,7 @@ function Dashboard() {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted-foreground">No quote or contact activity yet.</p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.noActivity")}</p>
             )}
           </CardContent>
         </Card>
@@ -119,7 +119,7 @@ function Dashboard() {
                 ))}
               </ul>
             ) : (
-              <p className="text-sm text-muted-foreground">No contact requests yet.</p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.noContacts")}</p>
             )}
           </CardContent>
         </Card>

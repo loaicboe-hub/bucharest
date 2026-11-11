@@ -47,7 +47,9 @@ CREATE TABLE IF NOT EXISTS `product_categories` (
   `id` VARCHAR(36) NOT NULL,
   `slug` VARCHAR(191) NOT NULL,
   `name_en` VARCHAR(191) NOT NULL DEFAULT '',
+  `name_fr` VARCHAR(191) NULL DEFAULT NULL,
   `name_ar` VARCHAR(191) NOT NULL DEFAULT '',
+  `name_ru` VARCHAR(191) NULL DEFAULT NULL,
   `sort_order` INT NOT NULL DEFAULT 1,
   `active` TINYINT(1) NOT NULL DEFAULT 1,
   `trade` ENUM('export', 'import') NOT NULL DEFAULT 'export',
@@ -66,13 +68,21 @@ CREATE TABLE IF NOT EXISTS `products` (
   `trade` ENUM('export', 'import') NOT NULL DEFAULT 'export',
   `category_id` VARCHAR(36) DEFAULT NULL,
   `name_en` VARCHAR(255) NOT NULL DEFAULT '',
+  `name_fr` VARCHAR(255) NULL DEFAULT NULL,
   `name_ar` VARCHAR(255) NOT NULL DEFAULT '',
+  `name_ru` VARCHAR(255) NULL DEFAULT NULL,
   `intro_en` TEXT,
+  `intro_fr` TEXT NULL DEFAULT NULL,
   `intro_ar` TEXT,
+  `intro_ru` TEXT NULL DEFAULT NULL,
   `description_en` LONGTEXT,
+  `description_fr` LONGTEXT NULL DEFAULT NULL,
   `description_ar` LONGTEXT,
+  `description_ru` LONGTEXT NULL DEFAULT NULL,
   `specs_en` JSON DEFAULT NULL,
+  `specs_fr` JSON DEFAULT NULL,
   `specs_ar` JSON DEFAULT NULL,
+  `specs_ru` JSON DEFAULT NULL,
   `hidden_specs` JSON DEFAULT NULL,
   `main_image` VARCHAR(500) NOT NULL DEFAULT '',
   `gallery` JSON DEFAULT NULL,
@@ -94,11 +104,17 @@ CREATE TABLE IF NOT EXISTS `news` (
   `id` VARCHAR(36) NOT NULL,
   `slug` VARCHAR(191) NOT NULL,
   `title` VARCHAR(255) NOT NULL DEFAULT '',
+  `title_fr` VARCHAR(255) NULL DEFAULT NULL,
   `title_ar` VARCHAR(255) NOT NULL DEFAULT '',
+  `title_ru` VARCHAR(255) NULL DEFAULT NULL,
   `excerpt` TEXT,
+  `excerpt_fr` TEXT NULL DEFAULT NULL,
   `excerpt_ar` TEXT,
+  `excerpt_ru` TEXT NULL DEFAULT NULL,
   `content` LONGTEXT,
+  `content_fr` LONGTEXT NULL DEFAULT NULL,
   `content_ar` LONGTEXT,
+  `content_ru` LONGTEXT NULL DEFAULT NULL,
   `featured_image` VARCHAR(500) NOT NULL DEFAULT '',
   `gallery` JSON DEFAULT NULL,
   `category` VARCHAR(100) NOT NULL DEFAULT '',
@@ -215,9 +231,9 @@ VALUES (
 ) ON DUPLICATE KEY UPDATE `email` = VALUES(`email`);
 
 -- 2. Categories
-INSERT INTO `product_categories` (`id`, `slug`, `name_en`, `name_ar`, `sort_order`, `active`, `trade`) VALUES
-('cat-fruits', 'fruits', 'Fresh Fruits', 'فواكه طازجة', 1, 1, 'export'),
-('cat-vegetables', 'vegetables', 'Fresh Vegetables', 'خضروات طازجة', 2, 1, 'export')
+INSERT INTO `product_categories` (`id`, `slug`, `name_en`, `name_fr`, `name_ar`, `name_ru`, `sort_order`, `active`, `trade`) VALUES
+('cat-fruits', 'fruits', 'Fresh Fruits', 'Fruits Frais', 'فواكه طازجة', 'Свежие фрукты', 1, 1, 'export'),
+('cat-vegetables', 'vegetables', 'Fresh Vegetables', 'Légumes Frais', 'خضروات طازجة', 'Свежие овощи', 2, 1, 'export')
 ON DUPLICATE KEY UPDATE `slug` = VALUES(`slug`);
 
 -- 3. Products (All 12 Catalog Products Pre-Seeded in MySQL)
@@ -361,16 +377,22 @@ VALUES (
 ) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`);
 
 -- 5. Default News Articles
-INSERT INTO `news` (`id`, `slug`, `title`, `title_ar`, `excerpt`, `excerpt_ar`, `content`, `content_ar`, `featured_image`, `category`, `author`, `published`)
+INSERT INTO `news` (`id`, `slug`, `title`, `title_fr`, `title_ar`, `title_ru`, `excerpt`, `excerpt_fr`, `excerpt_ar`, `excerpt_ru`, `content`, `content_fr`, `content_ar`, `content_ru`, `featured_image`, `category`, `author`, `published`)
 VALUES (
   'news-1',
   'bucharestegyagro-expands-citrus-exports-2026',
   'BucharestEgyAgro Expands Winter Citrus Export Programs for 2026',
+  'BucharestEgyAgro développe ses programmes d''exportation d''agrumes pour 2026',
   'بوخارست إيجي أجرو توسع برامج تصدير الموالح لموسم 2026',
+  'BucharestEgyAgro расширяет экспортные программы по цитрусовым на 2026 год',
   'With optical grading lines and coordinated reefer logistics, our team prepares seasonal citrus shipments for target markets.',
+  'Grâce à des lignes de calibrage modernes et une logistique frigorifique renforcée, nous préparons nos expéditions saisonnières d''agrumes.',
   'بخطوط فرز مجهزة وتنسيق مستمر للشحن المبرد، نجهز شحنات الموالح الموسمية للأسواق الأوروبية والعربية.',
+  'Благодаря современным линиям сортировки и расширенной рефрижераторной логистике мы подготовили сезонные отгрузки цитрусовых.',
   'BucharestEgyAgro announces the start of the 2026 winter citrus export season, supplying graded Valencia and Navel oranges from Egyptian farms to destination ports in Europe, the Gulf, and Asia.',
+  'BucharestEgyAgro annonce le lancement de son programme d''exportation d''agrumes d''hiver pour 2026, avec des oranges Valencia et Navel calibrées et pré-refroidies expédiées des vergers égyptiens vers les ports d''Europe, du Golfe et d''Asie.',
   'تعلن شركة بوخارست إيجي أجرو عن انطلاق موسم تصدير الموالح لعام 2026 من أصناف فالنسيا وأبو سرة وفق اشتراطات الحجر الزراعي وإجراءات التصدير.',
+  'Компания BucharestEgyAgro объявляет о запуске сезонной программы экспорта зимних цитрусовых 2026 года — отборных апельсинов сортов Валенсия и Навел из египетских хозяйств в порты Европы, стран Залива и Азии.',
   '/assets/oranges.jpg',
   'Company News',
   'Executive Board',

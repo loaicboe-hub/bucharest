@@ -3,13 +3,19 @@ import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-
 import { apiAuth } from "@/lib/hostinger-api";
 import { signOut } from "@/lib/admin-auth";
 import { toast } from "sonner";
-import { Languages } from "lucide-react";
+import { Check, ChevronDown, Languages } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { getAdminSession } from "@/lib/admin-auth";
-import { useAdminLang } from "@/lib/admin-i18n";
+import { ADMIN_LANG_OPTIONS, useAdminLang } from "@/lib/admin-i18n";
 import { moduleKeyFromPath } from "@/lib/admin-modules";
 import {
   PermissionsProvider,
@@ -61,6 +67,9 @@ function AuthedLayout() {
       navigate({ to: "/admin/login" });
     });
   }, [navigate]);
+
+  const activeLang = ADMIN_LANG_OPTIONS.find((o) => o.code === lang) ?? ADMIN_LANG_OPTIONS[0];
+
   return (
     <PermissionsProvider value={{ isSuper, permissions }}>
     <SidebarProvider>
@@ -74,16 +83,38 @@ function AuthedLayout() {
               <span className="text-sm font-medium text-muted-foreground">{t("adminPanel")}</span>
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-                onClick={() => setLang(lang === "fr" ? "en" : "fr")}
-                title={t("language")}
-              >
-                <Languages className="h-4 w-4" />
-                {lang === "fr" ? "English" : "Français"}
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    title={t("language")}
+                    aria-label={t("language")}
+                  >
+                    <Languages className="h-4 w-4" />
+                    <span>{activeLang.label}</span>
+                    <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={dir === "rtl" ? "start" : "end"} className="min-w-[170px]">
+                  {ADMIN_LANG_OPTIONS.map((opt) => (
+                    <DropdownMenuItem
+                      key={opt.code}
+                      onClick={() => setLang(opt.code)}
+                      className="flex cursor-pointer items-center justify-between gap-3"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="w-5 text-[11px] font-semibold uppercase text-muted-foreground">
+                          {opt.short}
+                        </span>
+                        <span>{opt.label}</span>
+                      </span>
+                      {lang === opt.code ? <Check className="h-4 w-4 text-primary" /> : null}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <span className="hidden text-sm text-muted-foreground sm:inline">
                 {t("signedInAs")} <span className="font-medium text-foreground">{session.email}</span>
               </span>
@@ -98,5 +129,4 @@ function AuthedLayout() {
     </SidebarProvider>
     </PermissionsProvider>
   );
-
 }
